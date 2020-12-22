@@ -1,6 +1,6 @@
 {
-  "name": "learn-starter",
-  "version": "0.1.0",
+  "name": "runalyze",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^2.13.1",
     "dateformat": "^3.0.3",
     "dayjs": "^1.9.5",
     "fitness-js": "^0.2.2",
@@ -15,5 +16,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "sass": "^1.30.0"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.13.1"
   }
 }

@@ -6,6 +6,8 @@ import DateRuns from "./DateRuns";
 
 export default class MonthRuns extends DateRuns {
     getRuns() {
+        if (this.props.runs.length === 0) return [];
+
         let months = [];
 
         const newestRunDate = this.props.runs[this.props.runs.length - 1].date;

@@ -22,12 +22,15 @@ import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient();
 
 class Home extends Component {
     constructor(props) {
         super(props);
 
-        const runs = jsonToRuns(props.runs);
+        const runs = jsonToRuns(props.json);
         const currentRun = runs[0];
 
         this.state = {
@@ -180,11 +183,10 @@ class Home extends Component {
 }
 
 export async function getStaticProps(ctx) {
-    const res = await fetch(process.env.PREACT_APP_API_GET_RUNS)
-    const json = await res.json();
+    const json = await prisma.runs.findMany();
 
     return {
-        props: {runs: json}
+        props: {json: json}
     };
 }
 

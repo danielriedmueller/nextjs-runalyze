@@ -2,11 +2,11 @@ import dayjs from "dayjs";
 
 import {Pacer, Length, Timespan} from "fitness-js";
 
-export const jsonToRuns = (json) => json.map((jsonRun) => {
+export const jsonToRuns = (json) => json.map(({Date, Distance, Duration}) => {
     return {
-        date: dayjs(jsonRun[0]),
-        distance: parseFloat(jsonRun[1]),
-        duration: stringToDuration(jsonRun[2])
+        date: dayjs(Date),
+        distance: parseFloat(Distance),
+        duration: stringToDuration(Duration)
     }
 })
 

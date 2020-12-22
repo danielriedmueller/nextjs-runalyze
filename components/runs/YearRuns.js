@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 
 export default class YearRuns extends DateRuns {
     getRuns() {
+        if (this.props.runs.length === 0) return [];
+
         let years = [];
         const firstYear = this.props.runs[0].date.year();
         const currentYear = dayjs().year();

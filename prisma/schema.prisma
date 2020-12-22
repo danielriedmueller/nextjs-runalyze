@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model runs {
+  Date     String @unique
+  Distance String
+  Duration String
+  ID       Int    @id @default(autoincrement())
+}

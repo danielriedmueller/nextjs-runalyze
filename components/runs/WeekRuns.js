@@ -5,6 +5,8 @@ import DateRuns from "./DateRuns";
 
 export default class WeekRuns extends DateRuns {
     getRuns() {
+        if (this.props.runs.length === 0) return [];
+
         let weeks = [];
 
         const newestRunDate = this.props.runs[this.props.runs.length - 1].date;
