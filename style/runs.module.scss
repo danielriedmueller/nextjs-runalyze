@@ -1,0 +1,13 @@
+.table {
+  overflow: scroll;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.table > div {
+  flex: 33.33% 0 0;
+  border-right: 1px solid var(--creme);
+  z-index: 999;
+  text-align: center;
+}

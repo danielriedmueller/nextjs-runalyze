@@ -1,0 +1,35 @@
+:root {
+  --red: #e63946;
+  --blue: #457b9d;
+  --blue-light: #a8dadc;
+  --blue-dark: #1d3557;
+  --creme: #f1faee;
+  --spacing-s: 10px;
+  --icon-size: 20px;
+  --icon-size-big: 40px;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+#app > * {
+  max-width: 100%;
+  overflow: scroll;
+}

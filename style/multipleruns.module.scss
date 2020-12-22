@@ -1,0 +1,65 @@
+.date, .count, .pace, .distance, .duration {
+  font-family: 'Courier Prime', monospace;
+  background: transparent none no-repeat var(--spacing-s) top;
+  background-image: url("../assets/icons/clipboard-list.svg");
+  background-size: var(--icon-size);
+  min-height: var(--icon-size);
+  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
+  padding-top: 3px;
+  text-align: left;
+  margin-bottom: var(--spacing-s);
+  color: var(--creme);
+}
+
+.count {
+  background-image: url("../assets/icons/clipboard-list.svg");
+  border-bottom: 1px solid var(--creme);
+  padding-bottom: var(--spacing-s);
+}
+
+.date {
+  background-image: url("../assets/icons/calendar3.svg");
+  border-bottom: 1px solid var(--creme);
+  padding-bottom: var(--spacing-s);
+  padding-top: 0;
+}
+
+.pace {
+  background-image: url("../assets/icons/stopwatch-running.svg");
+}
+
+.distance {
+  background-image: url("../assets/icons/polygon3.svg");
+}
+
+.duration {
+  background-image: url("../assets/icons/stopwatch.svg");
+}
+
+div.legend {
+  color: #000;
+  background-color: var(--blue-light);
+  font-family: 'Montserrat', sans-serif;
+  padding: var(--spacing-s);
+  margin-bottom: var(--spacing-s);
+}
+
+div.activeLegend {
+  font-family: 'Montserrat', sans-serif;
+  padding: var(--spacing-s);
+  margin-bottom: var(--spacing-s);
+  background-color: var(--red);
+  color: var(--creme);
+}
+
+.paceActive > .pace {
+  background-color: var(--blue) !important;
+}
+
+.durationActive > .duration {
+  background-color: var(--blue) !important;
+}
+
+.distanceActive > .distance {
+  background-color: var(--blue) !important;
+}

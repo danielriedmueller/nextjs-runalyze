@@ -1,0 +1,26 @@
+.chart {
+  padding: 5px;
+  user-select: none;
+  background-color: #fff;
+}
+
+.chart .linechart_path {
+  stroke-width: 1;
+  fill: none;
+  stroke: var(--red);
+}
+
+.chart .linechart_path {
+  stroke-width: 1;
+  fill: none;
+  stroke: var(--red);
+}
+
+.chart line {
+  stroke: var(--blue-dark);
+}
+
+.chart text {
+  font-size: 10px;
+  stroke: #fff;
+}
