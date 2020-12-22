@@ -15,7 +15,7 @@ dayjs.locale('de');
 import style from '../style/home.module.scss';
 import Header from "../components/Header";
 import {Component} from "react";
-import {filterRuns, isValidRun, jsonToRuns} from "../helper/functions";
+import {filterRuns, isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
 import LineChart from "../components/graphs/LineChart";
 import BestRuns from "../components/runs/BestRuns";
@@ -30,8 +30,8 @@ class Home extends Component {
     constructor(props) {
         super(props);
 
-        const runs = jsonToRuns(props.json);
-        const currentRun = runs[0];
+        const runs = jsonToRuns(props.runs);
+        const currentRun = jsonToRun(props.currentRun);
 
         this.state = {
             runs: runs.reverse(),
@@ -137,7 +137,7 @@ class Home extends Component {
 
     render() {
         const filteredRuns = filterRuns(this.state.runs, this.state.runFilter);
-        
+
         return <div id="app">
             <Header />
             <Subheader
@@ -183,10 +183,18 @@ class Home extends Component {
 }
 
 export async function getStaticProps(ctx) {
-    const json = await prisma.runs.findMany();
+    const runs = await prisma.runs.findMany();
+    const currentRun = await prisma.runs.findFirst({
+        orderBy: {
+            Date: 'desc'
+        }
+    });
 
     return {
-        props: {json: json}
+        props: {
+            runs: runs,
+            currentRun: currentRun
+        }
     };
 }
 
