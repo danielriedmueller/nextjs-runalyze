@@ -24,17 +24,16 @@ import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
 import { PrismaClient } from "@prisma/client"
 
-const prisma = new PrismaClient();
-
 class Home extends Component {
     constructor(props) {
         super(props);
 
         const runs = jsonToRuns(props.runs);
-        const currentRun = jsonToRun(props.currentRun);
+        const currentRun = runs[0];
 
         this.state = {
-            runs: runs.reverse(),
+            runs: runs,
+            yearRuns: jsonToRuns(props.yearRuns),
             newRun: {
                 distance: null,
                 duration: null
@@ -48,26 +47,57 @@ class Home extends Component {
             }
         };
 
-        this.deleteRun = this.deleteRun.bind(this);
         this.onChange = this.onChange.bind(this);
-        this.insertRun = this.insertRun.bind(this);
+        this.onDelete = this.onDelete.bind(this);
         this.changeCurrentRun = this.changeCurrentRun.bind(this);
         this.changeRunFilter = this.changeRunFilter.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
     }
 
-    onChange(event) {
-        let newRun = {};
-        if (event.target.name === "distanceInput") {
-            newRun.distance = event.target.value;
-            newRun.duration = this.state.newRun.duration;
-        }
-        if (event.target.name === "durationInput") {
-            newRun.duration = event.target.value;
-            newRun.distance = this.state.newRun.distance;
-        }
+    async fetchAll() {
+        const res = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
+        const runs = await res.json();
+        return jsonToRuns(runs);
+    }
 
-        this.setState({newRun: newRun});
+    async onChange(run) {
+        try {
+            const res = await fetch(process.env.NEXT_PUBLIC_API_UPDATE_RUN, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(run),
+            })
+
+            const jsonRun = await res.json();
+            const runs = await this.fetchAll();
+
+            this.setState({
+                runs: runs,
+                currentRun: jsonToRun(jsonRun)
+            });
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async onDelete(id) {
+        try {
+            await fetch(process.env.NEXT_PUBLIC_API_DELETE_RUN, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(id),
+            })
+
+            const runs = await this.fetchAll();
+            const currentRun = runs[0];
+
+            this.setState({
+                currentRun: currentRun,
+                runs: runs
+            });
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     changeCurrentRun(run, graphMode) {
@@ -107,34 +137,6 @@ class Home extends Component {
         });
     }
 
-    async insertRun(newRun) {
-        if (!isValidRun(newRun)) return;
-
-        let formData = new FormData();
-        formData.append('date', dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'));
-        formData.append('distance', String(newRun.distance));
-        formData.append('duration', newRun.duration);
-
-        await fetch(process.env.PREACT_APP_API_INSERT_RUN, {
-            method: "post",
-            body: formData
-        })
-
-        //await this.fetchRuns();
-    }
-
-    async deleteRun(date) {
-        let formData = new FormData();
-        formData.append('date', date.format(process.env.PREACT_APP_DB_DATE_FORMAT));
-
-        await fetch(process.env.PREACT_APP_API_DELETE_RUN, {
-            method: "post",
-            body: formData
-        })
-
-        //await this.fetchRuns();
-    }
-
     render() {
         const filteredRuns = filterRuns(this.state.runs, this.state.runFilter);
 
@@ -144,7 +146,7 @@ class Home extends Component {
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
                 onChange={this.onChange}
-                onInsert={this.insertRun}
+                onDeleteRun={this.onDelete}
                 changeCurrentRun={this.changeCurrentRun}
                 graphMode={this.state.graphMode}
             />
@@ -162,13 +164,8 @@ class Home extends Component {
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
-                <WeekRuns
-                    runs={filterRuns(this.state.runs, {year: this.state.runFilter.year, month: this.state.runFilter.month})}
-                    changeRunFilter={this.changeRunFilter}
-                    runFilter={this.state.runFilter}
-                />
                 <MonthRuns
-                    runs={filterRuns(this.state.runs, {year: this.state.runFilter.year})}
+                    runs={this.state.yearRuns}
                     changeRunFilter={this.changeRunFilter}
                     runFilter={this.state.runFilter}
                 />
@@ -183,17 +180,35 @@ class Home extends Component {
 }
 
 export async function getStaticProps(ctx) {
-    const runs = await prisma.runs.findMany();
-    const currentRun = await prisma.runs.findFirst({
-        orderBy: {
-            Date: 'desc'
-        }
+    const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
+    const runs = await jsonRuns.json();
+    const currentYear = dayjs(runs[0].date);
+
+    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            startOfYear: currentYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            endOfYear: currentYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
     });
+    const yearRuns = await jsonYearRuns.json();
+
+    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            startOfYear: currentYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            endOfYear: currentYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
+    });
+    const month = await jsonMonthRuns.json();
 
     return {
         props: {
             runs: runs,
-            currentRun: currentRun
+            yearRuns: yearRuns,
+            monthRuns: monthRuns
         }
     };
 }

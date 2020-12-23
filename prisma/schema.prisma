@@ -8,8 +8,8 @@ datasource db {
 }
 
 model runs {
-  Date     String @unique
-  Distance String
-  Duration String
-  ID       Int    @id @default(autoincrement())
+  date     String @unique
+  distance String
+  duration String
+  id       Int    @id @default(autoincrement())
 }

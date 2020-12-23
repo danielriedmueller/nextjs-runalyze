@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {findFastestRun, findFurthestRun, findLongestRun, findPerformanceRun} from "../../helper/functions";
 import style from '../../style/runs.module.scss';
-import SingleRun from "../SingleRun";
+import {SingleRun} from "../SingleRun";
 
 export default class BestRuns extends Component {
     getIsActiveClass(run) {

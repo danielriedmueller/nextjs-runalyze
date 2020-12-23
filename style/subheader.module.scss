@@ -1,6 +1,62 @@
 .subheader {
   display: flex;
   justify-content: space-between;
-  background-color: var(--blue-dark);
   padding: var(--spacing-s);
+  position: relative;
+  background-color: var(--blue-dark);
+
+  > div:first-child {
+    flex: 0 0 66.6%;
+  }
+
+  .buttonContainer {
+    flex: 0 0 33.3%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: space-around;
+
+    button {
+      height: var(--icon-size-big);
+      width: var(--icon-size-big);
+      padding: 0;
+      border: none;
+    }
+
+    button.deleteButton {
+      background: transparent url("../assets/icons/delete.svg") no-repeat center center;
+      background-size: var(--icon-size-big);
+    }
+
+    button.confirmButton {
+      background: transparent url("../assets/icons/check.svg") no-repeat center center;
+      background-size: var(--icon-size-big);
+    }
+
+    button.insertButton {
+      background: transparent url("../assets/icons/heart-plus.svg") no-repeat center center;
+      background-size: var(--icon-size-big);
+    }
+
+    button.cancelButton {
+      background: transparent url("../assets/icons/cross.svg") no-repeat center center;
+      background-size: var(--icon-size-big);
+    }
+  }
+}
+
+.edit-mode {
+  background: linear-gradient(to right, var(--green) 2px, transparent 2px) 0 0,
+  linear-gradient(to right, var(--green) 2px, transparent 2px) 0 100%,
+  linear-gradient(to left, var(--green) 2px, transparent 2px) 100% 0,
+  linear-gradient(to left, var(--green) 2px, transparent 2px) 100% 100%,
+  linear-gradient(to bottom, var(--green) 2px, transparent 2px) 0 0,
+  linear-gradient(to bottom, var(--green) 2px, transparent 2px) 100% 0,
+  linear-gradient(to top, var(--green) 2px, transparent 2px) 0 100%,
+  linear-gradient(to top, var(--green) 2px, transparent 2px) 100% 100%;
+
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-color: var(--blue-dark);
 }

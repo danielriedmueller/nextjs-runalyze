@@ -9,6 +9,19 @@
   text-align: left;
   margin-bottom: var(--spacing-s);
   color: var(--creme);
+
+  input {
+    font-size: var(--font-size-body);
+    border: none;
+    background-color: transparent;
+    color: var(--creme);
+    font-family: 'Courier Prime', monospace;
+    padding: 0;
+  }
+}
+
+.date input {
+  font-size: smaller;
 }
 
 .count {

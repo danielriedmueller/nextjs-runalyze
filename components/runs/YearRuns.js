@@ -1,5 +1,5 @@
 import React from "react";
-import {combineRuns, getRunsInTimeRange} from "../../helper/functions";
+import {combineRuns, getRunsBetween, getRunsInTimeRange} from "../../helper/functions";
 import MultipleRuns from "../MultipleRuns";
 import DateRuns from "./DateRuns";
 import dayjs from "dayjs";
@@ -9,16 +9,20 @@ export default class YearRuns extends DateRuns {
         if (this.props.runs.length === 0) return [];
 
         let years = [];
-        const firstYear = this.props.runs[0].date.year();
-        const currentYear = dayjs().year();
-        
-        for (let i = currentYear; i > firstYear - 1; i--) {
+
+        const latestYear = this.props.runs[0].date.year();
+        const firstYear = this.props.runs[this.props.runs.length - 1].date.year();
+        for (let i = latestYear; i > firstYear - 1; i--) {
+            const currentYear = dayjs('01-01-' + i);
             years.push(<div
                 key={'yearRun-' + i}
                 onClick={() => this.props.changeRunFilter({year: i})}
             ><MultipleRuns
                 label={i}
-                run={combineRuns(getRunsInTimeRange(this.props.runs, 'year', currentYear, i))}
+                run={combineRuns(getRunsBetween(this.props.runs, [
+                    currentYear.startOf('year'),
+                    currentYear.endOf('year'),
+                ]))}
                 isActive={i === this.props.runFilter.year}
             /></div>)
         }
