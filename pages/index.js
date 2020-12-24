@@ -33,6 +33,7 @@ class Home extends Component {
 
         this.state = {
             runs: runs,
+            filteredRuns: runs,
             newRun: {
                 distance: null,
                 duration: null
@@ -118,8 +119,12 @@ class Home extends Component {
         if (this.state.filter.year === year) {
             this.setState({
                 yearRuns: null,
+                monthRuns: null,
+                filteredRuns: this.state.runs,
                 filter: {
-                    year: null
+                    year: null,
+                    month: null,
+                    week: null
                 }
             });
         } else {
@@ -134,12 +139,15 @@ class Home extends Component {
             });
             const yearRuns = await jsonYearRuns.json();
 
-            const filterState = this.state.filter
-            filterState.year = year;
-
+            const runs = jsonToRuns(yearRuns);
             this.setState({
-                yearRuns: jsonToRuns(yearRuns),
-                filter: filterState
+                yearRuns: runs,
+                filteredRuns: runs,
+                filter: {
+                    year: year,
+                    month: null,
+                    week: null
+                }
             });
         }
     }
@@ -148,8 +156,10 @@ class Home extends Component {
         if (this.state.filter.month === month) {
             this.setState({
                 monthRuns: null,
+                filteredRuns: this.state.yearRuns,
                 filter: {
-                    month: null
+                    month: null,
+                    week: null
                 }
             });
         } else {
@@ -164,12 +174,16 @@ class Home extends Component {
             });
             const monthRuns = await jsonMonthRuns.json();
 
-            const filterState = this.state.filter
-            filterState.month = month;
+            const runs = jsonToRuns(monthRuns);
 
             this.setState({
-                monthRuns: jsonToRuns(monthRuns),
-                filter: filterState
+                monthRuns: runs,
+                filteredRuns: runs,
+                filter: {
+                    year: this.state.filter.year,
+                    month: month,
+                    week: null
+                }
             });
         }
     }
@@ -185,8 +199,6 @@ class Home extends Component {
     }
 
     render() {
-        const filteredRuns = filterRuns(this.state.runs, this.state.filter);
-
         return <div id="app">
             <Header />
             <Subheader
@@ -199,14 +211,14 @@ class Home extends Component {
             />
             <div className={style.home}>
                 <LineChart
-                    runs={filteredRuns}
+                    runs={this.state.filteredRuns}
                     changeCurrentRun={this.changeCurrentRun}
                     changeGraphMode={this.changeGraphMode}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
                 <BestRuns
-                    runs={filteredRuns}
+                    runs={this.state.filteredRuns}
                     changeCurrentRun={this.changeCurrentRun}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
