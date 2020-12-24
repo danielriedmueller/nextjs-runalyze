@@ -5,24 +5,23 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import isoWeeksInYear from "dayjs/plugin/isoWeeksInYear";
 import isLeapYear from "dayjs/plugin/isLeapYear";
-dayjs.extend(duration);
-dayjs.extend(customParseFormat);
-dayjs.extend(weekOfYear);
-dayjs.extend(isoWeeksInYear);
-dayjs.extend(isLeapYear);
-dayjs.locale('de');
-
 import style from '../style/home.module.scss';
 import Header from "../components/Header";
 import {Component} from "react";
-import {filterRuns, isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
+import {jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
 import LineChart from "../components/graphs/LineChart";
 import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
-import { PrismaClient } from "@prisma/client"
+
+dayjs.extend(duration);
+dayjs.extend(customParseFormat);
+dayjs.extend(weekOfYear);
+dayjs.extend(isoWeeksInYear);
+dayjs.extend(isLeapYear);
+dayjs.locale('de');
 
 class Home extends Component {
     constructor(props) {
@@ -64,7 +63,7 @@ class Home extends Component {
 
     async onChange(run) {
         try {
-            const res = await fetch(process.env.NEXT_PUBLIC_API_UPDATE_RUN, {
+            const res = await fetch(process.env.NEXT_PUBLIC_API_UPSERT_RUN, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(run),
@@ -87,7 +86,7 @@ class Home extends Component {
             await fetch(process.env.NEXT_PUBLIC_API_DELETE_RUN, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(id),
+                body: JSON.stringify({id}),
             })
 
             const runs = await this.fetchAll();
@@ -129,12 +128,12 @@ class Home extends Component {
             });
         } else {
             const filterYear = dayjs('01-01-' + year);
-            const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
+            const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    startOfYear: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    endOfYear: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                    start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
                 }),
             });
             const yearRuns = await jsonYearRuns.json();
@@ -164,12 +163,12 @@ class Home extends Component {
             });
         } else {
             const filterMonth = dayjs(month + '-01-' + this.state.filter.year);
-            const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_MONTH_RUNS, {
+            const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    startOfMonth: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    endOfMonth: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                    start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
                 }),
             });
             const monthRuns = await jsonMonthRuns.json();
