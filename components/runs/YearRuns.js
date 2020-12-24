@@ -16,7 +16,7 @@ export default class YearRuns extends DateRuns {
             const currentYear = dayjs('01-01-' + i);
             years.push(<div
                 key={'yearRun-' + i}
-                onClick={() => this.props.changeRunFilter({year: i})}
+                onClick={() => this.props.changeFilter(i)}
             ><MultipleRuns
                 label={i}
                 run={combineRuns(getRunsBetween(this.props.runs, [

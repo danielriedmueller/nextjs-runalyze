@@ -33,15 +33,14 @@ class Home extends Component {
 
         this.state = {
             runs: runs,
-            yearRuns: jsonToRuns(props.yearRuns),
             newRun: {
                 distance: null,
                 duration: null
             },
             currentRun: currentRun,
             graphMode: 'pace',
-            runFilter: {
-                year: dayjs().year(),
+            filter: {
+                year: null,
                 month: null,
                 week: null
             }
@@ -50,7 +49,9 @@ class Home extends Component {
         this.onChange = this.onChange.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.changeCurrentRun = this.changeCurrentRun.bind(this);
-        this.changeRunFilter = this.changeRunFilter.bind(this);
+        this.changeYearFilter = this.changeYearFilter.bind(this);
+        this.changeMonthFilter = this.changeMonthFilter.bind(this);
+        this.setFilteredRuns = this.setFilteredRuns.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
     }
 
@@ -113,32 +114,78 @@ class Home extends Component {
         });
     }
 
-    changeRunFilter(filter) {
-        const {year, month, week} = this.state.runFilter;
+    async changeYearFilter(year) {
+        if (this.state.filter.year === year) {
+            this.setState({
+                yearRuns: null,
+                filter: {
+                    year: null
+                }
+            });
+        } else {
+            const filterYear = dayjs('01-01-' + year);
+            const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    startOfYear: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    endOfYear: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                }),
+            });
+            const yearRuns = await jsonYearRuns.json();
 
-        /*
-        if (year !== filter.year) {
-            filter.month = null;
-            filter.week = null;
+            const filterState = this.state.filter
+            filterState.year = year;
+
+            this.setState({
+                yearRuns: jsonToRuns(yearRuns),
+                filter: filterState
+            });
         }
+    }
 
-        if (month !== filter.month) {
-            filter.week = null;
+    async changeMonthFilter(month) {
+        if (this.state.filter.month === month) {
+            this.setState({
+                monthRuns: null,
+                filter: {
+                    month: null
+                }
+            });
+        } else {
+            const filterMonth = dayjs(month + '-01-' + this.state.filter.year);
+            const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_MONTH_RUNS, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    startOfMonth: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    endOfMonth: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                }),
+            });
+            const monthRuns = await jsonMonthRuns.json();
+
+            const filterState = this.state.filter
+            filterState.month = month;
+
+            this.setState({
+                monthRuns: jsonToRuns(monthRuns),
+                filter: filterState
+            });
         }
+    }
 
-         */
+    async setFilteredRuns(runs, week) {
+        const filterState = this.state.filter
+        filterState.week = week;
 
         this.setState({
-            runFilter: {
-                year: filter.year === year ? dayjs().year() : filter.year || year,
-                month: filter.month === month ? null : filter.month || month,
-                week: filter.week === week ? null : filter.week || week
-            }
+            filteredRuns: runs,
+            filter: filterState
         });
     }
 
     render() {
-        const filteredRuns = filterRuns(this.state.runs, this.state.runFilter);
+        const filteredRuns = filterRuns(this.state.runs, this.state.filter);
 
         return <div id="app">
             <Header />
@@ -164,15 +211,20 @@ class Home extends Component {
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
-                <MonthRuns
+                {this.state.monthRuns ? <WeekRuns
+                    runs={this.state.monthRuns}
+                    setFilteredRuns={this.setFilteredRuns}
+                    runFilter={this.state.filter}
+                />: null}
+                {this.state.yearRuns ? <MonthRuns
                     runs={this.state.yearRuns}
-                    changeRunFilter={this.changeRunFilter}
-                    runFilter={this.state.runFilter}
-                />
+                    changeFilter={this.changeMonthFilter}
+                    runFilter={this.state.filter}
+                />: null}
                 <YearRuns
                     runs={this.state.runs}
-                    changeRunFilter={this.changeRunFilter}
-                    runFilter={this.state.runFilter}
+                    changeFilter={this.changeYearFilter}
+                    runFilter={this.state.filter}
                 />
             </div>
         </div>
@@ -182,33 +234,10 @@ class Home extends Component {
 export async function getStaticProps(ctx) {
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const runs = await jsonRuns.json();
-    const currentYear = dayjs(runs[0].date);
-
-    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            startOfYear: currentYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            endOfYear: currentYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const yearRuns = await jsonYearRuns.json();
-
-    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_YEAR_RUNS, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            startOfYear: currentYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            endOfYear: currentYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const month = await jsonMonthRuns.json();
 
     return {
         props: {
-            runs: runs,
-            yearRuns: yearRuns,
-            monthRuns: monthRuns
+            runs: runs
         }
     };
 }

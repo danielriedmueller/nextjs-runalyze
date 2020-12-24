@@ -1,5 +1,5 @@
 import React from "react";
-import {combineRuns, getRunsInTimeRange} from "../../helper/functions";
+import {combineRuns} from "../../helper/functions";
 import MultipleRuns from "../MultipleRuns";
 import DateRuns from "./DateRuns";
 
@@ -7,30 +7,29 @@ export default class WeekRuns extends DateRuns {
     getRuns() {
         if (this.props.runs.length === 0) return [];
 
-        let weeks = [];
+        const weeks = this.props.runs.reduce((acc, curr) => {
+            const week = curr.date.week();
+            if (!acc[week]) {
+                acc[week] = []
+            }
+            acc[week].push(curr);
+            return acc;
+        },{});
 
-        const newestRunDate = this.props.runs[this.props.runs.length - 1].date;
+        const multipleRuns = [];
+        Object.entries(weeks).forEach(week => {
+            multipleRuns.push(
+                <div
+                    key={'weekRun-' + week[0]}
+                    onClick={() => this.props.setFilteredRuns(week[1], week[0])}>
+                    <MultipleRuns
+                        label={"KW" + week[0]}
+                        run={combineRuns(week[1])}
+                        isActive={week[0] === this.props.runFilter.week}
+                    /></div>
+            )
+        })
 
-        const year = newestRunDate.year();
-
-        let end = newestRunDate.week();
-        const start = this.props.runs[0].date.week();
-
-        if (end === 1 && start !== 1) {
-            end = newestRunDate.isoWeeksInYear();
-        }
-
-        for (let i = end; i > start - 1; i--) {
-            weeks.push(<div
-                key={'weekRun-' + i}
-                onClick={() => this.props.changeRunFilter({week: i})}>
-                <MultipleRuns
-                    label={"KW " + i}
-                    run={combineRuns(getRunsInTimeRange(this.props.runs, 'week', year, i))}
-                    isActive={i === this.props.runFilter.week}
-                /></div>)
-        }
-
-        return weeks;
+        return multipleRuns.reverse();
     }
 }

@@ -1,7 +1,6 @@
-import React, {Component} from "react";
+import React from "react";
 import style from '../style/singlerun.module.scss';
 import {calcPace, durationToString} from "../helper/functions";
-import { useLongPress } from 'use-long-press';
 
 export function SingleRun(props) {
     if (!props.run) {
@@ -14,11 +13,7 @@ export function SingleRun(props) {
         </div>;
     }
 
-    const bind = useLongPress(() => {
-        props.activateEditMode();
-    });
-
-    return <div {...bind} className={props.activeClass ? style[props.activeClass] : ""}>
+    return <div className={props.activeClass ? style[props.activeClass] : ""}>
         {props.label ? <div className={style.legend}>{props.label}</div> : null}
         <div className={style.date} onClick={() => props.changeCurrentRun(props.run)}>
             {props.run.date.format('dddd')}<br/><small>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small>
