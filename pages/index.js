@@ -242,7 +242,7 @@ class Home extends Component {
     }
 }
 
-export async function getStaticProps(ctx) {
+export async function getServerSideProps(ctx) {
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const runs = await jsonRuns.json();
 
