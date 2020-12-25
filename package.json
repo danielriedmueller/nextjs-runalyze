@@ -8,19 +8,22 @@
     "start": "next start"
   },
   "dependencies": {
-    "cors": "2.8.5",
     "better-sqlite3": "^7.1.2",
+    "cors": "2.8.5",
     "dateformat": "^3.0.3",
     "dayjs": "^1.9.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fitness-js": "^0.2.2",
     "next": "^10.0.0",
+    "next-pwa": "^5.0.1",
     "react": "16.13.1",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "16.13.1",
     "sass": "^1.30.0",
     "use-long-press": "^1.0.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "copy-webpack-plugin": "^6.2.1"
+  }
 }
