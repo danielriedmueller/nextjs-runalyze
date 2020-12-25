@@ -12,7 +12,7 @@ export default class Subheader extends Component {
         this.state = {
             editMode: false,
             insertMode: false,
-            editRun: runToEditRun(props.currentRun),
+            editRun: props.currentRun ? runToEditRun(props.currentRun): null,
             newRun: runToEditRun({
                 date: dayjs(),
                 distance: 0,

@@ -6,7 +6,7 @@ import { useLongPress } from 'use-long-press';
 export function SingleRun(props) {
     if (!props.run) {
         return <div>
-            <div className={style.legend}>{props.label}</div>
+            {props.label ? <div className={style.legend}>{props.label}</div> : null}
             <div className={style.date}>-</div>
             <div className={style.pace}>-</div>
             <div className={style.distance}>-</div>
