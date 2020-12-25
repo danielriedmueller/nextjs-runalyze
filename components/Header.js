@@ -13,7 +13,7 @@ export default class Header extends Component {
                 <meta name="mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="theme-color" content="#e63946" />
-                <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 <title>Next.js PWA Example</title>
                 <link rel='manifest' href='/manifest.json' />
             </Head>
