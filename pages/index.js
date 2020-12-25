@@ -31,6 +31,7 @@ class Home extends Component {
         const currentRun = runs[0];
 
         this.state = {
+            user: 1,
             runs: runs,
             filteredRuns: runs,
             newRun: {
@@ -56,12 +57,17 @@ class Home extends Component {
     }
 
     async fetchAll() {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
+        const res = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({userId: this.state.user}),
+        });
         const runs = await res.json();
         return jsonToRuns(runs);
     }
 
     async onChange(run) {
+        run.userId = this.state.user;
         try {
             const res = await fetch(process.env.NEXT_PUBLIC_API_UPSERT_RUN, {
                 method: 'POST',
@@ -133,7 +139,8 @@ class Home extends Component {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                    end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    userId: this.state.user
                 }),
             });
             const yearRuns = await jsonYearRuns.json();
@@ -168,7 +175,8 @@ class Home extends Component {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                    end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    userId: this.state.user
                 }),
             });
             const monthRuns = await jsonMonthRuns.json();
@@ -243,12 +251,18 @@ class Home extends Component {
 }
 
 export async function getServerSideProps(ctx) {
-    const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
+    const userId = 2;
+    const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({userId}),
+    });
     const runs = await jsonRuns.json();
 
     return {
         props: {
-            runs: runs
+            runs: runs,
+            user: userId
         }
     };
 }

@@ -15,6 +15,6 @@ export default async function handle(req, res) {
     // Run cors
     await cors(req, res);
 
-    const rows = db.prepare('SELECT * FROM runs ORDER BY date desc').all();
+    const rows = db.prepare('SELECT * FROM runs WHERE user = ? ORDER BY date desc').all(req.body.userId);
     res.json(rows);
 }

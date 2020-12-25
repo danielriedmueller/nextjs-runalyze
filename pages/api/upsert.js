@@ -16,13 +16,14 @@ export default async function handle(req, res) {
     // Run cors
     await cors(req, res);
 
-    let {date, distance, duration, id} = req.body;
+    let {date, distance, duration, id, userId} = req.body;
 
     if (id === 0) {
-        const info = db.prepare('INSERT INTO runs(date, distance, duration) VALUES(?, ?, ?)').run(
+        const info = db.prepare('INSERT INTO runs(date, distance, duration, user) VALUES(?, ?, ?, ?)').run(
             date,
             distance,
-            duration
+            duration,
+            userId
         );
 
         id = info.lastInsertRowid

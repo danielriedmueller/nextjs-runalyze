@@ -16,11 +16,12 @@ export default async function handle(req, res) {
     // Run cors
     await cors(req, res);
 
-    const {start, end} = req.body;
+    const {start, end, userId} = req.body;
 
-    const rows = db.prepare('SELECT * FROM runs WHERE date >= ? AND date <= ? ORDER BY date desc').all(
+    const rows = db.prepare('SELECT * FROM runs WHERE date >= ? AND date <= ? AND user = ? ORDER BY date desc').all(
         start,
-        end
+        end,
+        userId
     );
 
     res.json(rows);
