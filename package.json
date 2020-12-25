@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "cors": "2.8.5",
     "better-sqlite3": "^7.1.2",
     "dateformat": "^3.0.3",
     "dayjs": "^1.9.5",
