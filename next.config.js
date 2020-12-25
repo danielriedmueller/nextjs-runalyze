@@ -11,8 +11,9 @@ module.exports = withPWA({
             new CopyWebpackPlugin(
                 {
                     patterns: [
-                        { from: path.join(__dirname, 'assets/icons'), to: path.join(__dirname, 'public/icons') },
-                        { from: path.join(__dirname, 'manifest.json'), to: path.join(__dirname, 'public/manifest.json') }
+                        { from: path.join(__dirname, 'assets/pwa'), to: path.join(__dirname, 'public/icons') },
+                        { from: path.join(__dirname, 'assets/manifest.json'), to: path.join(__dirname, 'public/manifest.json') },
+                        { from: path.join(__dirname, 'assets/favicon.ico'), to: path.join(__dirname, 'public/favicon.ico') }
                     ]
                 }
             )
