@@ -28,16 +28,20 @@ class Home extends Component {
         super(props);
 
         const runs = jsonToRuns(props.runs);
+        const yearRuns = jsonToRuns(props.yearRuns);
+        const monthRuns = jsonToRuns(props.monthRuns);
         const currentRun = runs[0];
 
         this.state = {
-            runs: runs,
+            runs,
+            yearRuns,
+            monthRuns,
             filteredRuns: runs,
             newRun: {
                 distance: null,
                 duration: null
             },
-            currentRun: currentRun,
+            currentRun,
             graphMode: 'pace',
             filter: {
                 year: null,
@@ -246,9 +250,35 @@ export async function getServerSideProps(ctx) {
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const runs = await jsonRuns.json();
 
+    const lastRun = runs[0].date;
+    const filterYear = dayjs(lastRun);
+    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
+    });
+    const yearRuns = await jsonYearRuns.json();
+
+    const lastYearRun = yearRuns[0].date;
+    const filterMonth = dayjs(lastYearRun);
+    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            start: filterMonth.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
+    });
+    const monthRuns = await jsonMonthRuns.json();
+
     return {
         props: {
-            runs: runs
+            runs: runs,
+            yearRuns: yearRuns,
+            monthRuns: monthRuns
         }
     };
 }
