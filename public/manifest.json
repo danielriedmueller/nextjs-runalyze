@@ -1,0 +1,21 @@
+{
+  "name": "Runalyze",
+  "short_name": "Runalyze",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#e63946",
+  "theme_color": "#e63946",
+  "icons": [
+    {
+      "src": "icons/android-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/android-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
