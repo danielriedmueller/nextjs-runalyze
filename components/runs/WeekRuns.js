@@ -18,14 +18,18 @@ export default class WeekRuns extends DateRuns {
 
         const multipleRuns = [];
         Object.entries(weeks).forEach(week => {
+            const index = week[0];
+            const runs = week[1];
+            const startOf = runs[0].date.startOf('week').format('DD.MM - ');
+            const endOf = runs[0].date.endOf('week').format('DD.MM');
             multipleRuns.push(
                 <div
-                    key={'weekRun-' + week[0]}
-                    onClick={() => this.props.setFilteredRuns(week[1], week[0])}>
+                    key={'weekRun-' + index}
+                    onClick={() => this.props.setFilteredRuns(runs, index)}>
                     <MultipleRuns
-                        label={"KW" + week[0]}
-                        run={combineRuns(week[1])}
-                        isActive={week[0] === this.props.runFilter.week}
+                        label={"Woche vom " + startOf + endOf}
+                        run={combineRuns(runs)}
+                        isActive={index === this.props.runFilter.week}
                     /></div>
             )
         })

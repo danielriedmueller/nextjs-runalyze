@@ -8,7 +8,7 @@ import isLeapYear from "dayjs/plugin/isLeapYear";
 import style from '../style/home.module.scss';
 import Header from "../components/Header";
 import {Component} from "react";
-import {jsonToRun, jsonToRuns} from "../helper/functions";
+import {isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
 import LineChart from "../components/graphs/LineChart";
 import BestRuns from "../components/runs/BestRuns";
@@ -66,22 +66,24 @@ class Home extends Component {
     }
 
     async onChange(run) {
-        try {
-            const res = await fetch(process.env.NEXT_PUBLIC_API_UPSERT_RUN, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(run),
-            })
+        if (isValidRun(run)) {
+            try {
+                const res = await fetch(process.env.NEXT_PUBLIC_API_UPSERT_RUN, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(run),
+                })
 
-            const jsonRun = await res.json();
-            const runs = await this.fetchAll();
+                const jsonRun = await res.json();
+                const runs = await this.fetchAll();
 
-            this.setState({
-                runs: runs,
-                currentRun: jsonToRun(jsonRun)
-            });
-        } catch (error) {
-            console.error(error)
+                this.setState({
+                    runs: runs,
+                    currentRun: jsonToRun(jsonRun)
+                });
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 
@@ -213,16 +215,16 @@ class Home extends Component {
                 graphMode={this.state.graphMode}
             />
             <div className={style.home}>
+                <BestRuns
+                    runs={this.state.filteredRuns}
+                    changeCurrentRun={this.changeCurrentRun}
+                    currentRun={this.state.currentRun}
+                    graphMode={this.state.graphMode}
+                />
                 <LineChart
                     runs={this.state.filteredRuns}
                     changeCurrentRun={this.changeCurrentRun}
                     changeGraphMode={this.changeGraphMode}
-                    currentRun={this.state.currentRun}
-                    graphMode={this.state.graphMode}
-                />
-                <BestRuns
-                    runs={this.state.filteredRuns}
-                    changeCurrentRun={this.changeCurrentRun}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />

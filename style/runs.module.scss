@@ -4,10 +4,21 @@
   display: flex;
   flex-direction: row;
 
+  /* one item */
+  > div:first-child:nth-last-child(1) {
+    flex: 0 0 100%;
+  }
+
+  /* two items */
+  > div:first-child:nth-last-child(2),
+  > div:first-child:nth-last-child(2) ~ div {
+    flex: 0 0 50%;
+  }
+
   > div {
     border-right: 1px solid var(--creme);
     z-index: 999;
     text-align: center;
-    flex: 0 0 33.33%;
+    flex: 0 0 33.3333%;
   }
 }

@@ -34,6 +34,20 @@ export const isValidRun = (newRun) => {
 
     if (!distance || !duration) return false;
 
+    if (parseFloat(distance) === 0) {
+        return false;
+    }
+
+    let hasPositiveValue = false;
+    duration.split(":").forEach(char => {
+        if (parseInt(char) !== 0) {
+            hasPositiveValue = true;
+        }
+    });
+    if (!hasPositiveValue) {
+        return false;
+    }
+
     for (i = 0, len = distance.length; i < len; i++) {
         code = distance.charCodeAt(i);
         if (!(code > 47 && code < 58) && code !== 46) {
@@ -100,7 +114,6 @@ export const getDateRange = (range, deviation = 0) => {
 
 export const getRunsInTimeRange = (runs, range, deviation = 0) => {
     const dateRange = getDateRange(range, deviation);
-    debugger
     return getRunsBetween(runs, dateRange);
 };
 

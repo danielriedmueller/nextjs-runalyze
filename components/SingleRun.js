@@ -21,7 +21,7 @@ export function SingleRun(props) {
     return <div {...bind} className={props.activeClass ? style[props.activeClass] : ""}>
         {props.label ? <div className={style.legend}>{props.label}</div> : null}
         <div className={style.date} onClick={() => props.changeCurrentRun(props.run)}>
-            {props.run.date.format('dddd')}<br/><small>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small>
+            <small>{props.run.date.format('dddd')}<br/>{props.run.date.format(process.env.NEXT_PUBLIC_DATE_FORMAT)}</small>
         </div>
         <div className={style.pace} onClick={() => props.changeCurrentRun(props.run, 'pace')}>
             {calcPace(props.run.distance, props.run.duration)}
