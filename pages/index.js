@@ -31,7 +31,7 @@ class Home extends Component {
         const currentRun = runs[0];
 
         this.state = {
-            user: 1,
+            user: props.user,
             runs: runs,
             filteredRuns: runs,
             newRun: {
@@ -251,7 +251,7 @@ class Home extends Component {
 }
 
 export async function getServerSideProps(ctx) {
-    const userId = 2;
+    const userId = 1;
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

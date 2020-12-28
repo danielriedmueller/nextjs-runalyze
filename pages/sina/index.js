@@ -7,7 +7,7 @@ class DanHome extends Home {
 }
 
 export async function getServerSideProps(ctx) {
-    const userId = 1;
+    const userId = 2;
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
