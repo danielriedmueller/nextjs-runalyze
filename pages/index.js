@@ -1,4 +1,4 @@
-require('dayjs/locale/de')
+import StackedAreaChart from "../components/graphs/StackedAreaChart";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -10,11 +10,12 @@ import Header from "../components/Header";
 import {Component} from "react";
 import {isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
-import LineChart from "../components/graphs/LineChart";
 import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
+
+require('dayjs/locale/de')
 
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
@@ -236,16 +237,16 @@ class Home extends Component {
                 graphMode={this.state.graphMode}
             />
             <div className={style.home}>
-                <BestRuns
-                    runs={this.getFilteredRuns()}
-                    changeCurrentRun={this.changeCurrentRun}
-                    currentRun={this.state.currentRun}
-                    graphMode={this.state.graphMode}
-                />
-                <LineChart
+                <StackedAreaChart
                     runs={this.getFilteredRuns()}
                     changeCurrentRun={this.changeCurrentRun}
                     changeGraphMode={this.changeGraphMode}
+                    currentRun={this.state.currentRun}
+                    graphMode={this.state.graphMode}
+                />
+                <BestRuns
+                    runs={this.getFilteredRuns()}
+                    changeCurrentRun={this.changeCurrentRun}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />

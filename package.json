@@ -20,6 +20,7 @@
     "react": "16.13.1",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "16.13.1",
+    "recharts": "^1.8.5",
     "sass": "^1.30.0",
     "use-long-press": "^1.0.4"
   },
