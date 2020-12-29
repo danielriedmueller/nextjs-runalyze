@@ -129,13 +129,6 @@ export const findLongestRun = (runs) => runs.reduce((prev, current) => (prev.dur
 
 export const findFurthestRun = (runs) => runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
 
-export const findPerformanceRun = (runs) => runs.reduce((prev, current) => {
-    const durationA = stringToDuration(calcPace(prev.distance, prev.duration));
-    const durationB = stringToDuration(calcPace(current.distance, current.duration));
-
-    return (durationA.asMilliseconds() / prev.distance) < (durationB.asMilliseconds() / current.distance) ? prev : current;
-});
-
 export const calcPace = (distance, duration) => {
     if (distance === 0 || duration.asMilliseconds === 0) {
         return "0:0";

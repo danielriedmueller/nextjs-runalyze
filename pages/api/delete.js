@@ -17,6 +17,7 @@ export default async function handle(req, res) {
     await cors(req, res);
 
     const {id} = req.body;
-    db.prepare('DELETE FROM runs WHERE id = ?').run(id);
+    const info = db.prepare('DELETE FROM runs WHERE id = ?').run(id);
+
     res.json({});
 }

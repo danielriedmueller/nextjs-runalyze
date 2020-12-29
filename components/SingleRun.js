@@ -14,9 +14,9 @@ export function SingleRun(props) {
         </div>;
     }
 
-    const bind = useLongPress(() => {
+    const bind = props.activateEditMode ? useLongPress(() => {
         props.activateEditMode();
-    });
+    }): null;
 
     return <div {...bind} className={props.activeClass ? style[props.activeClass] : ""}>
         {props.label ? <div className={style.legend}>{props.label}</div> : null}

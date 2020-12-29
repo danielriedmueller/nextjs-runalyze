@@ -28,15 +28,10 @@ class Home extends Component {
         super(props);
 
         const runs = jsonToRuns(props.runs);
-        const yearRuns = jsonToRuns(props.yearRuns);
-        const monthRuns = jsonToRuns(props.monthRuns);
         const currentRun = runs[0];
 
         this.state = {
             runs,
-            yearRuns,
-            monthRuns,
-            filteredRuns: runs,
             newRun: {
                 distance: null,
                 duration: null
@@ -44,6 +39,11 @@ class Home extends Component {
             currentRun,
             graphMode: 'pace',
             filter: {
+                year: null,
+                month: null,
+                week: null
+            },
+            filteredRuns: {
                 year: null,
                 month: null,
                 week: null
@@ -55,7 +55,8 @@ class Home extends Component {
         this.changeCurrentRun = this.changeCurrentRun.bind(this);
         this.changeYearFilter = this.changeYearFilter.bind(this);
         this.changeMonthFilter = this.changeMonthFilter.bind(this);
-        this.setFilteredRuns = this.setFilteredRuns.bind(this);
+        this.changeWeekFilter = this.changeWeekFilter.bind(this);
+        this.updateFilteredRuns = this.updateFilteredRuns.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
     }
 
@@ -121,86 +122,106 @@ class Home extends Component {
     }
 
     async changeYearFilter(year) {
-        if (this.state.filter.year === year) {
-            this.setState({
-                yearRuns: null,
-                monthRuns: null,
-                filteredRuns: this.state.runs,
-                filter: {
-                    year: null,
-                    month: null,
-                    week: null
-                }
-            });
-        } else {
-            const filterYear = dayjs('01-01-' + year);
-            const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-                }),
-            });
-            const yearRuns = await jsonYearRuns.json();
-
-            const runs = jsonToRuns(yearRuns);
-            this.setState({
-                yearRuns: runs,
-                filteredRuns: runs,
-                filter: {
-                    year: year,
-                    month: null,
-                    week: null
-                }
-            });
+        const filter = (this.state.filter.year === year) ? {
+            year: null,
+            month: null,
+            week: null
+        } : {
+            year: year,
+            month: null,
+            week: null
         }
+
+        await this.updateFilteredRuns(filter);
     }
 
     async changeMonthFilter(month) {
-        if (this.state.filter.month === month) {
-            this.setState({
-                monthRuns: null,
-                filteredRuns: this.state.yearRuns,
-                filter: {
-                    month: null,
-                    week: null
-                }
-            });
+        const filter = (this.state.filter.month === month) ? {
+            year: this.state.filter.year,
+            month: null,
+            week: null
+        } : {
+            year: this.state.filter.year,
+            month: month,
+            week: null
+        }
+
+        await this.updateFilteredRuns(filter);
+    }
+
+    async changeWeekFilter(week) {
+        let stateFilter = this.state.filter;
+        stateFilter.week === week ? stateFilter.week = null : stateFilter.week = week
+
+        await this.updateFilteredRuns(stateFilter);
+    }
+
+    async updateFilteredRuns(filter) {
+        const {year, month, week} = filter;
+
+        let startDate = null;
+        let endDate = null;
+
+        const filteredRuns = this.state.filteredRuns;
+        let dateRange = null;
+
+        if (week && month && year) {
+            dateRange = 'week';
+            const filterDate = dayjs(month + '-01-' + year).week(week);
+            startDate = filterDate.startOf(dateRange);
+            endDate = filterDate.endOf(dateRange);
+        } else if (month && year) {
+            dateRange = 'month';
+            const filterDate = dayjs(month + '-01-' + year);
+            startDate = filterDate.startOf(dateRange);
+            endDate = filterDate.endOf(dateRange);
+            filteredRuns.week = null;
+        } else if (year) {
+            dateRange = 'year';
+            const filterDate = dayjs('01-01-' + year);
+            startDate = filterDate.startOf(dateRange);
+            endDate = filterDate.endOf(dateRange);
+            filteredRuns.month = null;
+            filteredRuns.week = null;
         } else {
-            const filterMonth = dayjs(month + '-01-' + this.state.filter.year);
-            const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
+            filteredRuns.year = null
+            filteredRuns.month = null;
+            filteredRuns.week = null;
+        }
+
+        if (startDate && endDate) {
+            const dbResult = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-                    end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+                    start: startDate.format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+                    end: endDate.format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
                 }),
             });
-            const monthRuns = await jsonMonthRuns.json();
 
-            const runs = jsonToRuns(monthRuns);
-
-            this.setState({
-                monthRuns: runs,
-                filteredRuns: runs,
-                filter: {
-                    year: this.state.filter.year,
-                    month: month,
-                    week: null
-                }
-            });
+            const jsonRuns = await dbResult.json();
+            filteredRuns[dateRange] = jsonToRuns(jsonRuns);
         }
+
+        this.setState({filter, filteredRuns});
     }
 
-    async setFilteredRuns(runs, week) {
-        const filterState = this.state.filter
-        filterState.week = week;
+    getFilteredRuns() {
+        const {year, month, week} = this.state.filter;
 
-        this.setState({
-            filteredRuns: runs,
-            filter: filterState
-        });
+        if (week) {
+            return this.state.filteredRuns.week;
+        }
+
+        if (month) {
+            return this.state.filteredRuns.month;
+        }
+
+        if (year) {
+            return this.state.filteredRuns.year;
+        }
+
+        return this.state.runs;
     }
 
     render() {
@@ -216,25 +237,25 @@ class Home extends Component {
             />
             <div className={style.home}>
                 <BestRuns
-                    runs={this.state.filteredRuns}
+                    runs={this.getFilteredRuns()}
                     changeCurrentRun={this.changeCurrentRun}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
                 <LineChart
-                    runs={this.state.filteredRuns}
+                    runs={this.getFilteredRuns()}
                     changeCurrentRun={this.changeCurrentRun}
                     changeGraphMode={this.changeGraphMode}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
-                {this.state.monthRuns ? <WeekRuns
-                    runs={this.state.monthRuns}
-                    setFilteredRuns={this.setFilteredRuns}
+                {this.state.filteredRuns.month ? <WeekRuns
+                    runs={this.state.filteredRuns.month}
+                    changeFilter={this.changeWeekFilter}
                     runFilter={this.state.filter}
                 />: null}
-                {this.state.yearRuns ? <MonthRuns
-                    runs={this.state.yearRuns}
+                {this.state.filteredRuns.year ? <MonthRuns
+                    runs={this.state.filteredRuns.year}
                     changeFilter={this.changeMonthFilter}
                     runFilter={this.state.filter}
                 />: null}
@@ -252,35 +273,9 @@ export async function getServerSideProps(ctx) {
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const runs = await jsonRuns.json();
 
-    const lastRun = runs[0].date;
-    const filterYear = dayjs(lastRun);
-    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const yearRuns = await jsonYearRuns.json();
-
-    const lastYearRun = yearRuns[0].date;
-    const filterMonth = dayjs(lastYearRun);
-    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterMonth.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const monthRuns = await jsonMonthRuns.json();
-
     return {
         props: {
-            runs: runs,
-            yearRuns: yearRuns,
-            monthRuns: monthRuns
+            runs: runs
         }
     };
 }
