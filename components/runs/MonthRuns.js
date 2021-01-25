@@ -20,7 +20,7 @@ export default class MonthRuns extends DateRuns {
                 key={'monthRun-' + i}
                 onClick={() => this.props.changeFilter(i)}>
                 <MultipleRuns
-                    label={dayjs().add(i, 'month').format('MMMM')}
+                    label={dayjs().add(i - 1, 'month').format('MMMM')}
                     run={combineRuns(getRunsBetween(this.props.runs, [
                         currentMonth.startOf('month'),
                         currentMonth.endOf('month'),
