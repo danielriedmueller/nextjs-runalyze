@@ -224,9 +224,16 @@ class Home extends Component {
         return this.state.runs;
     }
 
+    async testApi() {
+        const dbResult = await fetch(process.env.NEXT_PUBLIC_API_FETCH_FITNESS_DATA, {
+            method: 'GET',
+        });
+    }
+
     render() {
         return <div id="app">
             <Header />
+            <button onClick={this.testApi}>Test G-API</button>
             <Subheader
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
