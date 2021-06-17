@@ -19,7 +19,10 @@ export default class Header extends Component {
                 <link href='/favicon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
                 <link rel='manifest' href='/manifest.json' />
             </Head>
-            <header className={style.header}><h1>Runalyze</h1></header>
+            <header className={style.header}>
+                <h1>Runalyze</h1>
+                <div>RunCount: {this.props.runCount}</div>
+            </header>
         </>
     }
 }

@@ -10,7 +10,6 @@ import Header from "../components/Header";
 import {Component} from "react";
 import {isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
-import LineChart from "../components/graphs/LineChart";
 import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
@@ -36,7 +35,7 @@ class Home extends Component {
             runs,
             yearRuns,
             monthRuns,
-            filteredRuns: runs,
+            filteredRuns: monthRuns,
             newRun: {
                 distance: null,
                 duration: null
@@ -44,8 +43,8 @@ class Home extends Component {
             currentRun,
             graphMode: 'pace',
             filter: {
-                year: null,
-                month: null,
+                year: yearRuns[0].date.format('YYYY'),
+                month: monthRuns[0].date.format('M'),
                 week: null
             }
         };
@@ -55,7 +54,7 @@ class Home extends Component {
         this.changeCurrentRun = this.changeCurrentRun.bind(this);
         this.changeYearFilter = this.changeYearFilter.bind(this);
         this.changeMonthFilter = this.changeMonthFilter.bind(this);
-        this.setFilteredRuns = this.setFilteredRuns.bind(this);
+        this.changeWeekFilter = this.changeWeekFilter.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
     }
 
@@ -147,6 +146,7 @@ class Home extends Component {
             const runs = jsonToRuns(yearRuns);
             this.setState({
                 yearRuns: runs,
+                monthRuns: null,
                 filteredRuns: runs,
                 filter: {
                     year: year,
@@ -160,11 +160,13 @@ class Home extends Component {
     async changeMonthFilter(month) {
         if (this.state.filter.month === month) {
             this.setState({
+                yearRuns: this.state.yearRuns,
                 monthRuns: null,
                 filteredRuns: this.state.yearRuns,
                 filter: {
                     month: null,
-                    week: null
+                    week: null,
+                    year: this.state.filter.year
                 }
             });
         } else {
@@ -182,6 +184,7 @@ class Home extends Component {
             const runs = jsonToRuns(monthRuns);
 
             this.setState({
+                yearRuns: this.state.yearRuns,
                 monthRuns: runs,
                 filteredRuns: runs,
                 filter: {
@@ -193,19 +196,28 @@ class Home extends Component {
         }
     }
 
-    async setFilteredRuns(runs, week) {
+    async changeWeekFilter(runs, week) {
         const filterState = this.state.filter
-        filterState.week = week;
-
-        this.setState({
-            filteredRuns: runs,
-            filter: filterState
-        });
+        if (this.state.filter.week === week) {
+            filterState.week = null
+            this.setState({
+                filteredRuns: this.state.monthRuns,
+                filter: filterState
+            });
+        } else {
+            filterState.week = week;
+            this.setState({
+                filteredRuns: runs,
+                filter: filterState
+            });
+        }
     }
 
     render() {
         return <div id="app">
-            <Header />
+            <Header
+                runCount={this.state.filteredRuns.length}
+            />
             <Subheader
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
@@ -221,23 +233,16 @@ class Home extends Component {
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />
-                <LineChart
-                    runs={this.state.filteredRuns}
-                    changeCurrentRun={this.changeCurrentRun}
-                    changeGraphMode={this.changeGraphMode}
-                    currentRun={this.state.currentRun}
-                    graphMode={this.state.graphMode}
-                />
                 {this.state.monthRuns ? <WeekRuns
                     runs={this.state.monthRuns}
-                    setFilteredRuns={this.setFilteredRuns}
+                    changeFilter={this.changeWeekFilter}
                     runFilter={this.state.filter}
-                />: null}
+                /> : null}
                 {this.state.yearRuns ? <MonthRuns
                     runs={this.state.yearRuns}
                     changeFilter={this.changeMonthFilter}
                     runFilter={this.state.filter}
-                />: null}
+                /> : null}
                 <YearRuns
                     runs={this.state.runs}
                     changeFilter={this.changeYearFilter}
@@ -270,7 +275,7 @@ export async function getServerSideProps(ctx) {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            start: filterMonth.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
             end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
         }),
     });

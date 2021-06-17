@@ -145,3 +145,18 @@ export const calcPace = (distance, duration) => {
         .withTime(new Timespan().addMilliseconds(duration.asMilliseconds()))
         .toPaceUnit('min/km').toString();
 }
+
+export const splitRunsInMonths = (runs) => {
+    let months = {};
+    runs.forEach(run => {
+        let currentMonth = run.date.format('M');
+
+        if (!(currentMonth in months)) {
+            months[currentMonth] = [];
+        }
+
+        months[currentMonth].push(run);
+    })
+
+    return months;
+}

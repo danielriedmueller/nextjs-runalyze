@@ -25,9 +25,9 @@ export default class WeekRuns extends DateRuns {
             multipleRuns.push(
                 <div
                     key={'weekRun-' + index}
-                    onClick={() => this.props.setFilteredRuns(runs, index)}>
+                    onClick={() => this.props.changeFilter(runs, index)}>
                     <MultipleRuns
-                        label={"Woche vom " + startOf + endOf}
+                        label={startOf + endOf}
                         run={combineRuns(runs)}
                         isActive={index === this.props.runFilter.week}
                     /></div>

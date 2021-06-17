@@ -14,14 +14,19 @@ export function SingleRun(props) {
         </div>;
     }
 
+    if (props.activateEditMode) {
+
+    }
     const bind = useLongPress(() => {
-        props.activateEditMode();
+        if (props.activateEditMode) {
+            props.activateEditMode();
+        }
     });
 
     return <div {...bind} className={props.activeClass ? style[props.activeClass] : ""}>
         {props.label ? <div className={style.legend}>{props.label}</div> : null}
         <div className={style.date} onClick={() => props.changeCurrentRun(props.run)}>
-            <small>{props.run.date.format('dddd')}<br/>{props.run.date.format(process.env.NEXT_PUBLIC_DATE_FORMAT)}</small>
+            <small>{props.run.date.format('dddd')}<br/>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small>
         </div>
         <div className={style.pace} onClick={() => props.changeCurrentRun(props.run, 'pace')}>
             {calcPace(props.run.distance, props.run.duration)}

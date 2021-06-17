@@ -20,6 +20,12 @@
   color: #FFF;
 }
 
+.header div {
+  padding: 15px 15px;
+  color: var(--blue-dark);
+  text-transform: capitalize;
+}
+
 .header nav {
   float: right;
   font-size: 100%;
