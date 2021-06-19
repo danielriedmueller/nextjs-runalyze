@@ -83,11 +83,13 @@ export const combineRuns = (runs) => {
     if (runs.length === 0) return null;
 
     let duration = dayjs.duration({'hours': 0});
-    let distance = 0;
+    let distance = 0
+    let accumulatedVdot = 0;
 
     runs.forEach((run) => {
         distance += parseFloat(run.distance);
         duration = duration.add(run.duration);
+        accumulatedVdot += run.vdot;
     })
 
     return {
@@ -95,7 +97,8 @@ export const combineRuns = (runs) => {
         distance: (Math.round(distance * 100)/100),
         avgDistance: (Math.round((distance / runs.length) * 100)/100),
         duration: duration,
-        avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length)
+        avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length),
+        avgVdot: (accumulatedVdot/runs.length).toFixed(2)
     };
 }
 
