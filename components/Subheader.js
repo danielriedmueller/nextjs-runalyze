@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import style from '../style/subheader.module.scss';
 import {SingleRun} from "./SingleRun";
-import {runToEditRun, runToJson, stringToDuration} from "../helper/functions";
+import {runToEditRun} from "../helper/functions";
 import dayjs from "dayjs";
 import {EditRun} from "./EditRun";
 
@@ -12,7 +12,7 @@ export default class Subheader extends Component {
         this.state = {
             editMode: false,
             insertMode: false,
-            editRun: props.currentRun ? runToEditRun(props.currentRun): null,
+            editRun: props.currentRun ? runToEditRun(props.currentRun) : null,
             newRun: runToEditRun({
                 date: dayjs(),
                 distance: 0,
@@ -70,10 +70,10 @@ export default class Subheader extends Component {
     }
 
     render() {
-        return <div className= {this.state.editMode || this.state.insertMode
-                ? [style.subheader, style['edit-mode']].join(" ")
-                : style.subheader
-            }>
+        return <div className={this.state.editMode || this.state.insertMode
+            ? [style.subheader, style['edit-mode']].join(" ")
+            : style.subheader
+        }>
             <div className={style.currentRun}>
                 {this.state.editMode || this.state.insertMode ? <EditRun
                     editRun={this.state.insertMode ? this.state.newRun : this.state.editRun}
@@ -91,8 +91,8 @@ export default class Subheader extends Component {
                     ? <>
                         <button className={style.confirmButton} onClick={this.onChangeConfirm}/>
                         {this.state.editMode
-                            ? <button className={style.deleteButton} onClick={this.onDelete} />
-                            : <button className={style.cancelButton} onClick={this.onCancel} />
+                            ? <button className={style.deleteButton} onClick={this.onDelete}/>
+                            : <button className={style.cancelButton} onClick={this.onCancel}/>
                         }
                     </>
                     : <button className={style.insertButton} onClick={this.activateInsertMode}/>

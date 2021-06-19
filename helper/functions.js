@@ -2,10 +2,11 @@ import dayjs from "dayjs";
 
 import {Pacer, Length, Timespan} from "fitness-js";
 
-export const jsonToRun = ({date, distance, duration, id}) => ({
+export const jsonToRun = ({date, distance, duration, vdot, id}) => ({
     date: dayjs(date),
     distance: parseFloat(distance),
     duration: stringToDuration(duration),
+    vdot: vdot,
     id: id
 });
 
@@ -130,10 +131,7 @@ export const findLongestRun = (runs) => runs.reduce((prev, current) => (prev.dur
 export const findFurthestRun = (runs) => runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
 
 export const findPerformanceRun = (runs) => runs.reduce((prev, current) => {
-    const durationA = stringToDuration(calcPace(prev.distance, prev.duration));
-    const durationB = stringToDuration(calcPace(current.distance, current.duration));
-
-    return (durationA.asMilliseconds() / prev.distance) < (durationB.asMilliseconds() / current.distance) ? prev : current;
+    return prev.vdot > current.vdot ? prev : current;
 });
 
 export const calcPace = (distance, duration) => {
