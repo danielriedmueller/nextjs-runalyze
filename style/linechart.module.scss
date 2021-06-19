@@ -1,23 +1,21 @@
 .chart {
   padding: 5px;
   user-select: none;
-  background-color: #fff;
+  background-color: var(--blue-dark);
+  border-bottom: 1px solid var(--creme);
+  border-top: 1px solid var(--creme);
 }
 
 .chart .linechart_path {
   stroke-width: 1;
   fill: none;
-  stroke: var(--red);
-}
-
-.chart .linechart_path {
-  stroke-width: 1;
-  fill: none;
-  stroke: var(--red);
+  stroke: var(--creme);
 }
 
 .chart line {
-  stroke: var(--blue-dark);
+  stroke: var(--red);
+  stroke-width: 10;
+  opacity: 0.3;
 }
 
 .chart text {

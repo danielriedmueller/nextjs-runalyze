@@ -1,3 +1,5 @@
+import LineChart from "../components/graphs/LineChart";
+
 require('dayjs/locale/de')
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -41,7 +43,7 @@ class Home extends Component {
                 duration: null
             },
             currentRun,
-            graphMode: 'pace',
+            graphMode: 'vdot',
             filter: {
                 year: yearRuns[0].date.format('YYYY'),
                 month: monthRuns[0].date.format('M'),
@@ -230,6 +232,13 @@ class Home extends Component {
                 <BestRuns
                     runs={this.state.filteredRuns}
                     changeCurrentRun={this.changeCurrentRun}
+                    currentRun={this.state.currentRun}
+                    graphMode={this.state.graphMode}
+                />
+                <LineChart
+                    runs={this.state.filteredRuns}
+                    changeCurrentRun={this.changeCurrentRun}
+                    changeGraphMode={this.changeGraphMode}
                     currentRun={this.state.currentRun}
                     graphMode={this.state.graphMode}
                 />

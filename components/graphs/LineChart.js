@@ -1,16 +1,20 @@
 import React, {Component, createRef} from "react";
 import style from '../../style/linechart.module.scss';
-import {calcPace, durationToString, stringToDuration} from "../../helper/functions";
+import {calcPace, stringToDuration} from "../../helper/functions";
 
 class LineChart extends Component {
     constructor(props) {
         super(props);
-        this.opacityLow = 0.4;
+        this.opacityLow = 0.1;
         this.ref = createRef()
         this.handleClick = this.handleClick.bind(this);
         this.handleTouchMove = this.handleTouchMove.bind(this);
         this.state = {
             minMax: {
+                vdot: {
+                    min: 30,
+                    max: 50,
+                },
                 pace: {
                     min: 240,
                     max: 480,
@@ -54,6 +58,13 @@ class LineChart extends Component {
         return (val - minMax.min) / (minMax.max - minMax.min);
     }
 
+    makeVdotPath() {
+        const data = this.props.runs.map(this.getVdotData.bind(this));
+        const isActive = this.props.graphMode === 'vdot';
+
+        return this.makePath(data, isActive);
+    }
+
     makePacePath() {
         const data = this.props.runs.map(this.getPaceData.bind(this));
         const isActive = this.props.graphMode === 'pace';
@@ -93,6 +104,14 @@ class LineChart extends Component {
         }
     }
 
+    getVdotData(run, index) {
+        return {
+            x: index,
+            y: this.normalize(run.vdot, this.state.minMax.vdot),
+            date: run.date
+        };
+    }
+
     getPaceData(run, index) {
         const data = calcPace(run.distance, run.duration);
 
@@ -113,7 +132,19 @@ class LineChart extends Component {
 
     handleClick(evt) {
         const graphMode = this.props.graphMode;
-        this.props.changeGraphMode(graphMode === 'pace' ? 'distance' : graphMode === 'distance' ? 'duration' : 'pace');
+        let nextGraphMode = "";
+
+        if (graphMode === 'duration') {
+           nextGraphMode = 'distance'
+        } else if (graphMode === 'distance') {
+            nextGraphMode = 'pace'
+        } else if (graphMode === 'pace') {
+            nextGraphMode = 'vdot'
+        } else {
+            nextGraphMode = 'duration'
+        }
+
+        this.props.changeGraphMode(nextGraphMode);
     }
 
     handleTouchMove(evt) {
@@ -144,7 +175,9 @@ class LineChart extends Component {
 
         return (
             <div className={style.chart}>
-                <svg onTouchMove={this.handleTouchMove} onClick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                <svg onTouchMove={this.handleTouchMove} onClick={this.handleClick} ref={this.ref}
+                     viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                    {this.makeVdotPath()}
                     {this.makePacePath()}
                     {this.makeDurationPath()}
                     {this.makeDistancePath()}
@@ -157,7 +190,7 @@ class LineChart extends Component {
 
 LineChart.defaultProps = {
     data: [],
-    color: '#ff4500',
+    color: '#f1faee',
     svgHeight: 400,
     svgWidth: 600,
 }

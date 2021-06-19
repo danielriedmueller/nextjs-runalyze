@@ -37,7 +37,7 @@ export function SingleRun(props) {
         <div className={style.duration} onClick={() => props.changeCurrentRun(props.run, 'duration')}>
             {durationToString(props.run.duration)}
         </div>
-        <div className={style.vdot}>
+        <div className={style.vdot} onClick={() => props.changeCurrentRun(props.run, 'vdot')}>
             {props.run.vdot}
         </div>
     </div>
