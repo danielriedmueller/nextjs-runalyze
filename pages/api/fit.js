@@ -2,7 +2,12 @@
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
 import dayjs from "dayjs";
-import {jsonToRun} from "../../helper/functions";
+import duration from "dayjs/plugin/duration";
+import {durationToString, jsonToRun} from "../../helper/functions";
+import {getVdot} from "./vdot";
+dayjs.extend(duration);
+
+const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
 const fitnessDataTypes = {
     'distance': 'com.google.distance.delta',
@@ -19,28 +24,34 @@ const cors = initMiddleware(
 )
 
 export default async function handle(req, res) {
+    let runs = [];
+
     // Run cors
     await cors(req, res);
 
     const {token} = req.body;
 
-    const startTime = '2022-04-11T00:00:00.000Z';
+    let latestRunDate = db.prepare('SELECT date FROM runs ORDER BY date desc').pluck().get();
+    latestRunDate = dayjs(latestRunDate).toISOString();
+
+    const startTime = latestRunDate;
     const joggingActivityType = 56;
     const params = new URLSearchParams({
         activityType: joggingActivityType,
         startTime: startTime,
     });
 
-    let runs = [];
-
-    let foo = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
+    const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
             'Content-type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-    }).then(response => response.json()).then(data => {
-        data.session.forEach(async (session) => {
-            const run = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
+    });
+    const gApiData = await gApiResponse.json();
+
+    await Promise.all(
+        gApiData.session.map(async (session) => {
+            const gApiBucketResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -54,24 +65,41 @@ export default async function handle(req, res) {
                     }),
                     "bucketBySession": {}
                 })
-            }).then(response => response.json()).then(data => createRun(data.bucket[0]));
+            });
+            const gApiBucketData = await gApiBucketResponse.json();
+            const run = await createRun(gApiBucketData.bucket[0]);
+            runs.push(run);
         })
-    });
-    console.log(runs);
+    );
 
     res.json(runs);
 }
 
-function createRun(data) {
+async function createRun(data) {
     const fitnessData = getFitnessDataFromDataset(data.dataset);
+    const durationInMillis = data.session.endTimeMillis - data.session.startTimeMillis;
+
     const date = new Date(parseInt(data.session.startTimeMillis));
+    const distance = fitnessData['distance'];
+    const duration = durationToString(dayjs.duration(durationInMillis, 'ms'));
+    const vdot = await getVdot(distance, duration);
+
+    db.prepare('INSERT INTO runs(date, distance, duration, vdot) VALUES(?, ?, ?, ?)').run(
+        dayjs(date).format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+        distance,
+        duration,
+        vdot
+    );
+
+    // Todo: 0 equals insert instead of update
+    const id = 0;
 
     return jsonToRun({
         date,
-        distance: fitnessData['distance'],
-        duration: '11000',
-        vdot: 0,
-        id: 0
+        distance,
+        duration,
+        vdot,
+        id
     });
 }
 
