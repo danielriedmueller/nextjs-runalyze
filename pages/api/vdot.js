@@ -20,14 +20,12 @@ export default async function handle(req, res) {
     formData.append('unit', 'km');
     formData.append('time', '01:00:00');
 
-    const vdot = await fetch(process.env.VDOT_API, {
+    const vdotData = await fetch(process.env.VDOT_API, {
         method: 'POST',
         body: formData
     });
 
-    const yearRuns = await vdot.json();
+    const vdot = await vdotData.json();
 
-    console.log(yearRuns.vdot);
-
-    res.json(yearRuns);
+    res.json(vdot);
 }

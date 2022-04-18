@@ -16,6 +16,7 @@ import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
+import GoogleLogin from 'react-google-login';
 
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
@@ -58,6 +59,7 @@ class Home extends Component {
         this.changeMonthFilter = this.changeMonthFilter.bind(this);
         this.changeWeekFilter = this.changeWeekFilter.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
+        this.fetchFitData = this.fetchFitData.bind(this);
     }
 
     async fetchAll() {
@@ -215,11 +217,45 @@ class Home extends Component {
         }
     }
 
+    async fetchFitData() {
+        const fitData = await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token: this.state.token
+            }),
+        });
+        const runs = await fitData.json();
+        console.log(runs);
+    }
+
+    responseGoogle = (response) => {
+        this.setState({
+            token: response.accessToken
+        })
+    }
+
+    responseGoogleFailed = (response) => {
+        console.log('google login failed');
+    }
+
     render() {
         return <div id="app">
             <Header
                 runCount={this.state.filteredRuns.length}
             />
+            {this.state.token ?
+                <button onClick={this.fetchFitData}>Fit Data</button> :
+                <GoogleLogin
+                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                    buttonText="Login"
+                    onSuccess={this.responseGoogle}
+                    onFailure={this.responseGoogleFailed}
+                    cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
+                    scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
+                />
+            }
             <Subheader
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}

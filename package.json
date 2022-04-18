@@ -21,6 +21,7 @@
     "react": "16.13.1",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "16.13.1",
+    "react-google-login": "^5.2.2",
     "sass": "^1.30.0",
     "use-long-press": "^1.0.4"
   },
