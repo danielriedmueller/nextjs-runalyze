@@ -1,11 +1,23 @@
 import React, {Component} from "react";
-import style from '../style/subheader.module.scss';
+import style from '../../style/subheader.module.scss';
 import {SingleRun} from "./SingleRun";
-import {runToEditRun} from "../helper/functions";
+import {runToEditRun} from "../../helper/functions";
 import dayjs from "dayjs";
-import {EditRun} from "./EditRun";
+import {EditRun} from "../EditRun";
+import {IRun} from "../../interfaces/IRun";
 
-export default class Subheader extends Component {
+interface IProps {
+    props: {
+        run: IRun
+    }
+}
+
+interface IState {
+    editMode: boolean
+    insertMode: boolean
+}
+
+export default class CurrentRun extends Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -23,13 +35,6 @@ export default class Subheader extends Component {
                 })
             })
         }
-
-        this.activateEditMode = this.activateEditMode.bind(this);
-        this.activateInsertMode = this.activateInsertMode.bind(this);
-        this.onChangeConfirm = this.onChangeConfirm.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onCancel = this.onCancel.bind(this);
-        this.onDelete = this.onDelete.bind(this);
     }
 
     onChange(evt) {

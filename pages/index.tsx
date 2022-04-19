@@ -9,6 +9,7 @@ import React, {Component} from "react";
 import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
 import {IRun} from "../interfaces/IRun";
 import {IUser} from "../interfaces/User";
+import RunArea from "../components/RunArea";
 
 require('dayjs/locale/de')
 
@@ -21,18 +22,18 @@ dayjs.locale('de');
 
 const USER_ID_COOKIE = 'user_id';
 
-interface AppProps {
+interface IProps {
     props: {
         runs?: IRun[]
     }
 }
 
-interface AppState {
+interface IState {
     runs?: IRun[]
     user: IUser;
 }
 
-class Home extends Component<AppProps, AppState> {
+class Home extends Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -97,11 +98,13 @@ class Home extends Component<AppProps, AppState> {
             {this.state.user.name ? <div>
                 Hallo {this.state.user.name}!
             </div> : null}
+            <RunArea
+            />
         </div>
     }
 }
 
-export async function getServerSideProps(ctx): Promise<AppProps> {
+export async function getServerSideProps(ctx): Promise<IProps> {
     const userId = ctx.req.cookies[USER_ID_COOKIE];
 
     if (userId) {
@@ -122,7 +125,7 @@ export async function getServerSideProps(ctx): Promise<AppProps> {
     return {
         props: {runs: null}
     }
-    
+
     /*
     const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const jsonRuns = await runsResponse.json();
