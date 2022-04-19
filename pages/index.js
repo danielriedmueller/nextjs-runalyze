@@ -1,6 +1,4 @@
 import LineChart from "../components/graphs/LineChart";
-
-require('dayjs/locale/de')
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -18,6 +16,8 @@ import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
 import GoogleLogin from 'react-google-login';
 
+require('dayjs/locale/de')
+
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
 dayjs.extend(weekOfYear);
@@ -29,28 +29,55 @@ class Home extends Component {
     constructor(props) {
         super(props);
 
-        const runs = jsonToRuns(props.runs);
-        const yearRuns = jsonToRuns(props.yearRuns);
-        const monthRuns = jsonToRuns(props.monthRuns);
-        const currentRun = runs[0];
+        if (props.runs && props.yearRuns && props.monthRuns) {
+            const runs = jsonToRuns(props.runs);
+            const yearRuns = jsonToRuns(props.yearRuns);
+            const monthRuns = jsonToRuns(props.monthRuns);
+            const currentRun = runs[0];
 
-        this.state = {
-            runs,
-            yearRuns,
-            monthRuns,
-            filteredRuns: monthRuns,
-            newRun: {
-                distance: null,
-                duration: null
-            },
-            currentRun,
-            graphMode: 'vdot',
-            filter: {
-                year: yearRuns[0].date.format('YYYY'),
-                month: monthRuns[0].date.format('M'),
-                week: null
-            }
-        };
+            this.state = {
+                runs,
+                yearRuns,
+                monthRuns,
+                filteredRuns: monthRuns,
+                newRun: {
+                    distance: null,
+                    duration: null
+                },
+                currentRun,
+                graphMode: 'vdot',
+                filter: {
+                    year: yearRuns[0].date.format('YYYY'),
+                    month: monthRuns[0].date.format('M'),
+                    week: null
+                },
+                user: {
+                    token: null,
+                    id: null,
+                    name: null
+                }
+            };
+        } else {
+            this.state = {
+                filteredRuns: [],
+                newRun: {
+                    distance: null,
+                    duration: null
+                },
+                graphMode: 'vdot',
+                filter: {
+                    year: null,
+                    month: null,
+                    week: null
+                },
+                user: {
+                    token: null,
+                    id: null,
+                    name: null
+                }
+            };
+        }
+
 
         this.onChange = this.onChange.bind(this);
         this.onDelete = this.onDelete.bind(this);
@@ -218,25 +245,34 @@ class Home extends Component {
     }
 
     async fetchFitData() {
-        const fitData = await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
+        await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                token: this.state.token
+                token: this.state.user.token,
+                user: this.state.user.id
             }),
         });
-        const runs = await fitData.json();
-        console.log(runs);
     }
 
     responseGoogle = (response) => {
-        this.setState({
-            token: response.accessToken
-        })
+        const user = {
+            token: response.accessToken,
+            id: response.googleId,
+            name: response.profileObj.givenName
+        }
+        this.setState({user});
     }
 
     responseGoogleFailed = (response) => {
         console.log('google login failed');
+        this.setState({
+            user: {
+                token: null,
+                id: null,
+                name: null
+            }
+        })
     }
 
     render() {
@@ -244,7 +280,7 @@ class Home extends Component {
             <Header
                 runCount={this.state.filteredRuns.length}
             />
-            {this.state.token ?
+            {this.state.user.token ?
                 <button onClick={this.fetchFitData}>Fit Data</button> :
                 <GoogleLogin
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
@@ -256,6 +292,9 @@ class Home extends Component {
                     scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
                 />
             }
+            {this.state.user.name ? <div>
+                Hallo {this.state.user.name}!
+            </div> : null}
             <Subheader
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
@@ -288,17 +327,18 @@ class Home extends Component {
                     changeFilter={this.changeMonthFilter}
                     runFilter={this.state.filter}
                 /> : null}
-                <YearRuns
+                {this.state.runs ? <YearRuns
                     runs={this.state.runs}
                     changeFilter={this.changeYearFilter}
                     runFilter={this.state.filter}
-                />
+                /> : null}
             </div>
         </div>
     }
 }
 
 export async function getServerSideProps(ctx) {
+    /*
     const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const runs = await jsonRuns.json();
 
@@ -331,6 +371,16 @@ export async function getServerSideProps(ctx) {
             runs: runs,
             yearRuns: yearRuns,
             monthRuns: monthRuns
+        }
+    };
+
+     */
+
+    return {
+        props: {
+            runs: null,
+            yearRuns: null,
+            monthRuns: null
         }
     };
 }

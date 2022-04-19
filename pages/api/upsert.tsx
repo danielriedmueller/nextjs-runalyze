@@ -1,6 +1,6 @@
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import {getVdot} from "./vdot";
+import {fetchVdot} from "./vdot";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
@@ -42,4 +42,26 @@ export default async function handle(req, res) {
     const run = db.prepare('SELECT * FROM runs WHERE id = ?').get(id);
 
     res.json(run);
+}
+
+export const insertRun = async (
+    startTime: number,
+    endTime: number,
+    distance: number,
+    calories: number,
+    user: number,
+    steps: number
+): Promise<number> => {
+    const vdot = await fetchVdot(distance, startTime, endTime);
+    const info = db.prepare('INSERT INTO runs(startTime, distance, vdot, user, endTime, calories, steps) VALUES(?, ?, ?, ?, ?, ?, ?)').run(
+        startTime,
+        distance,
+        vdot,
+        user,
+        endTime,
+        calories,
+        steps
+    );
+
+    return info.lastInsertRowid;
 }

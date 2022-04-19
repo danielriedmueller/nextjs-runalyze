@@ -26,6 +26,7 @@
     "use-long-press": "^1.0.4"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^6.2.1"
+    "copy-webpack-plugin": "^6.2.1",
+    "typescript": "^4.6.3"
   }
 }

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 
 import {Pacer, Length, Timespan} from "fitness-js";
+import {Duration} from "dayjs/plugin/duration";
 
 export const jsonToRun = ({date, distance, duration, vdot, id}) => ({
     date: dayjs(date),
@@ -76,7 +77,7 @@ export const stringToDuration = (str) => {
     });
 }
 
-export const durationToString = (duration) =>
+export const durationToString = (duration: Duration): string =>
     Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 
 export const combineRuns = (runs) => {
