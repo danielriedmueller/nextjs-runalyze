@@ -1,6 +1,7 @@
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
 import {fetchVdot} from "./vdot";
+import {encryptUser} from "../../helper/crypto";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
@@ -49,7 +50,7 @@ export const insertRun = async (
     endTime: number,
     distance: number,
     calories: number,
-    user: number,
+    user: string,
     steps: number
 ): Promise<number> => {
     const vdot = await fetchVdot(distance, startTime, endTime);
@@ -57,7 +58,7 @@ export const insertRun = async (
         startTime,
         distance,
         vdot,
-        user,
+        encryptUser(user),
         endTime,
         calories,
         steps

@@ -6,8 +6,9 @@ import isoWeeksInYear from "dayjs/plugin/isoWeeksInYear";
 import isLeapYear from "dayjs/plugin/isLeapYear";
 import Header from "../components/Header";
 import React, {Component} from "react";
-import GoogleLogin from 'react-google-login';
+import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
 import {IRun} from "../interfaces/IRun";
+import {IUser} from "../interfaces/User";
 
 require('dayjs/locale/de')
 
@@ -18,17 +19,17 @@ dayjs.extend(isoWeeksInYear);
 dayjs.extend(isLeapYear);
 dayjs.locale('de');
 
+const USER_ID_COOKIE = 'user_id';
+
 interface AppProps {
-    runs: IRun[]
+    props: {
+        runs?: IRun[]
+    }
 }
 
 interface AppState {
-    runs: IRun[]
-    user: {
-        token: number,
-        id: number,
-        name: string
-    };
+    runs?: IRun[]
+    user: IUser;
 }
 
 class Home extends Component<AppProps, AppState> {
@@ -43,11 +44,20 @@ class Home extends Component<AppProps, AppState> {
                 name: null
             }
         };
-
-        this.fetchFitData = this.fetchFitData.bind(this);
     }
 
-    async fetchFitData(): Promise<void> {
+    init = async (response: GoogleLoginResponse): Promise<void> => {
+        const user = {
+            token: response.accessToken,
+            id: response.googleId,
+            name: response.profileObj.givenName
+        }
+
+        this.setState({user});
+        document.cookie = USER_ID_COOKIE + "=" + user.id;
+    }
+
+    fetchFitData = async (): Promise<void> => {
         await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -56,15 +66,6 @@ class Home extends Component<AppProps, AppState> {
                 user: this.state.user.id
             }),
         });
-    }
-
-    responseGoogle = (response): void => {
-        const user = {
-            token: response.accessToken,
-            id: response.googleId,
-            name: response.profileObj.givenName
-        }
-        this.setState({user});
     }
 
     responseGoogleFailed = (): void => {
@@ -86,7 +87,7 @@ class Home extends Component<AppProps, AppState> {
                 <GoogleLogin
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                     buttonText="Login"
-                    onSuccess={this.responseGoogle}
+                    onSuccess={this.init}
                     onFailure={this.responseGoogleFailed}
                     cookiePolicy={'single_host_origin'}
                     isSignedIn={true}
@@ -100,7 +101,29 @@ class Home extends Component<AppProps, AppState> {
     }
 }
 
-export async function getServerSideProps(ctx): Promise<{props: AppProps}> {
+export async function getServerSideProps(ctx): Promise<AppProps> {
+    const userId = ctx.req.cookies[USER_ID_COOKIE];
+
+    if (userId) {
+        const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: userId
+            }),
+        });
+        const runs = await runsResponse.json() as IRun[];
+
+        return {
+            props: {runs}
+        }
+    }
+
+    return {
+        props: {runs: null}
+    }
+    
+    /*
     const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
     const jsonRuns = await runsResponse.json();
 
@@ -109,8 +132,6 @@ export async function getServerSideProps(ctx): Promise<{props: AppProps}> {
             runs: jsonRuns
         }
     }
-
-    /*
 
 
     const lastRun = runs[0].date;
@@ -144,8 +165,7 @@ export async function getServerSideProps(ctx): Promise<{props: AppProps}> {
             monthRuns: monthRuns
         }
     };
-
-     */
+    */
 }
 
 export default Home;
