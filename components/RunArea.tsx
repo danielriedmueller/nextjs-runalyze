@@ -6,7 +6,6 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import isoWeeksInYear from "dayjs/plugin/isoWeeksInYear";
 import isLeapYear from "dayjs/plugin/isLeapYear";
 import style from '../style/home.module.scss';
-import Header from "../components/Header";
 import {Component} from "react";
 import {isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
 import Subheader from "../components/Subheader";
@@ -14,7 +13,6 @@ import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
 import YearRuns from "../components/runs/YearRuns";
-import GoogleLogin from 'react-google-login';
 
 require('dayjs/locale/de')
 
@@ -25,7 +23,7 @@ dayjs.extend(isoWeeksInYear);
 dayjs.extend(isLeapYear);
 dayjs.locale('de');
 
-class Home extends Component {
+class RunArea extends Component {
     constructor(props) {
         super(props);
 
@@ -78,7 +76,6 @@ class Home extends Component {
             };
         }
 
-
         this.onChange = this.onChange.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.changeCurrentRun = this.changeCurrentRun.bind(this);
@@ -86,7 +83,6 @@ class Home extends Component {
         this.changeMonthFilter = this.changeMonthFilter.bind(this);
         this.changeWeekFilter = this.changeWeekFilter.bind(this);
         this.changeGraphMode = this.changeGraphMode.bind(this);
-        this.fetchFitData = this.fetchFitData.bind(this);
     }
 
     async fetchAll() {
@@ -244,57 +240,8 @@ class Home extends Component {
         }
     }
 
-    async fetchFitData() {
-        await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                token: this.state.user.token,
-                user: this.state.user.id
-            }),
-        });
-    }
-
-    responseGoogle = (response) => {
-        const user = {
-            token: response.accessToken,
-            id: response.googleId,
-            name: response.profileObj.givenName
-        }
-        this.setState({user});
-    }
-
-    responseGoogleFailed = (response) => {
-        console.log('google login failed');
-        this.setState({
-            user: {
-                token: null,
-                id: null,
-                name: null
-            }
-        })
-    }
-
     render() {
-        return <div id="app">
-            <Header
-                runCount={this.state.filteredRuns.length}
-            />
-            {this.state.user.token ?
-                <button onClick={this.fetchFitData}>Fit Data</button> :
-                <GoogleLogin
-                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                    buttonText="Login"
-                    onSuccess={this.responseGoogle}
-                    onFailure={this.responseGoogleFailed}
-                    cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
-                    scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
-                />
-            }
-            {this.state.user.name ? <div>
-                Hallo {this.state.user.name}!
-            </div> : null}
+        return <>
             <Subheader
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
@@ -333,56 +280,8 @@ class Home extends Component {
                     runFilter={this.state.filter}
                 /> : null}
             </div>
-        </div>
+        </>
     }
 }
 
-export async function getServerSideProps(ctx) {
-    /*
-    const jsonRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
-    const runs = await jsonRuns.json();
-
-    const lastRun = runs[0].date;
-    const filterYear = dayjs(lastRun);
-    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const yearRuns = await jsonYearRuns.json();
-
-    const lastYearRun = yearRuns[0].date;
-    const filterMonth = dayjs(lastYearRun);
-    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const monthRuns = await jsonMonthRuns.json();
-
-    return {
-        props: {
-            runs: runs,
-            yearRuns: yearRuns,
-            monthRuns: monthRuns
-        }
-    };
-
-     */
-
-    return {
-        props: {
-            runs: null,
-            yearRuns: null,
-            monthRuns: null
-        }
-    };
-}
-
-export default Home;
+export default RunArea;

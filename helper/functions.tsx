@@ -1,7 +1,11 @@
 import dayjs from "dayjs";
 
-import {Pacer, Length, Timespan} from "fitness-js";
+import {Length, Pacer, Timespan} from "fitness-js";
 import {Duration} from "dayjs/plugin/duration";
+
+export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
+export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
+
 
 export const jsonToRun = ({date, distance, duration, vdot, id}) => ({
     date: dayjs(date),
@@ -67,6 +71,7 @@ export const isValidRun = (newRun) => {
     return true;
 }
 
+
 export const stringToDuration = (str) => {
     let [seconds, minutes, hours] = str.split(":").reverse().map((str) => parseInt(str));
 
@@ -77,8 +82,6 @@ export const stringToDuration = (str) => {
     });
 }
 
-export const durationToString = (duration: Duration): string =>
-    Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 
 export const combineRuns = (runs) => {
     if (runs.length === 0) return null;
@@ -95,11 +98,11 @@ export const combineRuns = (runs) => {
 
     return {
         runs: runs.length,
-        distance: (Math.round(distance * 100)/100),
-        avgDistance: (Math.round((distance / runs.length) * 100)/100),
+        distance: (Math.round(distance * 100) / 100),
+        avgDistance: (Math.round((distance / runs.length) * 100) / 100),
         duration: duration,
-        avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length),
-        avgVdot: (accumulatedVdot/runs.length).toFixed(2)
+        avgDuration: dayjs.duration(duration.asMilliseconds() / runs.length),
+        avgVdot: (accumulatedVdot / runs.length).toFixed(2)
     };
 }
 

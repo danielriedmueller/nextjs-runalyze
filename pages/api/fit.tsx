@@ -32,13 +32,14 @@ export default async function handle(req: Request, res: Response): Promise<void>
     const {token, user} = req.body;
 
     let latestRunDate = db.prepare('SELECT startTime FROM runs ORDER BY startTime desc').pluck().get();
+
     // Initially get runs from current year
     let startTime = latestRunDate
         // Add 1,5 hours to prevent insert last run
         ? dayjs(latestRunDate + 10000000).toISOString()
         : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
 
-    const activityType = '56';
+    const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
     const params = new URLSearchParams({activityType, startTime});
     const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
@@ -47,7 +48,6 @@ export default async function handle(req: Request, res: Response): Promise<void>
         },
     });
     const gApiData = await gApiResponse.json();
-    console.log(gApiData)
 
     await Promise.all(
         gApiData.session.map(async (session) => {
