@@ -7,9 +7,9 @@ import isLeapYear from "dayjs/plugin/isLeapYear";
 import Header from "../components/Header";
 import React, {Component} from "react";
 import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
-import {IRun} from "../interfaces/IRun";
-import {IUser} from "../interfaces/User";
 import RunArea from "../components/RunArea";
+import IRun from "../interfaces/IRun";
+import IUser from "../interfaces/IUser";
 
 require('dayjs/locale/de')
 
@@ -23,9 +23,7 @@ dayjs.locale('de');
 const USER_ID_COOKIE = 'user_id';
 
 interface IProps {
-    props: {
-        runs?: IRun[]
-    }
+    runs?: IRun[]
 }
 
 interface IState {
@@ -98,8 +96,9 @@ class Home extends Component<IProps, IState> {
             {this.state.user.name ? <div>
                 Hallo {this.state.user.name}!
             </div> : null}
-            <RunArea
-            />
+            {this.state.runs ? <RunArea
+                runs={this.state.runs}
+            /> : null }
         </div>
     }
 }
@@ -117,58 +116,10 @@ export async function getServerSideProps(ctx): Promise<IProps> {
         });
         const runs = await runsResponse.json() as IRun[];
 
-        return {
-            props: {runs}
-        }
+        return {runs}
     }
 
-    return {
-        props: {runs: null}
-    }
-
-    /*
-    const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
-    const jsonRuns = await runsResponse.json();
-
-    return {
-        props: {
-            runs: jsonRuns
-        }
-    }
-
-
-    const lastRun = runs[0].date;
-    const filterYear = dayjs(lastRun);
-    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const yearRuns = await jsonYearRuns.json();
-
-    const lastYearRun = yearRuns[0].date;
-    const filterMonth = dayjs(lastYearRun);
-    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
-            end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
-        }),
-    });
-    const monthRuns = await jsonMonthRuns.json();
-
-    return {
-        props: {
-            runs: runs,
-            yearRuns: yearRuns,
-            monthRuns: monthRuns
-        }
-    };
-    */
+    return {runs: null}
 }
 
 export default Home;

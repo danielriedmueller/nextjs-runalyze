@@ -8,7 +8,7 @@ import isLeapYear from "dayjs/plugin/isLeapYear";
 import style from '../style/home.module.scss';
 import {Component} from "react";
 import {isValidRun, jsonToRun, jsonToRuns} from "../helper/functions";
-import CurrentRun from "../components/CurrentRun";
+import CurrentRunView from "../components/CurrentRunView";
 import BestRuns from "../components/runs/BestRuns";
 import WeekRuns from "../components/runs/WeekRuns";
 import MonthRuns from "../components/runs/MonthRuns";
@@ -242,7 +242,7 @@ class RunArea extends Component {
 
     render() {
         return <>
-            <CurrentRun
+            <CurrentRunView
                 currentRun={this.state.currentRun}
                 newRun={this.state.newRun}
                 onChange={this.onChange}
@@ -282,6 +282,73 @@ class RunArea extends Component {
             </div>
         </>
     }
+}
+
+export async function getServerSideProps(ctx): Promise<IProps> {
+    const userId = ctx.req.cookies[USER_ID_COOKIE];
+
+    if (userId) {
+        const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: userId
+            }),
+        });
+        const runs = await runsResponse.json() as IRun[];
+
+        return {
+            props: {runs}
+        }
+    }
+
+    return {
+        props: {runs: null}
+    }
+
+    /*
+    const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS);
+    const jsonRuns = await runsResponse.json();
+
+    return {
+        props: {
+            runs: jsonRuns
+        }
+    }
+
+
+    const lastRun = runs[0].date;
+    const filterYear = dayjs(lastRun);
+    const jsonYearRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            start: filterYear.startOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            end: filterYear.endOf('year').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
+    });
+    const yearRuns = await jsonYearRuns.json();
+
+    const lastYearRun = yearRuns[0].date;
+    const filterMonth = dayjs(lastYearRun);
+    const jsonMonthRuns = await fetch(process.env.NEXT_PUBLIC_API_GET_BETWEEN, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            start: filterMonth.startOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT),
+            end: filterMonth.endOf('month').format(process.env.NEXT_PUBLIC_DB_DATE_FORMAT)
+        }),
+    });
+    const monthRuns = await jsonMonthRuns.json();
+
+    return {
+        props: {
+            runs: runs,
+            yearRuns: yearRuns,
+            monthRuns: monthRuns
+        }
+    };
+    */
 }
 
 export default RunArea;

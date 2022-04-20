@@ -1,11 +1,9 @@
 import React, {Component} from "react";
-import {IRun} from "../interfaces/IRun";
-import CurrentRun from "./runs/CurrentRun";
+import IRun from "../interfaces/IRun";
+import CurrentRunView from "./runs/CurrentRunView";
 
 interface IProps {
-    props: {
-        runs: IRun[]
-    }
+    runs: IRun[]
 }
 
 interface IState {
@@ -23,11 +21,16 @@ class RunArea extends Component<IProps, IState> {
         };
     }
 
+    setStatistics = (statistics: string) => {
+        this.setState({statistics});
+    }
+
     render() {
         return <>
-            <CurrentRun
+            <CurrentRunView
                 run={this.state.currentRun}
                 statistics={this.state.statistics}
+                setStatistics={this.setStatistics}
             />
         </>
     }

@@ -1,68 +1,66 @@
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import {fetchVdot} from "./vdot";
 import {encryptUser} from "../../helper/crypto";
+import {IDbRun} from "../../interfaces/IDbRun";
+import {DbRun} from "../../model/DbRun";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
-// Initialize the cors middleware
 const cors = initMiddleware(
-    // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
     Cors({
-        // Only allow requests with GET, POST and OPTIONS
-        methods: ['GET', 'POST', 'OPTIONS'],
+        methods: ['POST'],
     })
 )
 
 export default async function handle(req, res) {
-    // Run cors
     await cors(req, res);
 
-    let {date, distance, duration, id} = req.body;
-    const vdot = await getVdot(distance, duration);
+    const {run, user} = req.body;
+    const dbRun = await DbRun.fromEditRun(run);
 
-    if (id === 0) {
-        const info = db.prepare('INSERT INTO runs(date, distance, duration, vdot) VALUES(?, ?, ?, ?)').run(
-            date,
-            distance,
-            duration,
-            vdot
-        );
-
-        id = info.lastInsertRowid;
+    if (dbRun.isNew()) {
+        await insertRun(user, dbRun);
     } else {
-        db.prepare('UPDATE runs SET date = ?, distance = ?, duration = ?, vdot = ? WHERE id = ?').run(
-            date,
-            distance,
-            duration,
-            vdot,
-            id
-        );
+        await updateRun(dbRun);
     }
 
-    const run = db.prepare('SELECT * FROM runs WHERE id = ?').get(id);
-
-    res.json(run);
+    res.json({});
 }
+
+export const updateRun = async (
+    run: IDbRun
+): Promise<number> => {
+    if (!run.id) {
+        throw new Error('Tried to update non-existing run in DB');
+    }
+
+    return db.prepare('UPDATE runs SET startTime = ?, distance = ?, vdot = ?, endTime = ?, calories = ?, steps = ? WHERE id = ?').run(
+        run.startTime,
+        run.distance,
+        run.vdot,
+        run.endTime,
+        run.calories,
+        run.steps,
+        run.id
+    );
+};
 
 export const insertRun = async (
-    startTime: number,
-    endTime: number,
-    distance: number,
-    calories: number,
     user: string,
-    steps: number
+    run: IDbRun
 ): Promise<number> => {
-    const vdot = await fetchVdot(distance, startTime, endTime);
-    const info = db.prepare('INSERT INTO runs(startTime, distance, vdot, user, endTime, calories, steps) VALUES(?, ?, ?, ?, ?, ?, ?)').run(
-        startTime,
-        distance,
-        vdot,
-        encryptUser(user),
-        endTime,
-        calories,
-        steps
-    );
+    if (run.id) {
+        throw new Error('Tried to insert existing run in DB');
+    }
 
-    return info.lastInsertRowid;
+    return db.prepare('INSERT INTO runs(startTime, distance, vdot, user, endTime, calories, steps) VALUES(?, ?, ?, ?, ?, ?, ?)').run(
+        run.startTime,
+        run.distance,
+        run.vdot,
+        encryptUser(user),
+        run.endTime,
+        run.calories,
+        run.steps
+    ).lastInsertRowid;
 }
+

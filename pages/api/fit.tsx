@@ -3,22 +3,11 @@ import Cors from "cors";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import {insertRun} from "./upsert";
+import {DbRun, FITNESS_DATA_TYPES} from "../../model/DbRun";
 
 dayjs.extend(duration);
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
-
-const fitnessDataTypes = {
-    'distance': 'com.google.distance.delta',
-    'steps': 'com.google.step_count.delta',
-    'calories': 'com.google.calories.expended'
-}
-
-interface FitnessData {
-    distance: number;
-    steps: number;
-    calories: number;
-}
 
 const cors = initMiddleware(
     Cors({
@@ -60,49 +49,15 @@ export default async function handle(req: Request, res: Response): Promise<void>
                 body: JSON.stringify({
                     "startTimeMillis": session.startTimeMillis,
                     "endTimeMillis": session.endTimeMillis,
-                    "aggregateBy": Object.values(fitnessDataTypes).map(val => {
+                    "aggregateBy": Object.values(FITNESS_DATA_TYPES).map(val => {
                         return {'dataTypeName': val};
                     }),
                     "bucketBySession": {}
                 })
             });
             const gApiBucketData = await gApiBucketResponse.json();
-            const bucket = gApiBucketData.bucket[0];
-            const {distance, calories, steps} = getFitnessDataFromDataset(bucket.dataset);
-            await insertRun(
-                bucket.session.startTimeMillis,
-                bucket.session.endTimeMillis,
-                distance,
-                calories,
-                user,
-                steps
-            );
+            const dbRun = await DbRun.fromGoogleApiData(gApiBucketData.bucket[0]);
+            await insertRun(user, dbRun);
         })
     );
-}
-
-const getFitnessDataFromDataset = (datasets): FitnessData => {
-    let fitnessData = [];
-
-    datasets.forEach((dataset) => {
-        dataset.point.forEach((point) => {
-            Object.entries(fitnessDataTypes).forEach(([type, apiName]) => {
-                if (point.dataTypeName === apiName) {
-                    if (!Array.isArray(fitnessData[type])) {
-                        fitnessData[type] = [];
-                    }
-
-                    // Get always first value only, see Google API Response documentation
-                    fitnessData[type].push(...point.value.map(valObj => valObj[Object.keys(valObj)[0]]));
-                }
-            })
-        })
-    });
-
-    let response = {};
-    for (const type in fitnessData) {
-        response[type] = fitnessData[type].reduce((a, b) => a + b);
-    }
-
-    return response as FitnessData;
 }
