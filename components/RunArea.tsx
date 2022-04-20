@@ -1,9 +1,13 @@
 import React, {Component} from "react";
 import IRun from "../interfaces/IRun";
 import CurrentRunView from "./runs/CurrentRunView";
+import IUser from "../interfaces/IUser";
+import IEditRun from "../interfaces/IEditRun";
+import {insertRun, updateRun} from "../helper/fetch";
 
 interface IProps {
-    runs: IRun[]
+    runs: IRun[],
+    user: IUser,
 }
 
 interface IState {
@@ -21,6 +25,14 @@ export default class RunArea extends Component<IProps, IState> {
         };
     }
 
+    upsert = async (run: IEditRun) => {
+        if (run.id) {
+            await updateRun(run);
+        } else {
+            await insertRun(run, this.props.user);
+        }
+    }
+
     setStatistics = (statistics: string) => {
         this.setState({statistics});
     }
@@ -31,6 +43,8 @@ export default class RunArea extends Component<IProps, IState> {
                 run={this.state.currentRun}
                 statistics={this.state.statistics}
                 setStatistics={this.setStatistics}
+                upsert={this.upsert}
+                user={this.props.user}
             />
         </>
     }

@@ -13,6 +13,7 @@ interface IProps {
     user: IUser
     statistics: string,
     setStatistics: (statistics: string) => void
+    upsert: (run: IEditRun) => void
 }
 
 interface IState {
@@ -37,22 +38,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     onChangeConfirm = async (): Promise<void> => {
-        if (this.state.editMode) {
-            if (!this.state.editRun.id) {
-                throw Error('Run to update does not have id')
-            }
-
-            await updateRun(this.state.editRun);
-        }
-
-        if (this.state.insertMode && !this.state.editRun.id) {
-            if (this.state.editRun.id) {
-                throw Error('Run to insert already existing with id: ' + this.state.editRun.id.toString())
-            }
-
-            await insertRun(this.state.editRun, this.props.user);
-        }
-
+        this.props.upsert(this.state.editRun);
         this.exitEditMode();
     }
 

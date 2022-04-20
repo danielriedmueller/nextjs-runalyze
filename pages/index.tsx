@@ -100,6 +100,7 @@ class Home extends Component<IProps, IState> {
             </div> : null}
             {this.state.runs ? <RunArea
                 runs={this.state.runs}
+                user={this.state.user}
             /> : null }
         </div>
     }
