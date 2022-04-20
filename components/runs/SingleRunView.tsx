@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import style from '../../style/singlerun.module.scss';
 import {useLongPress} from 'use-long-press';
 import IRun from "../../interfaces/IRun";
-import {calcPace, dateToDay, stringToDuration} from "../../helper/functions";
 
 interface IProps {
     run: IRun
@@ -37,22 +36,23 @@ export default class SingleRunView extends Component<IProps, IState> {
 
     render() {
         const activeClass = this.props.statistics + 'Active';
+        const run = this.state.run;
         return <div {...this.bind} className={style[activeClass]}>
             {this.state.label ? <div className={style.legend}>{this.state.label}</div> : null}
             <div className={style.date} onClick={() => this.state.setStatistics('date')}>
-                <small>{dateToDay(this.state.run.date)}<br/>{this.state.run.date}</small>
+                <small>{run.getDateDay()}<br/>{run.date}</small>
             </div>
             <div className={style.pace} onClick={() => this.state.setStatistics('pace')}>
-                {calcPace(this.state.run.distance, stringToDuration(this.state.run.duration))}
+                {run.getPace()}
             </div>
             <div className={style.distance} onClick={() => this.state.setStatistics('distance')}>
-                {this.state.run.distance}
+                {run.distance}
             </div>
             <div className={style.duration} onClick={() => this.state.setStatistics('duration')}>
-                {this.state.run.duration}
+                {run.getDuration()}
             </div>
             <div className={style.vdot} onClick={() => this.state.setStatistics('vdot')}>
-                {this.state.run.vdot}
+                {run.vdot}
             </div>
         </div>
     }

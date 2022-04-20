@@ -1,10 +1,9 @@
 import dayjs from "dayjs";
 
-import {Length, Pacer, Timespan} from "fitness-js";
+
 import {Duration} from "dayjs/plugin/duration";
 
 export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
-export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 export const stringToDuration = (duration: string): Duration => {
     let [seconds, minutes, hours] = duration.split(":").reverse().map((str) => parseInt(str));
 
@@ -16,18 +15,6 @@ export const stringToDuration = (duration: string): Duration => {
 };
 export const calcEndTime = (startTime: number, duration: string): number => stringToDuration(duration).asMilliseconds() + startTime;
 export const dateToStartTime = (date: string): number => dayjs(date).valueOf();
-export const dateToDay = (date: string): string => dayjs(date).format('dddd');
-export const calcPace = (distance: number, duration: Duration): string => {
-    if (distance === 0 || duration.asMilliseconds() === 0) {
-        return "0:0";
-    }
-    return new Pacer()
-        .withLength(new Length(distance, 'm'))
-        .withTime(new Timespan().addMilliseconds(duration.asMilliseconds()))
-        .toPaceUnit('min/km').toString();
-}
-
-
 
 export const jsonToRun = ({date, distance, duration, vdot, id}) => ({
     date: dayjs(date),

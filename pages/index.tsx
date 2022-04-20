@@ -10,6 +10,8 @@ import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
 import RunArea from "../components/RunArea";
 import IRun from "../interfaces/IRun";
 import IUser from "../interfaces/IUser";
+import IDbRun from "../interfaces/IDbRun";
+import {Run} from "../model/Run";
 
 require('dayjs/locale/de')
 
@@ -23,7 +25,7 @@ dayjs.locale('de');
 const USER_ID_COOKIE = 'user_id';
 
 interface IProps {
-    runs?: IRun[]
+    runs?: IDbRun[]
 }
 
 interface IState {
@@ -114,7 +116,7 @@ export async function getServerSideProps(ctx): Promise<{props: IProps}> {
                 user: userId
             }),
         });
-        const runs = await runsResponse.json() as IRun[];
+        let runs = await runsResponse.json() as IDbRun[];
 
         return {props: {runs}}
     }
