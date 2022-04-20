@@ -11,7 +11,7 @@ interface IState {
     statistics: string
 }
 
-class RunArea extends Component<IProps, IState> {
+export default class RunArea extends Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -35,5 +35,3 @@ class RunArea extends Component<IProps, IState> {
         </>
     }
 }
-
-export default RunArea;

@@ -77,7 +77,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
                     upsert={this.upsert}
                 /> : <SingleRunView
                     run={this.state.currentRun}
-                    statistics={this.state.statistics}
+                    statistics={this.props.statistics}
                     setStatistics={this.state.setStatistics}
                     activateEditMode={this.activateEditMode}
                 />}

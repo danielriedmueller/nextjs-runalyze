@@ -103,7 +103,7 @@ class Home extends Component<IProps, IState> {
     }
 }
 
-export async function getServerSideProps(ctx): Promise<IProps> {
+export async function getServerSideProps(ctx): Promise<{props: IProps}> {
     const userId = ctx.req.cookies[USER_ID_COOKIE];
 
     if (userId) {
@@ -116,10 +116,10 @@ export async function getServerSideProps(ctx): Promise<IProps> {
         });
         const runs = await runsResponse.json() as IRun[];
 
-        return {runs}
+        return {props: {runs}}
     }
 
-    return {runs: null}
+    return {props: {runs: null}}
 }
 
 export default Home;

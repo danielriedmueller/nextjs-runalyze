@@ -33,10 +33,10 @@ export default class SingleRunView extends Component<IProps, IState> {
         };
     }
 
-    bind = useLongPress(() => this.state.activateEditMode());
+    bind = () => useLongPress(() => this.state.activateEditMode());
 
     render() {
-        const activeClass = this.state.statistics + 'Active';
+        const activeClass = this.props.statistics + 'Active';
         return <div {...this.bind} className={style[activeClass]}>
             {this.state.label ? <div className={style.legend}>{this.state.label}</div> : null}
             <div className={style.date} onClick={() => this.state.setStatistics('date')}>
