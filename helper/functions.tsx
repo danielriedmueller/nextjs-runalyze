@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 
 export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
+export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 export const stringToDuration = (duration: string): Duration => {
     let [seconds, minutes, hours] = duration.split(":").reverse().map((str) => parseInt(str));
 
@@ -13,7 +14,7 @@ export const stringToDuration = (duration: string): Duration => {
         hours: hours || 0
     });
 };
-export const calcEndTime = (startTime: number, duration: string): number => stringToDuration(duration).asMilliseconds() + startTime;
+export const calcEndTime = (startTime: number, duration: Duration): number => duration.asMilliseconds() + startTime;
 export const dateToStartTime = (date: string): number => dayjs(date).valueOf();
 
 export const jsonToRun = ({date, distance, duration, vdot, id}) => ({

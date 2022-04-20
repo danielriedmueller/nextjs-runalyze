@@ -1,8 +1,8 @@
-import {IDbRun} from "../interfaces/IDbRun";
 import {fetchVdot} from "../pages/api/vdot";
-import {IRun} from "../interfaces/IRun";
-import {calcEndTime, dateToStartTime} from "../helper/functions";
-import {IEditRun} from "../interfaces/IEditRun";
+import {calcEndTime, dateToStartTime, stringToDuration} from "../helper/functions";
+import IDbRun from "../interfaces/IDbRun";
+import IEditRun from "../interfaces/IEditRun";
+import IRun from "../interfaces/IRun";
 
 interface FitnessData {
     distance: number;
@@ -16,7 +16,7 @@ export const FITNESS_DATA_TYPES = {
     'calories': 'com.google.calories.expended'
 }
 
-export class DbRun implements IDbRun {
+export default class DbRun implements IDbRun {
     id?: number;
     calories: number;
     distance: number;
@@ -25,7 +25,14 @@ export class DbRun implements IDbRun {
     steps: number;
     vdot: number;
 
-    private constructor(startTime: number, endTime: number, distance: number, calories: number, steps: number, vdot: number) {
+    private constructor(
+        startTime: number,
+        endTime: number,
+        distance: number,
+        calories: number,
+        steps: number,
+        vdot: number
+    ) {
         this.calories = calories;
         this.distance = distance;
         this.endTime = endTime;
@@ -35,9 +42,10 @@ export class DbRun implements IDbRun {
     }
 
     static async fromEditRun(run: IEditRun): Promise<IDbRun> {
-        const startTime = dateToStartTime(run.date + " " +  run.time);
-        const endTime = calcEndTime(startTime, run.duration);
-        return new DbRun(
+        const startTime = dateToStartTime(run.date);
+        const endTime = calcEndTime(startTime, stringToDuration(run.duration));
+
+        let newRun = new DbRun(
             startTime,
             endTime,
             parseFloat(run.distance),
@@ -45,6 +53,12 @@ export class DbRun implements IDbRun {
             parseFloat(run.steps),
             await fetchVdot(parseFloat(run.distance), startTime, endTime)
         );
+
+        if (run.id) {
+            newRun.id = run.id
+        }
+
+        return newRun;
     }
 
     static async fromGoogleApiData(bucket): Promise<IDbRun> {
@@ -63,6 +77,7 @@ export class DbRun implements IDbRun {
     static async fromRun(run: IRun): Promise<IDbRun> {
         const startTime = dateToStartTime(run.date);
         const endTime = calcEndTime(startTime, run.duration);
+
         let newRun = new DbRun(
             startTime,
             endTime,
@@ -104,6 +119,4 @@ export class DbRun implements IDbRun {
 
         return response as FitnessData;
     }
-
-    isNew = (): boolean => !this.id;
 }

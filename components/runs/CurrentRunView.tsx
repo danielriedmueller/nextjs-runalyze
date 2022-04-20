@@ -1,14 +1,16 @@
 import React, {Component} from "react";
-import style from '../../style/subheader.module.scss';
-import {deleteRun, upsertRun} from "../../helper/fetch";
+import style from '../../style/currentrun.module.scss';
+import {deleteRun, insertRun, updateRun} from "../../helper/fetch";
 import EditRunView from "./EditRunView";
 import IRun from "../../interfaces/IRun";
 import IEditRun from "../../interfaces/IEditRun";
 import NewRunView from "./NewRunView";
 import SingleRunView from "./SingleRunView";
+import IUser from "../../interfaces/IUser";
 
 interface IProps {
     run: IRun,
+    user: IUser
     statistics: string,
     setStatistics: (statistics: string) => void
 }
@@ -17,9 +19,6 @@ interface IState {
     editMode: boolean,
     insertMode: boolean,
     editRun: IEditRun,
-    currentRun: IRun,
-    statistics: string,
-    setStatistics: (statistics: string) => void
 }
 
 export default class CurrentRunView extends Component<IProps, IState> {
@@ -29,10 +28,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
         this.state = {
             editMode: false,
             insertMode: false,
-            editRun: null,
-            currentRun: props.run,
-            statistics: props.statistics,
-            setStatistics: props.setStatistics
+            editRun: null
         }
     }
 
@@ -41,15 +37,29 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     onChangeConfirm = async (): Promise<void> => {
-        this.exitEditMode();
+        if (this.state.editMode) {
+            if (!this.state.editRun.id) {
+                throw Error('Run to update does not have id')
+            }
 
-        await upsertRun(this.state.editRun);
+            await updateRun(this.state.editRun);
+        }
+
+        if (this.state.insertMode && !this.state.editRun.id) {
+            if (this.state.editRun.id) {
+                throw Error('Run to insert already existing with id: ' + this.state.editRun.id.toString())
+            }
+
+            await insertRun(this.state.editRun, this.props.user);
+        }
+
+        this.exitEditMode();
     }
 
     onDelete = async (): Promise<void> => {
         this.exitEditMode();
 
-        await deleteRun(this.state.currentRun);
+        await deleteRun(this.props.run);
     }
 
     exitEditMode = () => {
@@ -66,20 +76,19 @@ export default class CurrentRunView extends Component<IProps, IState> {
 
     render() {
         return <div className={this.state.editMode || this.state.insertMode
-            ? [style.subheader, style['edit-mode']].join(" ")
-            : style.subheader
+            ? [style.currentRun, style['editMode']].join(" ")
+            : style.currentRun
         }>
             <div className={style.currentRun}>
                 {this.state.editMode ? <EditRunView
-                    run={this.state.currentRun}
-                    upsert={this.upsert}
+                    run={this.props.run}
+                    update={this.upsert}
                 /> : this.state.insertMode ? <NewRunView
-                    upsert={this.upsert}
+                    insert={this.upsert}
                 /> : <SingleRunView
-                    run={this.state.currentRun}
+                    run={this.props.run}
                     statistics={this.props.statistics}
-                    setStatistics={this.state.setStatistics}
-                    activateEditMode={this.activateEditMode}
+                    setStatistics={this.props.setStatistics}
                 />}
             </div>
             <div className={style.buttonContainer}>
@@ -91,7 +100,10 @@ export default class CurrentRunView extends Component<IProps, IState> {
                             : <button className={style.cancelButton} onClick={this.exitEditMode}/>
                         }
                     </>
-                    : <button className={style.insertButton} onClick={this.activateInsertMode}/>
+                    : <>
+                        <button className={style.insertButton} onClick={this.activateInsertMode}/>
+                        <button className={style.editButton} onClick={this.activateEditMode}/>
+                    </>
                 }
             </div>
         </div>;

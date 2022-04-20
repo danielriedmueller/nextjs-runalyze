@@ -1,21 +1,21 @@
-import {IEditRun} from "../interfaces/IEditRun";
-import {IRun} from "../interfaces/IRun";
 import dayjs from "dayjs";
+import IEditRun from "../interfaces/IEditRun";
+import IRun from "../interfaces/IRun";
+import {durationToString} from "../helper/functions";
 
-export class EditRun implements IEditRun {
+export default class EditRun implements IEditRun {
     date: string;
     distance: string;
     duration: string;
-    time: string;
     calories?: string;
     id?: number;
     steps?: string;
 
-    private constructor(date?: string, distance?: string, duration?: string, time?: string, calories?: string, steps?: string) {
+    private constructor(id?: number, date?: string, distance?: string, duration?: string, calories?: string, steps?: string) {
+        this.id = id;
         this.date = date;
         this.distance = distance;
         this.duration = duration;
-        this.time = time;
         this.calories = calories;
         this.steps = steps;
     }
@@ -28,10 +28,10 @@ export class EditRun implements IEditRun {
         const date = dayjs(run.date);
 
         return new EditRun(
-            date.format('YYYY-MM-DD'),
+            run.id,
+            date.format('YYYY-MM-DDTHH:MM'),
             run.distance.toString(),
-            run.duration,
-            date.format('HH:MM:SS'),
+            durationToString(run.duration),
             run.calories.toString(),
             run.steps.toString()
         );

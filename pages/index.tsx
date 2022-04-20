@@ -11,7 +11,7 @@ import RunArea from "../components/RunArea";
 import IRun from "../interfaces/IRun";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
-import {Run} from "../model/Run";
+import Run from "../model/Run";
 
 require('dayjs/locale/de')
 
@@ -25,11 +25,11 @@ dayjs.locale('de');
 const USER_ID_COOKIE = 'user_id';
 
 interface IProps {
-    runs?: IDbRun[]
+    runs: IDbRun[]
 }
 
 interface IState {
-    runs?: IRun[]
+    runs: IRun[]
     user: IUser;
 }
 
@@ -38,7 +38,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: props.runs,
+            runs: props.runs.map((run) => Run.fromDbRun(run)),
             user: {
                 token: null,
                 id: null,
@@ -121,7 +121,7 @@ export async function getServerSideProps(ctx): Promise<{props: IProps}> {
         return {props: {runs}}
     }
 
-    return {props: {runs: null}}
+    return {props: {runs: []}}
 }
 
 export default Home;

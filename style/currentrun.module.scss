@@ -1,4 +1,4 @@
-.subheader {
+.currentRun {
   display: flex;
   justify-content: space-between;
   padding: var(--spacing-s);
@@ -37,6 +37,11 @@
 
     button.insertButton {
       background: transparent url("../assets/icons/heart-plus.svg") no-repeat center center;
+      background-size: var(--icon-size-big);
+    }
+
+    button.editButton {
+      background: transparent url("../assets/icons/user-edit.svg") no-repeat center center;
       background-size: var(--icon-size-big);
     }
 

@@ -20,10 +20,6 @@
   }
 }
 
-.date input {
-  font-size: smaller;
-}
-
 .count {
   background-image: url("../assets/icons/clipboard-list.svg");
   border-bottom: 1px solid var(--creme);
@@ -31,10 +27,15 @@
 }
 
 .date {
-  background-image: url("../assets/icons/calendar3.svg");
+  background: #fff none;
+  color: black;
   border-bottom: 1px solid var(--creme);
-  padding-bottom: var(--spacing-s);
-  padding-top: 0;
+  padding: 0 0 var(--spacing-s) 0;
+}
+
+.date input {
+  font-size: smaller;
+  color: black;
 }
 
 .pace {

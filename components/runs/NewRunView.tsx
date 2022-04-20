@@ -1,15 +1,14 @@
 import React, {Component} from "react";
 import style from '../../style/singlerun.module.scss';
 import IEditRun from "../../interfaces/IEditRun";
-import {EditRun} from "../../model/EditRun";
+import EditRun from "../../model/EditRun";
 
 interface IProps {
-    upsert: (editRun: IEditRun) => void
+    insert: (editRun: IEditRun) => void
 }
 
 interface IState {
     run: IEditRun
-    upsert: (editRun: IEditRun) => void
 }
 
 export default class NewRunView extends Component<IProps, IState> {
@@ -17,8 +16,7 @@ export default class NewRunView extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            run: EditRun.create(),
-            upsert: props.updateOrInsertRun
+            run: EditRun.create()
         };
     }
 
@@ -28,7 +26,7 @@ export default class NewRunView extends Component<IProps, IState> {
 
         this.setState({run});
 
-        this.state.upsert(run);
+        this.props.insert(run);
     }
 
     render() {
@@ -38,13 +36,7 @@ export default class NewRunView extends Component<IProps, IState> {
                     name="date"
                     value={this.state.run.date}
                     onChange={this.onChange}
-                    type="date"
-                />
-                <input
-                    name="date"
-                    value={this.state.run.time}
-                    onChange={this.onChange}
-                    type="time"
+                    type="datetime-local"
                 />
             </div>
             <div className={style.distance}>

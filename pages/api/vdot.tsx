@@ -6,7 +6,6 @@ import {durationToString} from "../../helper/functions";
 dayjs.extend(duration);
 const FormData = require('form-data');
 
-
 export const fetchVdot = async (
     distance: number,
     startTime: number,

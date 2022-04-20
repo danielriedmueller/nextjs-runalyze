@@ -6,5 +6,4 @@ export default interface IDbRun {
     vdot?: number;
     calories?: number;
     steps?: number;
-    isNew: () => boolean;
 }

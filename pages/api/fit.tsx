@@ -3,7 +3,7 @@ import Cors from "cors";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import {insertRun} from "./upsert";
-import {DbRun, FITNESS_DATA_TYPES} from "../../model/DbRun";
+import DbRun, {FITNESS_DATA_TYPES} from "../../model/DbRun";
 
 dayjs.extend(duration);
 

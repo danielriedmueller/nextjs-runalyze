@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import {createDuration} from "../helper/functions";
+import {createDuration, durationToString} from "../helper/functions";
 import IRun from "../interfaces/IRun";
 import IDbRun from "../interfaces/IDbRun";
 import {Length, Pacer, Timespan} from "fitness-js";
 import {Duration} from "dayjs/plugin/duration";
 
-export class Run implements IRun {
+export default class Run implements IRun {
     id: number;
     calories: number;
     date: string;
@@ -30,9 +30,9 @@ export class Run implements IRun {
             dayjs(dbRun.startTime).format(process.env.NEXT_PUBLIC_DATE_FORMAT),
             dbRun.distance,
             createDuration(dbRun.startTime, dbRun.endTime),
-            dbRun.id,
             dbRun.steps,
-            dbRun.vdot
+            dbRun.vdot,
+            dbRun.id
         );
     }
 
@@ -48,7 +48,5 @@ export class Run implements IRun {
             .toPaceUnit('min/km').toString();
     }
 
-    getDuration = (): string => {
-        return Math.floor(this.duration.asHours()) + ":" + this.duration.minutes() + ":" + this.duration.seconds()
-    }
+    getDuration = (): string => durationToString(this.duration);
 }
