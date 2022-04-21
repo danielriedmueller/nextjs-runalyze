@@ -25,15 +25,15 @@ export default class EditRun implements IEditRun {
     }
 
     public static fromRun(run: IRun): IEditRun {
-        const date = dayjs('2022-04-17 21:06:01');
+        const date = dayjs(run.date);
 
         return new EditRun(
             run.id,
             date.format('YYYY-MM-DDTHH:mm:ss'),
             run.distance.toString(),
             durationToString(run.duration),
-            run.calories.toString(),
-            run.steps.toString()
+            run.calories ? run.calories.toString() : null,
+            run.steps ? run.steps.toString(): null
         );
     }
 

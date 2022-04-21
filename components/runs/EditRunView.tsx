@@ -1,30 +1,18 @@
 import React, {Component} from "react";
 import style from '../../style/singlerun.module.scss';
-import IRun from "../../interfaces/IRun";
 import IEditRun from "../../interfaces/IEditRun";
-import EditRun from "../../model/EditRun";
 
 interface IProps {
-    run: IRun;
+    run: IEditRun;
     update: (editRun: IEditRun) => void;
 }
 
 interface IState {
-    run: IEditRun;
 }
 
 export default class EditRunView extends Component<IProps, IState> {
-    static getDerivedStateFromProps(props, state) {
-        console.log('editrunview: ', props.run.date);
-        const editRun = EditRun.fromRun(props.run);
-        console.log('editrunview: ', editRun.date);
-        return {
-            run: editRun
-        };
-    }
-
     onChange = (evt): void => {
-        let run = this.state.run;
+        let run = this.props.run;
         run[evt.target.name] = evt.target.value;
 
         this.setState({run});
@@ -37,7 +25,7 @@ export default class EditRunView extends Component<IProps, IState> {
             <div className={style.date}>
                 <input
                     name="date"
-                    value={this.state.run.date}
+                    value={this.props.run.date}
                     onChange={this.onChange}
                     type="datetime-local"
                 />
@@ -45,7 +33,7 @@ export default class EditRunView extends Component<IProps, IState> {
             <div className={style.distance}>
                 <input
                     name="distance"
-                    value={this.state.run.distance}
+                    value={this.props.run.distance}
                     onChange={this.onChange}
                     type="text"
                 />
@@ -53,7 +41,7 @@ export default class EditRunView extends Component<IProps, IState> {
             <div className={style.duration}>
                 <input
                     name="duration"
-                    value={this.state.run.duration}
+                    value={this.props.run.duration}
                     onChange={this.onChange}
                     type="text"
                 />

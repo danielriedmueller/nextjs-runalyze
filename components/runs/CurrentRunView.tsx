@@ -7,6 +7,7 @@ import IEditRun from "../../interfaces/IEditRun";
 import NewRunView from "./NewRunView";
 import SingleRunView from "./SingleRunView";
 import IUser from "../../interfaces/IUser";
+import EditRun from "../../model/EditRun";
 
 interface IProps {
     run: IRun;
@@ -38,6 +39,10 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     onChangeConfirm = async (): Promise<void> => {
+        if (!this.state.editRun) {
+            return;
+        }
+
         if (this.state.editRun.isValid()) {
             this.props.upsert(this.state.editRun);
             this.exitEditMode();
@@ -55,24 +60,32 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     activateEditMode = () => {
-        this.setState({editMode: true, insertMode: false});
+        this.setState({
+            editRun: EditRun.fromRun(this.props.run),
+            editMode: true,
+            insertMode: false
+        });
     }
 
     activateInsertMode = () => {
-        this.setState({editMode: false, insertMode: true});
+        this.setState({
+            editRun: EditRun.create(),
+            editMode: false,
+            insertMode: true
+        });
     }
 
     render() {
-        console.log('currentrunview: ', this.props.run);
         return <div className={this.state.editMode || this.state.insertMode
             ? [style.currentRun, style['editMode']].join(" ")
             : style.currentRun
         }>
             <div className={style.currentRun}>
                 {this.state.editMode ? <EditRunView
-                    run={this.props.run}
+                    run={this.state.editRun}
                     update={this.upsert}
                 /> : this.state.insertMode ? <NewRunView
+                    run={this.state.editRun}
                     insert={this.upsert}
                 /> : <SingleRunView
                     run={this.props.run}

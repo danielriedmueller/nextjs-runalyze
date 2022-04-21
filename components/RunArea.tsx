@@ -29,7 +29,6 @@ export default class RunArea extends Component<IProps, IState> {
     }
 
     static getDerivedStateFromProps(props, state) {
-        console.log("rerender")
         return {
             currentRun: props.runs[0]
         };
