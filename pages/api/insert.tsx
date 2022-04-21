@@ -17,6 +17,8 @@ export default async function handle(req, res) {
     const {run, user} = req.body;
     const dbRun = await DbRun.fromEditRun(run);
 
+    // TODO: Check achievements
+
     await insertRun(user, dbRun);
 
     res.json({});

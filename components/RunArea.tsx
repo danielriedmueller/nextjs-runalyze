@@ -8,10 +8,10 @@ import {insertRun, updateRun} from "../helper/fetch";
 interface IProps {
     runs: IRun[],
     user: IUser,
+    refresh: () => void
 }
 
 interface IState {
-    currentRun: IRun
     statistics: string
 }
 
@@ -20,7 +20,6 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: props.runs[0],
             statistics: 'vdot'
         };
     }
@@ -31,6 +30,8 @@ export default class RunArea extends Component<IProps, IState> {
         } else {
             await insertRun(run, this.props.user);
         }
+
+        this.props.refresh();
     }
 
     setStatistics = (statistics: string) => {
@@ -40,7 +41,7 @@ export default class RunArea extends Component<IProps, IState> {
     render() {
         return <>
             <CurrentRunView
-                run={this.state.currentRun}
+                run={this.props.runs[0]}
                 statistics={this.state.statistics}
                 setStatistics={this.setStatistics}
                 upsert={this.upsert}

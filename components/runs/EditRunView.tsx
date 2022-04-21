@@ -20,6 +20,8 @@ export default class EditRunView extends Component<IProps, IState> {
         this.state = {
             run: EditRun.fromRun(props.run),
         };
+
+        this.props.update(this.state.run);
     }
 
     onChange = (evt): void => {

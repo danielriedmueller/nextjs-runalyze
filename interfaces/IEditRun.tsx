@@ -5,4 +5,5 @@ export default interface IEditRun {
     calories?: string;
     steps?: string;
     id?: number;
+    isValid: () => boolean;
 }

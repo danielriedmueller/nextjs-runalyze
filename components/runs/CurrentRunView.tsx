@@ -38,8 +38,10 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     onChangeConfirm = async (): Promise<void> => {
-        this.props.upsert(this.state.editRun);
-        this.exitEditMode();
+        if (this.state.editRun.isValid()) {
+            this.props.upsert(this.state.editRun);
+            this.exitEditMode();
+        }
     }
 
     onDelete = async (): Promise<void> => {

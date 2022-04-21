@@ -18,6 +18,8 @@ export default class NewRunView extends Component<IProps, IState> {
         this.state = {
             run: EditRun.create()
         };
+
+        this.props.insert(this.state.run);
     }
 
     onChange = (evt): void => {

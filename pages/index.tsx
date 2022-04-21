@@ -12,6 +12,7 @@ import IRun from "../interfaces/IRun";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
+import {fetchFitData, fetchRuns} from "../helper/fetch";
 
 require('dayjs/locale/de')
 
@@ -39,11 +40,7 @@ class Home extends Component<IProps, IState> {
 
         this.state = {
             runs: props.runs.map((run) => Run.fromDbRun(run)),
-            user: {
-                token: null,
-                id: null,
-                name: null
-            }
+            user: null
         };
     }
 
@@ -58,33 +55,26 @@ class Home extends Component<IProps, IState> {
         document.cookie = USER_ID_COOKIE + "=" + user.id;
     }
 
-    fetchFitData = async (): Promise<void> => {
-        await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                token: this.state.user.token,
-                user: this.state.user.id
-            }),
-        });
-    }
+    fetchFitData = async (): Promise<void> => fetchFitData(this.state.user);
 
     responseGoogleFailed = (): void => {
         console.log('google login failed');
-        this.setState({
-            user: {
-                token: null,
-                id: null,
-                name: null
-            }
-        })
+        this.setState({user: null})
+    }
+
+    refreshRuns = async (): Promise<void> => {
+        const runs = await fetchRuns(this.state.user.id);
+        this.setState({runs: runs.map((run) => Run.fromDbRun(run))});
     }
 
     render() {
         return <div id="app">
             <Header/>
-            {this.state.user.token ?
-                <button onClick={this.fetchFitData}>Fit Data</button> :
+            {this.state.user ?
+                <>
+                    <button onClick={this.fetchFitData}>Fit Data</button>
+                    <div>Hallo {this.state.user.name}!</div>
+                </> :
                 <GoogleLogin
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                     buttonText="Login"
@@ -95,30 +85,20 @@ class Home extends Component<IProps, IState> {
                     scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
                 />
             }
-            {this.state.user.name ? <div>
-                Hallo {this.state.user.name}!
-            </div> : null}
-            {this.state.runs ? <RunArea
+            {this.state.runs && this.state.user ? <RunArea
                 runs={this.state.runs}
                 user={this.state.user}
-            /> : null }
+                refresh={this.refreshRuns}
+            /> : null}
         </div>
     }
 }
 
-export async function getServerSideProps(ctx): Promise<{props: IProps}> {
+export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = ctx.req.cookies[USER_ID_COOKIE];
 
     if (userId) {
-        const runsResponse = await fetch(process.env.NEXT_PUBLIC_API_GET_RUNS, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                user: userId
-            }),
-        });
-        let runs = await runsResponse.json() as IDbRun[];
-
+        const runs = await fetchRuns(userId);
         return {props: {runs}}
     }
 

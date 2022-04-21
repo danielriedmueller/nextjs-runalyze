@@ -36,4 +36,8 @@ export default class EditRun implements IEditRun {
             run.steps.toString()
         );
     }
+
+    isValid(): boolean {
+        return !!(this.date && this.distance && this.duration);
+    }
 }
