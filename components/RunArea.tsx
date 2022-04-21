@@ -4,15 +4,18 @@ import CurrentRunView from "./runs/CurrentRunView";
 import IUser from "../interfaces/IUser";
 import IEditRun from "../interfaces/IEditRun";
 import {insertRun, updateRun} from "../helper/fetch";
+import BestRuns from "./runs/BestRuns";
+import style from '../style/runarea.module.scss';
 
 interface IProps {
-    runs: IRun[],
-    user: IUser,
-    refresh: () => void
+    runs: IRun[];
+    user: IUser;
+    refresh: () => void;
 }
 
 interface IState {
-    statistics: string
+    currentRun: IRun;
+    statistics: string;
 }
 
 export default class RunArea extends Component<IProps, IState> {
@@ -20,7 +23,15 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
+            currentRun: null,
             statistics: 'vdot'
+        };
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        console.log("rerender")
+        return {
+            currentRun: props.runs[0]
         };
     }
 
@@ -41,7 +52,7 @@ export default class RunArea extends Component<IProps, IState> {
     render() {
         return <>
             <CurrentRunView
-                run={this.props.runs[0]}
+                run={this.state.currentRun}
                 statistics={this.state.statistics}
                 setStatistics={this.setStatistics}
                 upsert={this.upsert}

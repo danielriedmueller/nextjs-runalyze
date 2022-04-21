@@ -9,17 +9,17 @@ import SingleRunView from "./SingleRunView";
 import IUser from "../../interfaces/IUser";
 
 interface IProps {
-    run: IRun,
-    user: IUser
-    statistics: string,
-    setStatistics: (statistics: string) => void
-    upsert: (run: IEditRun) => void
+    run: IRun;
+    user: IUser;
+    statistics: string;
+    setStatistics: (statistics: string) => void;
+    upsert: (run: IEditRun) => void;
 }
 
 interface IState {
-    editMode: boolean,
-    insertMode: boolean,
-    editRun: IEditRun,
+    editMode: boolean;
+    insertMode: boolean;
+    editRun: IEditRun;
 }
 
 export default class CurrentRunView extends Component<IProps, IState> {
@@ -63,6 +63,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     render() {
+        console.log('currentrunview: ', this.props.run);
         return <div className={this.state.editMode || this.state.insertMode
             ? [style.currentRun, style['editMode']].join(" ")
             : style.currentRun

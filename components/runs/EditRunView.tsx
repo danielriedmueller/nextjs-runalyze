@@ -5,23 +5,22 @@ import IEditRun from "../../interfaces/IEditRun";
 import EditRun from "../../model/EditRun";
 
 interface IProps {
-    run: IRun
-    update: (editRun: IEditRun) => void
+    run: IRun;
+    update: (editRun: IEditRun) => void;
 }
 
 interface IState {
-    run: IEditRun
+    run: IEditRun;
 }
 
 export default class EditRunView extends Component<IProps, IState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            run: EditRun.fromRun(props.run),
+    static getDerivedStateFromProps(props, state) {
+        console.log('editrunview: ', props.run.date);
+        const editRun = EditRun.fromRun(props.run);
+        console.log('editrunview: ', editRun.date);
+        return {
+            run: editRun
         };
-
-        this.props.update(this.state.run);
     }
 
     onChange = (evt): void => {

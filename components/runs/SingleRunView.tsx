@@ -3,10 +3,10 @@ import style from '../../style/singlerun.module.scss';
 import IRun from "../../interfaces/IRun";
 
 interface IProps {
-    run: IRun
-    statistics: string,
-    setStatistics: (statistics: string) => void,
-    label?: string
+    run: IRun;
+    statistics: string;
+    setStatistics: (statistics: string) => void;
+    label?: string;
 }
 
 interface IState {

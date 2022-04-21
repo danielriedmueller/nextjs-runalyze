@@ -4,11 +4,11 @@ import IEditRun from "../../interfaces/IEditRun";
 import EditRun from "../../model/EditRun";
 
 interface IProps {
-    insert: (editRun: IEditRun) => void
+    insert: (editRun: IEditRun) => void;
 }
 
 interface IState {
-    run: IEditRun
+    run: IEditRun;
 }
 
 export default class NewRunView extends Component<IProps, IState> {
