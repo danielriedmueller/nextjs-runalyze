@@ -9,11 +9,13 @@ import style from '../style/runarea.module.scss';
 import IRuns from "../interfaces/IRuns";
 import LineChart from "./graphs/LineChart";
 import YearRuns from "./runs/YearRuns";
+import MonthRuns from "./runs/MonthRuns";
 
 interface IProps {
     runs: IRuns;
     user: IUser;
     refresh: () => void;
+    setDateFilter: (filter: string) => void;
 }
 
 interface IState {
@@ -60,8 +62,13 @@ export default class RunArea extends Component<IProps, IState> {
                     statistics={this.state.statistics}
                     setStatistics={this.setStatistics}
                 />
+                <MonthRuns
+                    runs={this.props.runs}
+                    setDateFilter={this.props.setDateFilter}
+                />
                 <YearRuns
                     runs={this.props.runs}
+                    setDateFilter={this.props.setDateFilter}
                 />
             </div>
         </>

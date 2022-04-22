@@ -14,6 +14,7 @@ import Run from "../model/Run";
 import {fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns from "../interfaces/IRuns";
+import isBetween from "dayjs/plugin/isBetween";
 
 require('dayjs/locale/de')
 
@@ -22,12 +23,15 @@ dayjs.extend(customParseFormat);
 dayjs.extend(weekOfYear);
 dayjs.extend(isoWeeksInYear);
 dayjs.extend(isLeapYear);
+dayjs.extend(isBetween);
 dayjs.locale('de');
 
-const USER_ID_COOKIE = 'user_id';
+export const USER_ID_COOKIE = 'user_id';
+export const DATE_FILTER_COOKIE = 'date_filter';
 
 interface IProps {
-    runs: IDbRun[]
+    runs: IDbRun[],
+    dateFilter?: string;
 }
 
 interface IState {
@@ -40,7 +44,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run))),
+            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), props.dateFilter),
             user: null
         };
     }
@@ -68,6 +72,12 @@ class Home extends Component<IProps, IState> {
         this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
     }
 
+    setDateFilter = (filter: string): void => {
+        let runs = this.state.runs;
+        runs.setFilter(filter);
+        this.setState({runs});
+    }
+
     render() {
         return <div id="app">
             <Header/>
@@ -90,6 +100,7 @@ class Home extends Component<IProps, IState> {
                 runs={this.state.runs}
                 user={this.state.user}
                 refresh={this.refreshRuns}
+                setDateFilter={this.setDateFilter}
             /> : null}
         </div>
     }
@@ -97,13 +108,14 @@ class Home extends Component<IProps, IState> {
 
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = ctx.req.cookies[USER_ID_COOKIE];
+    const dateFilter = ctx.req.cookies[DATE_FILTER_COOKIE];
 
     if (userId) {
         const runs = await fetchRuns(userId);
-        return {props: {runs}}
+        return {props: {runs, dateFilter}}
     }
 
-    return {props: {runs: []}}
+    return {props: {runs: [], dateFilter: null}}
 }
 
 export default Home;

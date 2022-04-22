@@ -8,6 +8,7 @@ export default interface IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
+    active: boolean;
     getMostPerformant: () => IRun;
     getFurthest: () => IRun;
     getLongest: () => IRun;
@@ -22,4 +23,6 @@ export default interface IRuns {
     getDurationAvg: () => string;
     getPaceAvg: () => string;
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
+    setFilter: (filter: string) => void;
+    isActive: () => boolean;
 }

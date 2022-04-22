@@ -5,7 +5,7 @@ import IRuns from "../../interfaces/IRuns";
 interface IProps {
     runs: IRuns;
     label: string;
-    isActive: boolean;
+    onClick: () => void;
 }
 
 interface IState {
@@ -13,8 +13,8 @@ interface IState {
 
 export default class MultipleRuns extends Component<IProps, IState> {
     render() {
-        return <div>
-            <div className={this.props.isActive ? style.activeLegend : style.legend}>{this.props.label}</div>
+        return <div onClick={() => this.props.onClick()}>
+            <div className={this.props.runs.isActive() ? style.activeLegend : style.legend}>{this.props.label}</div>
             <div className={style.count}>{this.props.runs.getCount()}</div>
             <div className={style.pace}>{this.props.runs.getPaceAvg()}</div>
             <div

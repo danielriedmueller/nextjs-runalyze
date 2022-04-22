@@ -4,6 +4,7 @@ import IRuns from "../../interfaces/IRuns";
 
 interface IProps {
     runs: IRuns;
+    setDateFilter: (filter: string) => void;
 }
 
 interface IState {

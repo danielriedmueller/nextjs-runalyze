@@ -4,6 +4,7 @@ import {durationToString, stringToDuration} from "../helper/functions";
 import dayjs from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
+import {DATE_FILTER_COOKIE} from "../pages";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -11,11 +12,13 @@ export default class Runs implements IRuns {
     durationSum: Duration;
     vdotSum: number;
     filter?: string;
+    active: boolean = false;
 
-    constructor(runs: IRun[]) {
+    constructor(runs: IRun[], filter?: string) {
         this.distanceSum = 0;
         this.durationSum = dayjs.duration();
         this.vdotSum = 0;
+        this.filter = filter;
 
         runs.forEach((run) => {
             this.distanceSum += run.distance;
@@ -26,8 +29,14 @@ export default class Runs implements IRuns {
         this.runs = runs;
     }
 
-    setFilter(filter?: string) {
+    /**
+     * year;month;week
+     * e.g.
+     * 2022;12;44 or 2022;12 or 2022
+     */
+    setFilter(filter?: string): void {
         this.filter = filter;
+        document.cookie = DATE_FILTER_COOKIE + "=" + filter;
     }
 
     getFastest(): IRun {
@@ -69,8 +78,20 @@ export default class Runs implements IRuns {
         return this.runs.length;
     }
 
+    isActive(): boolean {
+        return this.active;
+    }
+
     getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
-        return new Runs(this.runs.filter((run) => run.date.isAfter(startDate) && run.date.isBefore(endDate)));
+        let runs = new Runs(this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]')));
+
+        // TODO Check if active for other than year
+        if (this.filter) {
+            const filterDate = dayjs(this.filter);
+            runs.active = !!filterDate.isBetween(startDate, endDate, null, '[]');
+        }
+
+        return runs;
     }
 
     getDistanceAvg(): number {

@@ -53,37 +53,3 @@ export const isValidRun = (newRun) => {
 
     return true;
 }
-
-export const getDateRange = (range, deviation = 0) => {
-    let date = dayjs(year + '-1', 'YYYY-M');
-    if (range === "week") {
-        date = date.week(deviation);
-    } else {
-        date = date.set(range, deviation);
-    }
-
-    return [
-        date.clone().startOf(range),
-        date.clone().endOf(range)
-    ];
-}
-
-export const getRunsInTimeRange = (runs, range, deviation = 0) => {
-    const dateRange = getDateRange(range, deviation);
-    return getRunsBetween(runs, dateRange);
-};
-
-export const splitRunsInMonths = (runs) => {
-    let months = {};
-    runs.forEach(run => {
-        let currentMonth = run.date.format('M');
-
-        if (!(currentMonth in months)) {
-            months[currentMonth] = [];
-        }
-
-        months[currentMonth].push(run);
-    })
-
-    return months;
-}

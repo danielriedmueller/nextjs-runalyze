@@ -1,29 +1,39 @@
 import React from "react";
 import dayjs from "dayjs";
 import DateRuns from "./DateRuns";
+import MultipleRuns from "./MultipleRuns";
 
 export default class MonthRuns extends DateRuns {
-    getRuns() {
-        if (this.props.runs.getCount() === 0) return [];
+    getRunViews() {
+        const runs = this.props.runs;
+        if (runs.getCount() === 0 || !runs.filter) return [];
 
-        var months = [];
+        let months = [];
 
-        const newestRunDate = this.props.runs.getLatest().date;
-        const currentYear = newestRunDate.year();
+        const firstMonth = 1;
+        const lastMonth = 12;
 
-        const splittedRuns = splitRunsInMonths(this.props.runs);
-
-        for (const [month, runs] of Object.entries(splittedRuns)) {
-            months.push(<div
-                key={'monthRun-' + month}
-                onClick={() => this.props.changeFilter(month)}>
-                <MultipleRuns
-                    label={dayjs().month(month - 1).format('MMMM')}
-                    run={combineRuns(runs)}
-                    isActive={month === this.props.runFilter.month}
-                /></div>)
+        const onClick = (month: number) => {
+            this.props.setDateFilter(runs.filter + ";" + month.toString());
         }
 
-        return months.reverse();
+        for (let i = lastMonth; i > firstMonth - 1; i--) {
+            const currentMonth = dayjs(i + '-01-' + runs.filter);
+            const monthRuns = runs.getBetween(
+                currentMonth.startOf('month'),
+                currentMonth.endOf('month')
+            );
+            if (monthRuns.getCount() > 0) {
+                months.push(<div
+                    key={'monthRun-' + i}
+                ><MultipleRuns
+                    label={i.toString()}
+                    runs={monthRuns}
+                    onClick={() => onClick(i)}
+                /></div>)
+            }
+        }
+
+        return months;
     }
 }
