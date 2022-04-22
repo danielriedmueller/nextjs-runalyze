@@ -20,6 +20,13 @@
   }
 }
 
+.fastest .pace,
+.mostPerformant .vdot,
+.longest .duration,
+.furthest .distance {
+  color: var(--yellow) !important;
+}
+
 .count {
   background-image: url("../assets/icons/clipboard-list.svg");
   border-bottom: 1px solid var(--creme);
@@ -53,6 +60,23 @@
 .vdot {
   background-image: url("../assets/icons/star.svg");
 }
+
+.fastest .pace {
+  background-image: url("../assets/icons/stopwatch-running-most.svg");
+}
+
+.mostPerformant .vdot {
+  background-image: url("../assets/icons/star-most.svg");
+}
+
+.longest .duration {
+  background-image: url("../assets/icons/stopwatch-most.svg");
+}
+
+.furthest .distance {
+  background-image: url("../assets/icons/polygon3-most.svg");
+}
+
 
 div.legend {
   font-family: 'Montserrat', sans-serif;

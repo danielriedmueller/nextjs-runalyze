@@ -17,7 +17,7 @@ export default class YearRuns extends DateRuns {
             years.push(<div
                 key={'yearRun-' + i}
             ><MultipleRuns
-                label={i}
+                label={i.toString()}
                 runs={this.props.runs.getBetween(
                     currentYear.startOf('year'),
                     currentYear.endOf('year')

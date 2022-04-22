@@ -31,26 +31,38 @@ export default class Runs implements IRuns {
     }
 
     getFastest(): IRun {
-        return this.runs.reduce((prev, current) => {
+        let run = this.runs.reduce((prev, current) => {
             const durationA = stringToDuration(prev.getPace());
             const durationB = stringToDuration(current.getPace());
 
             return (durationA.asMilliseconds() < durationB.asMilliseconds()) ? prev : current
-        })
+        });
+        run.best = 'fastest';
+
+        return run;
     }
 
     getFurthest(): IRun {
-        return this.runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
+        let run = this.runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
+        run.best = 'furthest';
+
+        return run;
     }
 
     getLongest(): IRun {
-        return this.runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
+        let run = this.runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
+        run.best = 'longest';
+
+        return run;
     }
 
     getMostPerformant(): IRun {
-        return this.runs.reduce((prev, current) => {
+        let run = this.runs.reduce((prev, current) => {
             return prev.vdot > current.vdot ? prev : current;
         });
+        run.best = 'mostPerformant';
+
+        return run;
     }
 
     getCount(): number {
@@ -98,9 +110,5 @@ export default class Runs implements IRuns {
 
     getVdotAvg(): string {
         return (this.vdotSum / this.getCount()).toFixed(2);
-    }
-
-    getYearRuns(): IRuns {
-
     }
 }
