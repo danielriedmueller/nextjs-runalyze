@@ -6,9 +6,12 @@ import IEditRun from "../interfaces/IEditRun";
 import {insertRun, updateRun} from "../helper/fetch";
 import BestRuns from "./runs/BestRuns";
 import style from '../style/runarea.module.scss';
+import IRuns from "../interfaces/IRuns";
+import LineChart from "./graphs/LineChart";
+import YearRuns from "./runs/YearRuns";
 
 interface IProps {
-    runs: IRun[];
+    runs: IRuns;
     user: IUser;
     refresh: () => void;
 }
@@ -23,14 +26,8 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: null,
+            currentRun: props.runs.getLatest(),
             statistics: 'vdot'
-        };
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        return {
-            currentRun: props.runs[0]
         };
     }
 
@@ -44,8 +41,8 @@ export default class RunArea extends Component<IProps, IState> {
         this.props.refresh();
     }
 
-    setStatistics = (statistics: string) => {
-        this.setState({statistics});
+    setStatistics = (currentRun: IRun, statistics: string) => {
+        this.setState({currentRun, statistics});
     }
 
     render() {
@@ -57,6 +54,16 @@ export default class RunArea extends Component<IProps, IState> {
                 upsert={this.upsert}
                 user={this.props.user}
             />
+            <div className={style.runarea}>
+                <BestRuns
+                    runs={this.props.runs}
+                    statistics={this.state.statistics}
+                    setStatistics={this.setStatistics}
+                />
+                <YearRuns
+                    runs={this.props.runs}
+                />
+            </div>
         </>
     }
 }

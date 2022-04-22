@@ -1,16 +1,14 @@
 import React from "react";
-import {combineRuns, getRunsBetween, getRunsInTimeRange, splitRunsInMonths} from "../../helper/functions";
-import MultipleRuns from "../MultipleRuns";
 import dayjs from "dayjs";
 import DateRuns from "./DateRuns";
 
 export default class MonthRuns extends DateRuns {
     getRuns() {
-        if (this.props.runs.length === 0) return [];
+        if (this.props.runs.getCount() === 0) return [];
 
         var months = [];
 
-        const newestRunDate = this.props.runs[0].date;
+        const newestRunDate = this.props.runs.getLatest().date;
         const currentYear = newestRunDate.year();
 
         const splittedRuns = splitRunsInMonths(this.props.runs);

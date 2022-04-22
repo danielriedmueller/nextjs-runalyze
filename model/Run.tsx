@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import {createDuration, durationToString} from "../helper/functions";
 import IRun from "../interfaces/IRun";
 import IDbRun from "../interfaces/IDbRun";
@@ -8,7 +8,7 @@ import {Duration} from "dayjs/plugin/duration";
 export default class Run implements IRun {
     id: number;
     calories: number;
-    date: string;
+    date: Dayjs;
     distance: number;
     duration: Duration;
     steps: number;
@@ -16,7 +16,7 @@ export default class Run implements IRun {
 
     constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
         this.calories = calories;
-        this.date = date;
+        this.date = dayjs(date);
         this.distance = distance;
         this.duration = duration;
         this.steps = steps;
@@ -36,7 +36,9 @@ export default class Run implements IRun {
         );
     }
 
-    getDateDay = (): string => dayjs(this.date).format('dddd');
+    getDate = ():string => this.date.format(process.env.NEXT_PUBLIC_DATE_FORMAT);
+
+    getDateDay = (): string => this.date.format('dddd');
 
     getPace = (): string => {
         if (this.distance === 0 || this.duration.asMilliseconds() === 0) {

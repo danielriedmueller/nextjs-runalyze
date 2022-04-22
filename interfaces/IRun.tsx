@@ -1,13 +1,15 @@
 import {Duration} from "dayjs/plugin/duration";
+import {Dayjs} from "dayjs";
 
 export default interface IRun {
-    date: string;
+    date: Dayjs;
     distance: number;
     vdot: number;
     duration: Duration;
     id: number;
     calories?: number;
     steps?: number;
+    getDate: () => string;
     getDateDay: () => string;
     getPace: () => string;
     getDuration: () => string;

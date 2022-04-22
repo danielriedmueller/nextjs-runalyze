@@ -5,7 +5,7 @@ import IRun from "../../interfaces/IRun";
 interface IProps {
     run: IRun;
     statistics: string;
-    setStatistics: (statistics: string) => void;
+    setStatistics: (currentRun: IRun, statistics: string) => void;
     label?: string;
 }
 
@@ -18,19 +18,19 @@ export default class SingleRunView extends Component<IProps, IState> {
         const run = this.props.run;
         return <div className={style[activeClass]}>
             {this.props.label ? <div className={style.legend}>{this.props.label}</div> : null}
-            <div className={style.date} onClick={() => this.props.setStatistics('date')}>
-                <small>{run.getDateDay()}<br/>{run.date}</small>
+            <div className={style.date} onClick={() => this.props.setStatistics(run, 'date')}>
+                <small>{run.getDateDay()}<br/>{run.getDate()}</small>
             </div>
-            <div className={style.pace} onClick={() => this.props.setStatistics('pace')}>
+            <div className={style.pace} onClick={() => this.props.setStatistics(run, 'pace')}>
                 {run.getPace()}
             </div>
-            <div className={style.distance} onClick={() => this.props.setStatistics('distance')}>
+            <div className={style.distance} onClick={() => this.props.setStatistics(run, 'distance')}>
                 {run.distance}
             </div>
-            <div className={style.duration} onClick={() => this.props.setStatistics('duration')}>
+            <div className={style.duration} onClick={() => this.props.setStatistics(run, 'duration')}>
                 {run.getDuration()}
             </div>
-            <div className={style.vdot} onClick={() => this.props.setStatistics('vdot')}>
+            <div className={style.vdot} onClick={() => this.props.setStatistics(run, 'vdot')}>
                 {run.vdot}
             </div>
         </div>

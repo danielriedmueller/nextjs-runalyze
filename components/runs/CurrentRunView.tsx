@@ -13,7 +13,7 @@ interface IProps {
     run: IRun;
     user: IUser;
     statistics: string;
-    setStatistics: (statistics: string) => void;
+    setStatistics: (currentRun: IRun, statistics: string) => void;
     upsert: (run: IEditRun) => void;
 }
 

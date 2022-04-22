@@ -8,11 +8,12 @@ import Header from "../components/Header";
 import React, {Component} from "react";
 import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
 import RunArea from "../components/RunArea";
-import IRun from "../interfaces/IRun";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
 import {fetchFitData, fetchRuns} from "../helper/fetch";
+import Runs from "../model/Runs";
+import IRuns from "../interfaces/IRuns";
 
 require('dayjs/locale/de')
 
@@ -30,7 +31,7 @@ interface IProps {
 }
 
 interface IState {
-    runs: IRun[]
+    runs: IRuns
     user: IUser;
 }
 
@@ -39,7 +40,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: props.runs.map((run) => Run.fromDbRun(run)),
+            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run))),
             user: null
         };
     }
@@ -64,7 +65,7 @@ class Home extends Component<IProps, IState> {
 
     refreshRuns = async (): Promise<void> => {
         const runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: runs.map((run) => Run.fromDbRun(run))});
+        this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
     }
 
     render() {

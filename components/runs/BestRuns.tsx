@@ -1,14 +1,13 @@
 import React, {Component} from "react";
-import {findFastestRun, findFurthestRun, findLongestRun, findPerformanceRun} from "../../helper/functions";
 import style from '../../style/runs.module.scss';
-import IRun from "../../interfaces/IRun";
-import IUser from "../../interfaces/IUser";
 import SingleRunView from "./SingleRunView";
+import IRuns from "../../interfaces/IRuns";
+import IRun from "../../interfaces/IRun";
 
 interface IProps {
-    runs: IRun[];
-    user: IUser;
-    refresh: () => void;
+    runs: IRuns;
+    statistics: string;
+    setStatistics: (currentRun: IRun, statistics: string) => void;
 }
 
 interface IState {
@@ -16,45 +15,31 @@ interface IState {
 }
 
 export default class BestRuns extends Component<IProps, IState> {
-    getIsActiveClass(run) {
-        if (run && run.date.isSame(this.props.currentRun.date)) {
-            return this.props.graphMode + 'Active'
-        }
-
-        return null;
-    }
-    
     render() {
-        const runCount = this.props.runs.length;
-        const performanceRun = runCount > 0 ? findPerformanceRun(this.props.runs) : null;
-        const furthestRun = runCount > 0 ? findFurthestRun(this.props.runs) : null;
-        const longestRun = runCount > 0 ? findLongestRun(this.props.runs) : null;
-        const fastestRun = runCount > 0 ? findFastestRun(this.props.runs) : null;
-
         return <div className={style.table}>
             <SingleRunView
                 label={"Performance"}
-                run={performanceRun}
-                changeCurrentRun={this.props.changeCurrentRun}
-                activeClass={this.getIsActiveClass(performanceRun)}
+                run={this.props.runs.getMostPerformant()}
+                statistics={this.props.statistics}
+                setStatistics={this.props.setStatistics}
             />
             <SingleRunView
                 label={"Weitester"}
-                run={furthestRun}
-                changeCurrentRun={this.props.changeCurrentRun}
-                activeClass={this.getIsActiveClass(furthestRun)}
+                run={this.props.runs.getFurthest()}
+                statistics={this.props.statistics}
+                setStatistics={this.props.setStatistics}
             />
             <SingleRunView
                 label={"Längster"}
-                run={longestRun}
-                changeCurrentRun={this.props.changeCurrentRun}
-                activeClass={this.getIsActiveClass(longestRun)}
+                run={this.props.runs.getLongest()}
+                statistics={this.props.statistics}
+                setStatistics={this.props.setStatistics}
             />
             <SingleRunView
                 label={"Schnellster"}
-                run={fastestRun}
-                changeCurrentRun={this.props.changeCurrentRun}
-                activeClass={this.getIsActiveClass(fastestRun)}
+                run={this.props.runs.getFastest()}
+                statistics={this.props.statistics}
+                setStatistics={this.props.setStatistics}
             />
         </div>;
     }
