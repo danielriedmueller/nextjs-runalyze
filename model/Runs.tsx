@@ -10,9 +10,9 @@ export default class Runs implements IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
-    filter?: IDateFilter;
+    filter: IDateFilter;
 
-    constructor(runs: IRun[], filter?: IDateFilter) {
+    constructor(runs: IRun[], filter: IDateFilter) {
         this.distanceSum = 0;
         this.durationSum = dayjs.duration();
         this.vdotSum = 0;
@@ -25,6 +25,31 @@ export default class Runs implements IRuns {
         })
 
         this.runs = runs;
+    }
+
+    getFiltered(): IRuns {
+        if (!this.filter.year) {
+            return this;
+        }
+
+        let date;
+        let period;
+
+        if (this.filter.week) {
+            period = 'week';
+            date = dayjs(this.filter.month + '-01-' + this.filter.year).week(this.filter.week);
+        } else if (this.filter.month) {
+            period = 'month';
+            date = dayjs(this.filter.month + '-01-' + this.filter.year);
+        } else {
+            period = 'year';
+            date = dayjs('01-01-' + this.filter.year);
+        }
+
+        return this.getBetween(
+            date.startOf(period),
+            date.endOf(period)
+        );
     }
 
     getFastest(): IRun {
@@ -67,7 +92,10 @@ export default class Runs implements IRuns {
     }
 
     getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
-        return new Runs(this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]')));
+        return new Runs(
+            this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]')),
+            this.filter
+        );
     }
 
     getDistanceAvg(): number {

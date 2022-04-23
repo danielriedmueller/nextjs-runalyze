@@ -68,7 +68,10 @@ class Home extends Component<IProps, IState> {
 
     refreshRuns = async (): Promise<void> => {
         const runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
+        this.setState({runs: new Runs(
+            runs.map((run) => Run.fromDbRun(run)),
+            this.state.runs.filter
+        )});
     }
 
     setDateFilter = (filter: IDateFilter): void => {

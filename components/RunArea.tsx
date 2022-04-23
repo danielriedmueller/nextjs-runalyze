@@ -9,6 +9,7 @@ import style from '../style/runarea.module.scss';
 import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
 import MonthRuns from "./runs/MonthRuns";
+import WeekRuns from "./runs/WeekRuns";
 
 interface IProps {
     runs: IRuns;
@@ -57,9 +58,13 @@ export default class RunArea extends Component<IProps, IState> {
             />
             <div className={style.runarea}>
                 <BestRuns
-                    runs={this.props.runs}
+                    runs={this.props.runs.getFiltered()}
                     statistics={this.state.statistics}
                     setStatistics={this.setStatistics}
+                />
+                <WeekRuns
+                    runs={this.props.runs}
+                    setDateFilter={this.props.setDateFilter}
                 />
                 <MonthRuns
                     runs={this.props.runs}

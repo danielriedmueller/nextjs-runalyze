@@ -3,8 +3,10 @@ import IUser from "../interfaces/IUser";
 
 const USER_ID_COOKIE = 'user_id';
 const DATE_FILTER_COOKIE = 'date_filter';
+const DATE_FILTER_COOKIE_SEPERATOR = '+';
 
 export const setDateFilterCookie = (filter: IDateFilter): void => {
+    console.log(dateFilterToCookieString(filter))
     document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter);
 }
 
@@ -38,7 +40,7 @@ const dateFilterToCookieString = (filter: IDateFilter): string => {
         filterArr.push(week);
     }
 
-    return filterArr.join(';');
+    return filterArr.join(DATE_FILTER_COOKIE_SEPERATOR);
 }
 
 const cookieStringToDateFilter = (filterString: string): IDateFilter => {
@@ -52,7 +54,7 @@ const cookieStringToDateFilter = (filterString: string): IDateFilter => {
         return dateFilter;
     }
 
-    filterString.split(';').forEach((value, index) => {
+    filterString.split(DATE_FILTER_COOKIE_SEPERATOR).forEach((value, index) => {
         if (index === 0) {
             dateFilter.year = parseInt(value);
         }
