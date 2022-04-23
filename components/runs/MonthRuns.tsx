@@ -8,7 +8,7 @@ export default class MonthRuns extends DateRuns {
         const runs = this.props.runs;
         const filter = this.props.filter;
 
-        if (runs.getCount() === 0 || !filter.year) return [];
+        if (runs.getCount() < 2 || !filter.year) return [];
 
         let months = [];
 

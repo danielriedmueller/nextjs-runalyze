@@ -8,7 +8,7 @@ export default class WeekRuns extends DateRuns {
         const runs = this.props.runs;
         const filter = this.props.filter;
 
-        if (runs.getCount() === 0 || !filter.year || !filter.month) return [];
+        if (runs.getCount() < 2 || !filter.year || !filter.month) return [];
 
         let weeks = [];
 

@@ -1,5 +1,6 @@
 import initMiddleware from "../../../lib/init-middleware";
 import Cors from "cors";
+import dayjs from "dayjs";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
@@ -14,9 +15,18 @@ export default async function handle(req: Request, res: Response): Promise<numbe
 
     const {token, user} = req.body;
 
+    const sessions = [];
+
     let latestRunDate = db.prepare('SELECT startTime FROM runs WHERE user = ? ORDER BY startTime desc').pluck().get(user);
+
+    // Initially get runs from current year
+    let startTime = latestRunDate
+        // Add 1,5 hours to prevent insert last run
+        ? dayjs(latestRunDate + 10000000).toISOString()
+        : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
+
     const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
-    const params = new URLSearchParams({activityType, latestRunDate});
+    const params = new URLSearchParams({activityType, startTime});
     const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
             'Content-type': 'application/json',
@@ -24,6 +34,26 @@ export default async function handle(req: Request, res: Response): Promise<numbe
         },
     });
     const gApiData = await gApiResponse.json();
+    sessions.push(...gApiData.session);
+    let nextPageToken = gApiData.nextPageToken;
 
-    return res.json(gApiData.session.length);
+    while (nextPageToken) {
+        const params = new URLSearchParams({pageToken: nextPageToken});
+        const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const gApiData = await gApiResponse.json();
+
+        if (gApiData.session.length === 0) {
+            nextPageToken = null;
+        } else {
+            sessions.push(...gApiData.session);
+            nextPageToken = gApiData.nextPageToken;
+        }
+    }
+
+    return res.json(sessions.length);
 }
