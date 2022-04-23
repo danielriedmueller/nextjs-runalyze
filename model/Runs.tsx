@@ -1,4 +1,4 @@
-import IRuns from "../interfaces/IRuns";
+import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
 import {durationToString, stringToDuration} from "../helper/functions";
 import dayjs from "dayjs";
@@ -11,7 +11,7 @@ export default class Runs implements IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
-    filter?: string;
+    filter?: IDateFilter;
     active: boolean = false;
 
     constructor(runs: IRun[], filter?: string) {

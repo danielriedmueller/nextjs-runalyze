@@ -4,7 +4,7 @@ import {Duration} from "dayjs/plugin/duration";
 
 export default interface IRuns {
     runs: IRun[];
-    filter?: string;
+    filter?: IDateFilter;
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
@@ -25,4 +25,10 @@ export default interface IRuns {
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
     setFilter: (filter: string) => void;
     isActive: () => boolean;
+}
+
+export interface IDateFilter {
+    year: number;
+    month: number;
+    week: number;
 }
