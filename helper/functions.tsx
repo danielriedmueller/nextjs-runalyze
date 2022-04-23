@@ -17,55 +17,20 @@ export const calcEndTime = (startTime: number, duration: Duration): number => du
 export const dateToStartTime = (date: string): number => dayjs(date).valueOf();
 
 /**
- * year;month;week
- * e.g.
- * 2022;12;44 or 2022;12 or 2022
+ * Adjujst invalid date filter
+ * e.g. month without year
  */
-export const dateFilterToCookieString = (filter: IDateFilter): string => {
-    if (!filter) return '';
-
-    const {year, month, week} = filter;
-    let filterArr = [];
-
-    if (year) {
-        filterArr.push(year);
+export const emendDateFilter = (filter: IDateFilter): IDateFilter => {
+    if (!filter.year) {
+        filter.month = null;
     }
 
-    if (month) {
-        filterArr.push(month);
+    if (!filter.month) {
+        filter.week = null;
     }
 
-    if (week) {
-        filterArr.push(week);
-    }
-
-    return filterArr.join(';');
+    return filter;
 }
-
-export const cookieStringToDateFilter = (filterString: string): IDateFilter => {
-    let dateFilter = {
-        year: null,
-        month: null,
-        week: null
-    };
-
-    filterString.split(';').forEach((value, index) => {
-        if (index === 0) {
-            dateFilter.year = value;
-        }
-
-        if (index === 1) {
-            dateFilter.month = value;
-        }
-
-        if (index === 2) {
-            dateFilter.week = value;
-        }
-    })
-
-    return dateFilter;
-}
-
 
 
 export const isValidRun = (newRun) => {

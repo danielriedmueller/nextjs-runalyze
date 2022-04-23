@@ -1,10 +1,9 @@
 import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {dateFilterToCookieString, durationToString, stringToDuration} from "../helper/functions";
+import {durationToString, stringToDuration} from "../helper/functions";
 import dayjs from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
-import {DATE_FILTER_COOKIE} from "../pages";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -26,11 +25,6 @@ export default class Runs implements IRuns {
         })
 
         this.runs = runs;
-    }
-
-    setFilter(filter?: IDateFilter): void {
-        this.filter = filter;
-        document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter);
     }
 
     getFastest(): IRun {
@@ -73,7 +67,7 @@ export default class Runs implements IRuns {
     }
 
     getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
-        return new Runs(this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]')));;
+        return new Runs(this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]')));
     }
 
     getDistanceAvg(): number {

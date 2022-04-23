@@ -22,7 +22,6 @@ export default interface IRuns {
     getDurationAvg: () => string;
     getPaceAvg: () => string;
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
-    setFilter: (filter: IDateFilter) => void;
 }
 
 export interface IDateFilter {

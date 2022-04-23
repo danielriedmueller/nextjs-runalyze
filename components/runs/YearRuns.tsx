@@ -14,7 +14,10 @@ export default class YearRuns extends DateRuns {
         let filter = this.props.runs.filter;
 
         const onClick = (year: number) => {
-            filter.year = parseInt(year);
+            if (year === filter.year) {
+                year = null;
+            }
+            filter.year = year;
             this.props.setDateFilter(filter);
         }
 

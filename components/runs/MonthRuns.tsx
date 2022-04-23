@@ -15,6 +15,9 @@ export default class MonthRuns extends DateRuns {
         let filter = this.props.runs.filter;
 
         const onClick = (month: number) => {
+            if (month === filter.month) {
+                month = null;
+            }
             filter.month = month;
             this.props.setDateFilter(filter);
         }

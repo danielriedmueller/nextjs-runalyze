@@ -15,7 +15,8 @@ import {fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
-import {cookieStringToDateFilter} from "../helper/functions";
+import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
+import {emendDateFilter} from "../helper/functions";
 
 require('dayjs/locale/de')
 
@@ -27,12 +28,9 @@ dayjs.extend(isLeapYear);
 dayjs.extend(isBetween);
 dayjs.locale('de');
 
-export const USER_ID_COOKIE = 'user_id';
-export const DATE_FILTER_COOKIE = 'date_filter';
-
 interface IProps {
     runs: IDbRun[],
-    dateFilter?: string;
+    dateFilter: IDateFilter;
 }
 
 interface IState {
@@ -45,7 +43,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), cookieStringToDateFilter(props.dateFilter)),
+            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), props.dateFilter),
             user: null
         };
     }
@@ -57,8 +55,8 @@ class Home extends Component<IProps, IState> {
             name: response.profileObj.givenName
         }
 
+        setUserIdCookie(user);
         this.setState({user});
-        document.cookie = USER_ID_COOKIE + "=" + user.id;
     }
 
     fetchFitData = async (): Promise<void> => fetchFitData(this.state.user);
@@ -74,8 +72,10 @@ class Home extends Component<IProps, IState> {
     }
 
     setDateFilter = (filter: IDateFilter): void => {
+        filter = emendDateFilter(filter);
         let runs = this.state.runs;
-        runs.setFilter(filter);
+        runs.filter = filter;
+        setDateFilterCookie(filter);
         this.setState({runs});
     }
 
@@ -108,11 +108,11 @@ class Home extends Component<IProps, IState> {
 }
 
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
-    const userId = ctx.req.cookies[USER_ID_COOKIE];
+    const userId = getUserIdFromCookie(ctx.req.cookies);
+    const dateFilter = getDateFilterFromCookie(ctx.req.cookies);
     const runs = userId ? await fetchRuns(userId) : [];
-    const dateFilter = ctx.req.cookies[DATE_FILTER_COOKIE] ? ctx.req.cookies[DATE_FILTER_COOKIE] :  '';
 
-    return {props: {runs: runs, dateFilter: dateFilter}}
+    return {props: {runs, dateFilter}}
 }
 
 export default Home;
