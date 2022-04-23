@@ -23,4 +23,5 @@ export default interface IRuns {
     getPaceAvg: () => string;
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
     getFiltered: (filter: IDateFilter, period?: OpUnitType) => IRuns;
+    toArray: () => IRun[];
 }

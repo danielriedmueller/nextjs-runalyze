@@ -135,4 +135,8 @@ export default class Runs implements IRuns {
     getVdotAvg(): string {
         return (this.vdotSum / this.getCount()).toFixed(2);
     }
+
+    toArray(): IRun[] {
+        return this.runs;
+    }
 }

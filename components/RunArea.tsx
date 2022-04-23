@@ -11,6 +11,7 @@ import YearRuns from "./runs/YearRuns";
 import MonthRuns from "./runs/MonthRuns";
 import WeekRuns from "./runs/WeekRuns";
 import IDateFilter from "../interfaces/IDateFilter";
+import SingleRuns from "./runs/SingleRuns";
 
 interface IProps {
     runs: IRuns;
@@ -60,6 +61,11 @@ export default class RunArea extends Component<IProps, IState> {
             />
             <div className={style.runarea}>
                 <BestRuns
+                    runs={this.props.runs.getFiltered(this.props.filter)}
+                    statistics={this.state.statistics}
+                    setStatistics={this.setStatistics}
+                />
+                <SingleRuns
                     runs={this.props.runs.getFiltered(this.props.filter)}
                     statistics={this.state.statistics}
                     setStatistics={this.setStatistics}
