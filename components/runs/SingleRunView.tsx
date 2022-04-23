@@ -13,27 +13,11 @@ interface IState {
 }
 
 export default class SingleRunView extends Component<IProps, IState> {
-    getBestLabel = (): string => {
-        switch (this.props.run.best) {
-            case 'mostPerformant':
-                return 'Performance'
-            case 'furthest':
-                return 'Weitester'
-            case 'fastest':
-                return 'Schnellster'
-            case 'longest':
-                return 'Längster'
-            default:
-                return ''
-        }
-    }
-
     render() {
         const activeClass = this.props.statistics + 'Active';
         const run = this.props.run;
 
-        return <div className={style[activeClass] + ' ' + style[run.best ? run.best : null]}>
-            {run.best ? <div className={style.legend}>{this.getBestLabel()}</div> : null}
+        return <div className={style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
             <div className={style.date} onClick={() => this.props.setStatistics(run, 'date')}>
                 <small>{run.getDateDay()}<br/>{run.getDate()}</small>
             </div>

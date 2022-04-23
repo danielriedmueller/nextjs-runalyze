@@ -13,7 +13,7 @@ export default class Run implements IRun {
     duration: Duration;
     steps: number;
     vdot: number;
-    best?: string;
+    best: string[];
 
     constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
         this.calories = calories;
@@ -23,6 +23,7 @@ export default class Run implements IRun {
         this.steps = steps;
         this.vdot = vdot;
         this.id = id;
+        this.best = [];
     }
 
     public static fromDbRun(dbRun: IDbRun): IRun {

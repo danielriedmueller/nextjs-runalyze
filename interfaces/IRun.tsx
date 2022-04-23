@@ -9,7 +9,7 @@ export default interface IRun {
     id: number;
     calories?: number;
     steps?: number;
-    best?: string;
+    best: string[];
     getDate: () => string;
     getDateDay: () => string;
     getPace: () => string;

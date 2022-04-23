@@ -59,21 +59,21 @@ export default class Runs implements IRuns {
 
             return (durationA.asMilliseconds() < durationB.asMilliseconds()) ? prev : current
         });
-        run.best = 'fastest';
+        run.best.push('fastest');
 
         return run;
     }
 
     getFurthest(): IRun {
         let run = this.runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
-        run.best = 'furthest';
+        run.best.push('furthest');
 
         return run;
     }
 
     getLongest(): IRun {
         let run = this.runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
-        run.best = 'longest';
+        run.best.push('longest');
 
         return run;
     }
@@ -82,7 +82,7 @@ export default class Runs implements IRuns {
         let run = this.runs.reduce((prev, current) => {
             return prev.vdot > current.vdot ? prev : current;
         });
-        run.best = 'mostPerformant';
+        run.best.push('mostPerformant');
 
         return run;
     }
