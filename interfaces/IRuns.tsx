@@ -1,7 +1,7 @@
 import IRun from "./IRun";
-import {Dayjs} from "dayjs";
+import {Dayjs, OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
-import {IDateFilter} from "./IDateFilter";
+import IDateFilter from "./IDateFilter";
 
 export default interface IRuns {
     runs: IRun[];
@@ -22,5 +22,5 @@ export default interface IRuns {
     getDurationAvg: () => string;
     getPaceAvg: () => string;
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
-    getFiltered: (filter: IDateFilter) => IRuns;
+    getFiltered: (filter: IDateFilter, period?: OpUnitType) => IRuns;
 }

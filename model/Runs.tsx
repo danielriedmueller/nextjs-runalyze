@@ -1,7 +1,7 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {durationToString, stringToDuration} from "../helper/functions";
-import dayjs from "dayjs";
+import {applyPeriodOnFilter, durationToString, stringToDuration} from "../helper/functions";
+import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
@@ -26,22 +26,23 @@ export default class Runs implements IRuns {
         this.runs = runs;
     }
 
-    getFiltered(filter: IDateFilter): IRuns {
+    getFiltered(filter: IDateFilter, period?: OpUnitType): IRuns {
         if (!filter.year) {
             return this;
         }
 
-        let date;
-        let period;
+        if (period) {
+            filter = applyPeriodOnFilter(filter, period);
+        } else {
+            period = filter.week ? 'week' : filter.month ? 'month' : 'year';
+        }
 
+        let date;
         if (filter.week) {
-            period = 'week';
             date = dayjs(filter.month + '-01-' + filter.year).week(filter.week);
         } else if (filter.month) {
-            period = 'month';
             date = dayjs(filter.month + '-01-' + filter.year);
         } else {
-            period = 'year';
             date = dayjs('01-01-' + filter.year);
         }
 

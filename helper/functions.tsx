@@ -1,6 +1,7 @@
-import dayjs from "dayjs";
+import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
-import {IDateFilter} from "../interfaces/IRuns";
+import IDateFilter from "../interfaces/IDateFilter";
+import exp from "constants";
 
 export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
 export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
@@ -26,6 +27,20 @@ export const emendDateFilter = (filter: IDateFilter): IDateFilter => {
     }
 
     if (!filter.month) {
+        filter.week = null;
+    }
+
+    return filter;
+}
+
+export const applyPeriodOnFilter = (orgFilter: IDateFilter, period: OpUnitType): IDateFilter => {
+    let filter = {...orgFilter};
+    if (period === 'year') {
+        filter.month = null;
+        filter.week = null;
+    }
+
+    if (period === 'month') {
         filter.week = null;
     }
 

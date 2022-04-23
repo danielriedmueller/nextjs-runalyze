@@ -65,12 +65,12 @@ export default class RunArea extends Component<IProps, IState> {
                     setStatistics={this.setStatistics}
                 />
                 <WeekRuns
-                    runs={this.props.runs}
+                    runs={this.props.runs.getFiltered(this.props.filter, 'month')}
                     filter={this.props.filter}
                     setDateFilter={this.props.setDateFilter}
                 />
                 <MonthRuns
-                    runs={this.props.runs}
+                    runs={this.props.runs.getFiltered(this.props.filter, 'year')}
                     filter={this.props.filter}
                     setDateFilter={this.props.setDateFilter}
                 />
