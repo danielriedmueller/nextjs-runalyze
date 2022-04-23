@@ -35,6 +35,23 @@ export const fetchFitData = async (user: IUser): Promise<void> => {
     }
 }
 
+export const checkFitData = async (user: IUser): Promise<number> => {
+    try {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_CHECK_GOOGLE_FIT_DATA, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token: user.token,
+                user: user.id
+            }),
+        });
+
+        return await response.json() as number;
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const updateRun = async (run: IEditRun): Promise<void> => {
     try {
         await fetch(process.env.NEXT_PUBLIC_API_UPDATE_RUN, {

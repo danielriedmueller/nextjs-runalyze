@@ -11,7 +11,7 @@ import RunArea from "../components/RunArea";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
-import {fetchFitData, fetchRuns} from "../helper/fetch";
+import {checkFitData, fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
@@ -55,10 +55,13 @@ class Home extends Component<IProps, IState> {
         const user = {
             token: response.accessToken,
             id: response.googleId,
-            name: response.profileObj.givenName
-        }
+            name: response.profileObj.givenName,
+        } as IUser;
 
         setUserIdCookie(user);
+
+        user.unfetchedRuns = await checkFitData(user);
+
         this.setState({user});
     }
 
@@ -86,7 +89,7 @@ class Home extends Component<IProps, IState> {
             {this.state.user ?
                 <>
                     <button onClick={this.fetchFitData}>Fit Data</button>
-                    <div>Hallo {this.state.user.name}!</div>
+                    <div>Hallo {this.state.user.name}! Du hast {this.state.user.unfetchedRuns} Aktivitäten zum Importieren</div>
                 </> :
                 <GoogleLogin
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
