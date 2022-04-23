@@ -1,12 +1,11 @@
-import {IDateFilter} from "../interfaces/IRuns";
 import IUser from "../interfaces/IUser";
+import IDateFilter from "../interfaces/IDateFilter";
 
 const USER_ID_COOKIE = 'user_id';
 const DATE_FILTER_COOKIE = 'date_filter';
 const DATE_FILTER_COOKIE_SEPERATOR = '+';
 
 export const setDateFilterCookie = (filter: IDateFilter): void => {
-    console.log(dateFilterToCookieString(filter))
     document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter);
 }
 

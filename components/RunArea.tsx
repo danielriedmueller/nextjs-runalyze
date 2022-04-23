@@ -6,15 +6,17 @@ import IEditRun from "../interfaces/IEditRun";
 import {insertRun, updateRun} from "../helper/fetch";
 import BestRuns from "./runs/BestRuns";
 import style from '../style/runarea.module.scss';
-import IRuns, {IDateFilter} from "../interfaces/IRuns";
+import IRuns from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
 import MonthRuns from "./runs/MonthRuns";
 import WeekRuns from "./runs/WeekRuns";
+import IDateFilter from "../interfaces/IDateFilter";
 
 interface IProps {
     runs: IRuns;
     user: IUser;
     refresh: () => void;
+    filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
 }
 
@@ -58,20 +60,23 @@ export default class RunArea extends Component<IProps, IState> {
             />
             <div className={style.runarea}>
                 <BestRuns
-                    runs={this.props.runs.getFiltered()}
+                    runs={this.props.runs.getFiltered(this.props.filter)}
                     statistics={this.state.statistics}
                     setStatistics={this.setStatistics}
                 />
                 <WeekRuns
                     runs={this.props.runs}
+                    filter={this.props.filter}
                     setDateFilter={this.props.setDateFilter}
                 />
                 <MonthRuns
                     runs={this.props.runs}
+                    filter={this.props.filter}
                     setDateFilter={this.props.setDateFilter}
                 />
                 <YearRuns
                     runs={this.props.runs}
+                    filter={this.props.filter}
                     setDateFilter={this.props.setDateFilter}
                 />
             </div>

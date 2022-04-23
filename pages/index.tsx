@@ -13,10 +13,11 @@ import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
 import {fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
-import IRuns, {IDateFilter} from "../interfaces/IRuns";
+import IRuns from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
 import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 import {emendDateFilter} from "../helper/functions";
+import IDateFilter from "../interfaces/IDateFilter";
 
 require('dayjs/locale/de')
 
@@ -30,11 +31,12 @@ dayjs.locale('de');
 
 interface IProps {
     runs: IDbRun[],
-    dateFilter: IDateFilter;
+    filter: IDateFilter;
 }
 
 interface IState {
-    runs: IRuns
+    runs: IRuns;
+    filter: IDateFilter;
     user: IUser;
 }
 
@@ -43,7 +45,8 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), props.dateFilter),
+            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run))),
+            filter: props.filter,
             user: null
         };
     }
@@ -68,18 +71,13 @@ class Home extends Component<IProps, IState> {
 
     refreshRuns = async (): Promise<void> => {
         const runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: new Runs(
-            runs.map((run) => Run.fromDbRun(run)),
-            this.state.runs.filter
-        )});
+        this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
     }
 
     setDateFilter = (filter: IDateFilter): void => {
         filter = emendDateFilter(filter);
-        let runs = this.state.runs;
-        runs.filter = filter;
         setDateFilterCookie(filter);
-        this.setState({runs});
+        this.setState({filter});
     }
 
     render() {
@@ -103,6 +101,7 @@ class Home extends Component<IProps, IState> {
             {this.state.runs && this.state.user ? <RunArea
                 runs={this.state.runs}
                 user={this.state.user}
+                filter={this.state.filter}
                 refresh={this.refreshRuns}
                 setDateFilter={this.setDateFilter}
             /> : null}
@@ -112,10 +111,10 @@ class Home extends Component<IProps, IState> {
 
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = getUserIdFromCookie(ctx.req.cookies);
-    const dateFilter = getDateFilterFromCookie(ctx.req.cookies);
+    const filter = getDateFilterFromCookie(ctx.req.cookies);
     const runs = userId ? await fetchRuns(userId) : [];
 
-    return {props: {runs, dateFilter}}
+    return {props: {runs, filter}}
 }
 
 export default Home;

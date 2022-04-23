@@ -6,13 +6,14 @@ import MultipleRuns from "./MultipleRuns";
 export default class MonthRuns extends DateRuns {
     getRunViews() {
         const runs = this.props.runs;
-        if (runs.getCount() === 0 || !runs.filter.year) return [];
+        const filter = this.props.filter;
+
+        if (runs.getCount() === 0 || !filter.year) return [];
 
         let months = [];
 
         const firstMonth = 1;
         const lastMonth = 12;
-        let filter = this.props.runs.filter;
 
         const onClick = (month: number) => {
             if (month === filter.month) {
@@ -23,7 +24,7 @@ export default class MonthRuns extends DateRuns {
         }
 
         for (let i = lastMonth; i > firstMonth - 1; i--) {
-            const currentMonth = dayjs(i + '-01-' + runs.filter.year);
+            const currentMonth = dayjs(i + '-01-' + filter.year);
             const monthRuns = runs.getBetween(
                 currentMonth.startOf('month'),
                 currentMonth.endOf('month')

@@ -5,13 +5,14 @@ import MultipleRuns from "./MultipleRuns";
 
 export default class YearRuns extends DateRuns {
     getRunViews(): ReactNode[] {
+        const filter = this.props.filter;
+
         if (this.props.runs.getCount() === 0) return [];
 
         let years = [];
 
         const firstYear = this.props.runs.getFirst().date.year();
         const latestYear = this.props.runs.getLatest().date.year();
-        let filter = this.props.runs.filter;
 
         const onClick = (year: number) => {
             if (year === filter.year) {

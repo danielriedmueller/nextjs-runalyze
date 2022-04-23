@@ -6,14 +6,15 @@ import MultipleRuns from "./MultipleRuns";
 export default class WeekRuns extends DateRuns {
     getRunViews() {
         const runs = this.props.runs;
-        if (runs.getCount() === 0 || !runs.filter.year || !runs.filter.month) return [];
+        const filter = this.props.filter;
+
+        if (runs.getCount() === 0 || !filter.year || !filter.month) return [];
 
         let weeks = [];
 
-        const date = dayjs(runs.filter.month + '-01-' + runs.filter.year);
+        const date = dayjs(filter.month + '-01-' + filter.year);
         const firstWeek = date.startOf('month').week();
         const lastWeek = date.endOf('month').week();
-        let filter = this.props.runs.filter;
 
         const onClick = (week: number) => {
             if (week === filter.week) {
