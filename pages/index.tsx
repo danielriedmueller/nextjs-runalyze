@@ -13,8 +13,9 @@ import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
 import {fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
-import IRuns from "../interfaces/IRuns";
+import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
+import {cookieStringToDateFilter} from "../helper/functions";
 
 require('dayjs/locale/de')
 
@@ -44,7 +45,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), props.dateFilter),
+            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run)), cookieStringToDateFilter(props.dateFilter)),
             user: null
         };
     }
@@ -72,7 +73,7 @@ class Home extends Component<IProps, IState> {
         this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
     }
 
-    setDateFilter = (filter: string): void => {
+    setDateFilter = (filter: IDateFilter): void => {
         let runs = this.state.runs;
         runs.setFilter(filter);
         this.setState({runs});
@@ -108,14 +109,10 @@ class Home extends Component<IProps, IState> {
 
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = ctx.req.cookies[USER_ID_COOKIE];
-    const dateFilter = ctx.req.cookies[DATE_FILTER_COOKIE];
+    const runs = userId ? await fetchRuns(userId) : [];
+    const dateFilter = ctx.req.cookies[DATE_FILTER_COOKIE] ? ctx.req.cookies[DATE_FILTER_COOKIE] :  '';
 
-    if (userId) {
-        const runs = await fetchRuns(userId);
-        return {props: {runs, dateFilter}}
-    }
-
-    return {props: {runs: [], dateFilter: null}}
+    return {props: {runs: runs, dateFilter: dateFilter}}
 }
 
 export default Home;

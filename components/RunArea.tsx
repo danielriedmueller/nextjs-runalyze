@@ -6,8 +6,7 @@ import IEditRun from "../interfaces/IEditRun";
 import {insertRun, updateRun} from "../helper/fetch";
 import BestRuns from "./runs/BestRuns";
 import style from '../style/runarea.module.scss';
-import IRuns from "../interfaces/IRuns";
-import LineChart from "./graphs/LineChart";
+import IRuns, {IDateFilter} from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
 import MonthRuns from "./runs/MonthRuns";
 
@@ -15,7 +14,7 @@ interface IProps {
     runs: IRuns;
     user: IUser;
     refresh: () => void;
-    setDateFilter: (filter: string) => void;
+    setDateFilter: (filter: IDateFilter) => void;
 }
 
 interface IState {

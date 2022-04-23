@@ -12,9 +12,11 @@ export default class MonthRuns extends DateRuns {
 
         const firstMonth = 1;
         const lastMonth = 12;
+        let filter = this.props.runs.filter;
 
         const onClick = (month: number) => {
-            this.props.setDateFilter(runs.filter + ";" + month.toString());
+            filter.month = month;
+            this.props.setDateFilter(filter);
         }
 
         for (let i = lastMonth; i > firstMonth - 1; i--) {
@@ -29,6 +31,7 @@ export default class MonthRuns extends DateRuns {
                 ><MultipleRuns
                     label={i.toString()}
                     runs={monthRuns}
+                    active={i === filter.month}
                     onClick={() => onClick(i)}
                 /></div>)
             }
