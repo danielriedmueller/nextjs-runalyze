@@ -14,12 +14,12 @@ export default class Runs implements IRuns {
 
     constructor(runs: IRun[]) {
         this.distanceSum = 0;
-        this.durationSum = dayjs.duration();
+        this.durationSum = dayjs.duration(0);
         this.vdotSum = 0;
 
         runs.forEach((run) => {
             this.distanceSum += run.distance;
-            this.durationSum.add(run.duration);
+            this.durationSum = this.durationSum.add(run.duration);
             this.vdotSum += run.vdot;
         })
 

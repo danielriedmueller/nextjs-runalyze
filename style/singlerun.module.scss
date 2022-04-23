@@ -77,13 +77,12 @@
   background-image: url("../assets/icons/polygon3-most.svg");
 }
 
-
 div.legend {
   font-family: 'Montserrat', sans-serif;
   padding: var(--spacing-s);
   margin-bottom: var(--spacing-s);
-  background-color: var(--red);
-  color: var(--creme);
+  background-color: var(--yellow);
+  color: #000;
 }
 
 .paceActive > .pace {
