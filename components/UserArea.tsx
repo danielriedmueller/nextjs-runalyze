@@ -19,10 +19,9 @@ export default class UserArea extends Component<IProps, IState> {
         return <div className={style.userarea + " " + style[loggedInCls]}>
             {this.props.user ?
                 <>
-                    <div>Hallo {this.props.user.name}! Du hast {this.props.user.unfetchedRuns} Aktivitäten zum
-                        Importieren
+                    <div>Hallo {this.props.user.name}! Du kannst {this.props.user.unfetchedRuns} Aktivitäten
+                        <button onClick={this.props.fetchFitData}>Importieren</button>
                     </div>
-                    <button onClick={this.props.fetchFitData}>Importieren</button>
                 </> :
                 <GoogleLogin
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
