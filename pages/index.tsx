@@ -6,7 +6,7 @@ import isoWeeksInYear from "dayjs/plugin/isoWeeksInYear";
 import isLeapYear from "dayjs/plugin/isLeapYear";
 import Header from "../components/Header";
 import React, {Component} from "react";
-import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
+import {GoogleLoginResponse} from 'react-google-login';
 import RunArea from "../components/RunArea";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
@@ -18,7 +18,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
-import Subheader from "../components/Subheader";
+import UserArea from "../components/UserArea";
 
 require('dayjs/locale/de')
 
@@ -87,7 +87,7 @@ class Home extends Component<IProps, IState> {
     render() {
         return <div id="app">
             <Header/>
-            <Subheader
+            <UserArea
                 user={this.state.user}
                 fetchFitData={this.fetchFitData}
                 init={this.init}

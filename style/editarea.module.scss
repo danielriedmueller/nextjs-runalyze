@@ -1,0 +1,40 @@
+.editarea {
+  flex: 0 0 33.3%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: space-around;
+
+  button {
+    height: var(--icon-size-big);
+    width: var(--icon-size-big);
+    padding: 0;
+    border: none;
+  }
+
+  button.deleteButton {
+    background: transparent url("../assets/icons/delete.svg") no-repeat center center;
+    background-size: var(--icon-size-big);
+  }
+
+  button.confirmButton {
+    background: transparent url("../assets/icons/check.svg") no-repeat center center;
+    background-size: var(--icon-size-big);
+  }
+
+  button.insertButton {
+    background: transparent url("../assets/icons/heart-plus.svg") no-repeat center center;
+    background-size: var(--icon-size-big);
+  }
+
+  button.editButton {
+    background: transparent url("../assets/icons/user-edit.svg") no-repeat center center;
+    background-size: var(--icon-size-big);
+  }
+
+  button.cancelButton {
+    background: transparent url("../assets/icons/cross.svg") no-repeat center center;
+    background-size: var(--icon-size-big);
+  }
+}

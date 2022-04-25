@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import GoogleLogin, {GoogleLoginResponse} from "react-google-login";
 import IUser from "../interfaces/IUser";
-import style from '../style/subheader.module.scss';
+import style from '../style/userarea.module.scss';
 
 interface IProps {
     user: IUser;
@@ -13,10 +13,10 @@ interface IProps {
 interface IState {
 }
 
-export default class Subheader extends Component<IProps, IState> {
+export default class UserArea extends Component<IProps, IState> {
     render() {
         const loggedInCls = this.props.user ? 'loggedIn' : 'loggedOut'
-        return <div className={style.subheader + " " + style[loggedInCls]}>
+        return <div className={style.userarea + " " + style[loggedInCls]}>
             {this.props.user ?
                 <>
                     <div>Hallo {this.props.user.name}! Du hast {this.props.user.unfetchedRuns} Aktivitäten zum

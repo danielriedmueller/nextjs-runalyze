@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import IRun from "../interfaces/IRun";
-import CurrentRunView from "./runs/CurrentRunView";
 import IUser from "../interfaces/IUser";
 import IEditRun from "../interfaces/IEditRun";
-import {insertRun, updateRun} from "../helper/fetch";
+import {deleteRun, insertRun, updateRun} from "../helper/fetch";
 import BestRuns from "./runs/BestRuns";
 import style from '../style/runarea.module.scss';
 import IRuns from "../interfaces/IRuns";
@@ -12,6 +11,11 @@ import MonthRuns from "./runs/MonthRuns";
 import WeekRuns from "./runs/WeekRuns";
 import IDateFilter from "../interfaces/IDateFilter";
 import SingleRuns from "./runs/SingleRuns";
+import EditArea, {Mode} from "./runs/EditArea";
+import EditRun from "../model/EditRun";
+import EditRunView from "./runs/EditRunView";
+import NewRunView from "./runs/NewRunView";
+import SingleRunView from "./runs/SingleRunView";
 
 interface IProps {
     runs: IRuns;
@@ -23,7 +27,9 @@ interface IProps {
 
 interface IState {
     currentRun: IRun;
+    editRun: IEditRun;
     statistics: string;
+    mode: number;
 }
 
 export default class RunArea extends Component<IProps, IState> {
@@ -32,7 +38,9 @@ export default class RunArea extends Component<IProps, IState> {
 
         this.state = {
             currentRun: props.runs.getLatest(),
-            statistics: 'vdot'
+            editRun: null,
+            statistics: 'vdot',
+            mode: Mode.None
         };
     }
 
@@ -46,19 +54,52 @@ export default class RunArea extends Component<IProps, IState> {
         this.props.refresh();
     }
 
+    onChangeConfirm = async (): Promise<void> => {
+        if (!this.state.editRun) {
+            return;
+        }
+
+        if (this.state.editRun.isValid()) {
+            await this.upsert(this.state.editRun);
+            this.setMode(Mode.None);
+        }
+    }
+
+    onDelete = async (): Promise<void> => {
+        this.setMode(Mode.None)
+
+        await deleteRun(this.state.currentRun);
+    }
+
+    setMode = (mode: number) => {
+        this.setState({mode});
+    }
+
     setStatistics = (currentRun: IRun, statistics: string) => {
         this.setState({currentRun, statistics});
     }
 
     render() {
         return <>
-            <CurrentRunView
-                run={this.state.currentRun}
-                statistics={this.state.statistics}
-                setStatistics={this.setStatistics}
-                upsert={this.upsert}
-                user={this.props.user}
+            <EditArea
+                mode={this.state.mode}
+                onChangeConfirm={this.onChangeConfirm}
+                onDelete={this.onDelete}
+                setMode={this.setMode}
             />
+            <div className={style.currentRun}>
+                {this.state.mode === Mode.Edit ? <EditRunView
+                    run={this.state.editRun}
+                    update={this.upsert}
+                /> : this.state.mode === Mode.Insert ? <NewRunView
+                    run={this.state.editRun}
+                    insert={this.upsert}
+                /> : <SingleRunView
+                    run={this.state.currentRun}
+                    statistics={this.state.statistics}
+                    setStatistics={this.setStatistics}
+                />}
+            </div>
             <div className={style.runarea}>
                 <BestRuns
                     runs={this.props.runs.getFiltered(this.props.filter)}

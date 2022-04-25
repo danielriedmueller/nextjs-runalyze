@@ -1,4 +1,4 @@
-.subheader.loggedOut {
+.userarea.loggedOut {
   position: absolute;
   left: 0;
   right: 0;
@@ -8,7 +8,7 @@
   justify-content: center;
 }
 
-.subheader.loggedIn {
+.userarea.loggedIn {
   background-color: var(--creme);
   color: #000;
 }
