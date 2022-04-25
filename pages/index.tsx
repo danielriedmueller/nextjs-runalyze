@@ -18,6 +18,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
+import Subheader from "../components/Subheader";
 
 require('dayjs/locale/de')
 
@@ -86,21 +87,12 @@ class Home extends Component<IProps, IState> {
     render() {
         return <div id="app">
             <Header/>
-            {this.state.user ?
-                <>
-                    <button onClick={this.fetchFitData}>Fit Data</button>
-                    <div>Hallo {this.state.user.name}! Du hast {this.state.user.unfetchedRuns} Aktivitäten zum Importieren</div>
-                </> :
-                <GoogleLogin
-                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                    buttonText="Login"
-                    onSuccess={this.init}
-                    onFailure={this.responseGoogleFailed}
-                    cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
-                    scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
-                />
-            }
+            <Subheader
+                user={this.state.user}
+                fetchFitData={this.fetchFitData}
+                init={this.init}
+                responseGoogleFailed={this.responseGoogleFailed}
+            />
             {this.state.runs && this.state.user ? <RunArea
                 runs={this.state.runs}
                 user={this.state.user}

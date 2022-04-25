@@ -2,11 +2,13 @@ import {Component} from "react";
 import style from '../style/header.module.scss';
 import Head from 'next/head';
 
-export default class Header extends Component {
-    constructor(props) {
-        super(props);
-    }
+interface IProps {
+}
 
+interface IState {
+}
+
+export default class Header extends Component<IProps, IState> {
     render() {
         return <>
             <Head>

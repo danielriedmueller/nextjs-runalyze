@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import style from '../../style/currentrun.module.scss';
-import {deleteRun, insertRun, updateRun} from "../../helper/fetch";
+import {deleteRun} from "../../helper/fetch";
 import EditRunView from "./EditRunView";
 import IRun from "../../interfaces/IRun";
 import IEditRun from "../../interfaces/IEditRun";

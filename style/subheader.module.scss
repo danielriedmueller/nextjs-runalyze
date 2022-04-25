@@ -1,0 +1,14 @@
+.subheader.loggedOut {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 120px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.subheader.loggedIn {
+  background-color: var(--creme);
+  color: #000;
+}
