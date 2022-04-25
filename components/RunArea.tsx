@@ -37,11 +37,19 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: props.runs.getLatest(),
+            currentRun: null,
             editRun: null,
             statistics: 'vdot',
             mode: Mode.None
         };
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (!state.currentRun) {
+            return {currentRun: props.runs.getLatest()};
+        }
+
+        return null;
     }
 
     upsert = async (run: IEditRun) => {
@@ -67,9 +75,9 @@ export default class RunArea extends Component<IProps, IState> {
 
     onDelete = async (): Promise<void> => {
         this.setMode(Mode.None)
-
         await deleteRun(this.state.currentRun);
         await this.props.refresh();
+        this.setState({currentRun: null});
     }
 
     setMode = (mode: number) => {
