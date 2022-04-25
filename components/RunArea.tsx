@@ -16,6 +16,7 @@ import EditRun from "../model/EditRun";
 import EditRunView from "./runs/EditRunView";
 import NewRunView from "./runs/NewRunView";
 import SingleRunView from "./runs/SingleRunView";
+import CurrentRunView from "./runs/CurrentRunView";
 
 interface IProps {
     runs: IRuns;
@@ -94,7 +95,7 @@ export default class RunArea extends Component<IProps, IState> {
                 /> : this.state.mode === Mode.Insert ? <NewRunView
                     run={this.state.editRun}
                     insert={this.upsert}
-                /> : <SingleRunView
+                /> : <CurrentRunView
                     run={this.state.currentRun}
                     statistics={this.state.statistics}
                     setStatistics={this.setStatistics}

@@ -1,4 +1,4 @@
-.date, .count, .pace, .distance, .duration, .vdot {
+.date, .count, .pace, .distance, .duration, .vdot, .steps, .calories, .help {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
   background-image: url("../assets/icons/clipboard-list.svg");
@@ -61,6 +61,14 @@
   background-image: url("../assets/icons/star.svg");
 }
 
+.steps {
+  background-image: url("../assets/icons/footprint.svg");
+}
+
+.calories {
+  background-image: url("../assets/icons/fire.svg");
+}
+
 .fastest .pace {
   background-image: url("../assets/icons/stopwatch-running-most.svg");
 }
@@ -99,4 +107,13 @@ div.legend {
 
 .vdotActive > .vdot {
   background-color: var(--blue) !important;
+}
+
+.help {
+  background-color: transparent;
+  background-image: url("../assets/icons/magnifier-question.svg");
+  position: absolute;
+  right: var(--spacing-s);
+  top: var(--spacing-s);
+  border: none;
 }
