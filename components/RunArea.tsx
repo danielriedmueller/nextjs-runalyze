@@ -15,7 +15,6 @@ import EditArea, {Mode} from "./runs/EditArea";
 import EditRun from "../model/EditRun";
 import EditRunView from "./runs/EditRunView";
 import NewRunView from "./runs/NewRunView";
-import SingleRunView from "./runs/SingleRunView";
 import CurrentRunView from "./runs/CurrentRunView";
 
 interface IProps {
@@ -70,10 +69,24 @@ export default class RunArea extends Component<IProps, IState> {
         this.setMode(Mode.None)
 
         await deleteRun(this.state.currentRun);
+        await this.props.refresh();
     }
 
     setMode = (mode: number) => {
-        this.setState({mode});
+        let editRun = null;
+
+        if (mode === Mode.Insert) {
+            editRun = EditRun.create();
+        }
+
+        if (mode === Mode.Edit) {
+            editRun = EditRun.fromRun(this.state.currentRun);
+        }
+
+        this.setState({
+            mode,
+            editRun
+        });
     }
 
     setStatistics = (currentRun: IRun, statistics: string) => {

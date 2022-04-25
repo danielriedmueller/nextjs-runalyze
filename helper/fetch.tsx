@@ -81,7 +81,7 @@ export const deleteRun = async (run: IRun): Promise<void> => {
         await fetch(process.env.NEXT_PUBLIC_API_DELETE_RUN, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: run.id.toString(),
+            body: JSON.stringify({id: run.id}),
         })
     } catch (error) {
         console.error(error)

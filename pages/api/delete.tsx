@@ -14,6 +14,8 @@ export default async function handle(req, res) {
 
     const {id} = req.body;
 
+    console.log(id);
+
     db.prepare('DELETE FROM runs WHERE id = ?').run(id);
 
     res.json({});
