@@ -10,17 +10,14 @@ export default class Runs implements IRuns {
     runs: IRun[];
     distanceSum: number;
     durationSum: Duration;
-    vdotSum: number;
 
     constructor(runs: IRun[]) {
         this.distanceSum = 0;
         this.durationSum = dayjs.duration(0);
-        this.vdotSum = 0;
 
         runs.forEach((run) => {
             this.distanceSum += run.distance;
             this.durationSum = this.durationSum.add(run.duration);
-            this.vdotSum += run.vdot;
         })
 
         this.runs = runs;
@@ -78,15 +75,6 @@ export default class Runs implements IRuns {
         return run;
     }
 
-    getMostPerformant(): IRun {
-        let run = this.runs.reduce((prev, current) => {
-            return prev.vdot > current.vdot ? prev : current;
-        });
-        run.best.push('mostPerformant');
-
-        return run;
-    }
-
     getCount(): number {
         return this.runs.length;
     }
@@ -130,10 +118,6 @@ export default class Runs implements IRuns {
             .withLength(new Length(this.distanceSum, 'm'))
             .withTime(new Timespan().addMilliseconds(this.durationSum.asMilliseconds()))
             .toPaceUnit('min/km').toString();
-    }
-
-    getVdotAvg(): string {
-        return (this.vdotSum / this.getCount()).toFixed(2);
     }
 
     toArray(): IRun[] {

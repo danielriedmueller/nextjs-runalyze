@@ -1,10 +1,6 @@
-import initMiddleware from "../../../lib/init-middleware";
+import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
-import {insertRun} from "../insert";
-import dayjs from "dayjs";
-
-const db = require('better-sqlite3')(process.env.DATABASE_URL);
+import ApiRun, {FITNESS_DATA_TYPES} from "../../model/ApiRun";
 
 const cors = initMiddleware(
     Cors({
@@ -12,20 +8,13 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: Request, res: Response): Promise<boolean> {
+export default async function handle(req: Request, res: Response): Promise<ApiRun[]> {
     await cors(req, res);
 
-    const {token, user} = req.body;
-
-    let latestRunDate = db.prepare('SELECT startTime FROM runs WHERE user = ? ORDER BY startTime desc').pluck().get(user);
-
-    // Initially get runs from current year
-    let startTime = latestRunDate
-        // Add 1,5 hours to prevent insert last run
-        ? dayjs(latestRunDate + 10000000).toISOString()
-        : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
+    const {token} = req.body;
 
     const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
+    const startTime = '1970-01-01T00:00:00.000Z';
     const params = new URLSearchParams({activityType, startTime});
     const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
@@ -34,6 +23,9 @@ export default async function handle(req: Request, res: Response): Promise<boole
         },
     });
     const gApiData = await gApiResponse.json();
+    console.log(gApiData)
+
+    let apiRuns = [];
 
     await Promise.all(
         gApiData.session.map(async (session) => {
@@ -53,8 +45,11 @@ export default async function handle(req: Request, res: Response): Promise<boole
                 })
             });
             const gApiBucketData = await gApiBucketResponse.json();
-            const dbRun = await DbRun.fromGoogleApiData(gApiBucketData.bucket[0]);
-            await insertRun(user, dbRun);
+            const apiRun = await ApiRun.fromGoogleApiData(gApiBucketData.bucket[0]);
+
+            apiRuns.push(apiRun);
         })
     );
+
+    return res.json(apiRuns);
 }

@@ -12,7 +12,7 @@
     }
   }
 
-.date, .count, .pace, .distance, .duration, .vdot, .steps, .calories, .help {
+.date, .count, .pace, .distance, .duration, .steps, .calories, .help {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
   background-image: url("../assets/icons/clipboard-list.svg");
@@ -35,7 +35,6 @@
 }
 
 .fastest .pace,
-.mostPerformant .vdot,
 .longest .duration,
 .furthest .distance {
   color: var(--yellow) !important;
@@ -71,10 +70,6 @@
   background-image: url("../assets/icons/stopwatch.svg");
 }
 
-.vdot {
-  background-image: url("../assets/icons/star.svg");
-}
-
 .steps {
   background-image: url("../assets/icons/footprint.svg");
 }
@@ -85,10 +80,6 @@
 
 .fastest .pace {
   background-image: url("../assets/icons/stopwatch-running-most.svg");
-}
-
-.mostPerformant .vdot {
-  background-image: url("../assets/icons/star-most.svg");
 }
 
 .longest .duration {
@@ -116,10 +107,6 @@ div.legend {
 }
 
 .distanceActive > .distance {
-  background-color: var(--blue) !important;
-}
-
-.vdotActive > .vdot {
   background-color: var(--blue) !important;
 }
 

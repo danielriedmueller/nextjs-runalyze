@@ -1,40 +1,34 @@
 import dayjs, {Dayjs} from "dayjs";
 import {createDuration, durationToString} from "../helper/functions";
 import IRun from "../interfaces/IRun";
-import IDbRun from "../interfaces/IDbRun";
 import {Length, Pacer, Timespan} from "fitness-js";
 import {Duration} from "dayjs/plugin/duration";
+import IApiRun from "../interfaces/IApiRun";
 
 export default class Run implements IRun {
-    id: number;
     calories: number;
     date: Dayjs;
     distance: number;
     duration: Duration;
     steps: number;
-    vdot: number;
     best: string[];
 
-    constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
+    constructor(calories: number, date: string, distance: number, duration: Duration, steps: number) {
         this.calories = calories;
         this.date = dayjs(date);
         this.distance = distance;
         this.duration = duration;
         this.steps = steps;
-        this.vdot = vdot;
-        this.id = id;
         this.best = [];
     }
 
-    public static fromDbRun(dbRun: IDbRun): IRun {
+    public static fromApiRun(apiRun: IApiRun): IRun {
         return new Run(
-            dbRun.calories,
-            dayjs(dbRun.startTime).format(process.env.NEXT_PUBLIC_DATE_FORMAT),
-            dbRun.distance,
-            createDuration(dbRun.startTime, dbRun.endTime),
-            dbRun.steps,
-            dbRun.vdot,
-            dbRun.id
+            apiRun.calories,
+            dayjs(apiRun.startTime).format(process.env.NEXT_PUBLIC_DATE_FORMAT),
+            apiRun.distance,
+            createDuration(apiRun.startTime, apiRun.endTime),
+            apiRun.steps
         );
     }
 

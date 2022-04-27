@@ -9,16 +9,16 @@ import React, {Component} from "react";
 import {GoogleLoginResponse} from 'react-google-login';
 import RunArea from "../components/RunArea";
 import IUser from "../interfaces/IUser";
-import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
-import {checkFitData, fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
-import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
+import {setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import UserArea from "../components/UserArea";
+import {fetchRuns} from "../helper/fetch";
+import IApiRun from "../interfaces/IApiRun";
 
 require('dayjs/locale/de')
 
@@ -31,7 +31,7 @@ dayjs.extend(isBetween);
 dayjs.locale('de');
 
 interface IProps {
-    runs: IDbRun[],
+    runs: IApiRun[],
     filter: IDateFilter;
 }
 
@@ -46,8 +46,12 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run))),
-            filter: props.filter,
+            runs: null,
+            filter: {
+                year: null,
+                month: null,
+                week: null
+            },
             user: null
         };
     }
@@ -60,13 +64,13 @@ class Home extends Component<IProps, IState> {
         } as IUser;
 
         setUserIdCookie(user);
+        const runs = await fetchRuns(user.token);
 
-        user.unfetchedRuns = await checkFitData(user);
-
-        this.setState({user});
+        this.setState({
+            runs: new Runs(runs.map(run => Run.fromApiRun(run))),
+            user
+        });
     }
-
-    fetchFitData = async (): Promise<void> => fetchFitData(this.state.user);
 
     responseGoogleFailed = (): void => {
         console.log('google login failed');
@@ -74,8 +78,8 @@ class Home extends Component<IProps, IState> {
     }
 
     refreshRuns = async (): Promise<void> => {
-        const runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
+        const runs = await fetchRuns(this.state.user.token);
+        this.setState({runs: new Runs(runs.map((run) => Run.fromApiRun(run)))});
     }
 
     setDateFilter = (filter: IDateFilter): void => {
@@ -89,7 +93,6 @@ class Home extends Component<IProps, IState> {
             <Header/>
             <UserArea
                 user={this.state.user}
-                fetchFitData={this.fetchFitData}
                 init={this.init}
                 responseGoogleFailed={this.responseGoogleFailed}
             />
@@ -102,14 +105,6 @@ class Home extends Component<IProps, IState> {
             /> : null}
         </div>
     }
-}
-
-export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
-    const userId = getUserIdFromCookie(ctx.req.cookies);
-    const filter = getDateFilterFromCookie(ctx.req.cookies);
-    const runs = userId ? await fetchRuns(userId) : [];
-
-    return {props: {runs, filter}}
 }
 
 export default Home;

@@ -18,11 +18,6 @@ export default class BestRuns extends Component<IProps, IState> {
     render() {
         return <div className={style.table}>
             <SingleRunView
-                run={this.props.runs.getMostPerformant()}
-                statistics={this.props.statistics}
-                setStatistics={this.props.setStatistics}
-            />
-            <SingleRunView
                 run={this.props.runs.getFurthest()}
                 statistics={this.props.statistics}
                 setStatistics={this.props.setStatistics}

@@ -3,8 +3,6 @@ import style from '../../style/runs.module.scss';
 import SingleRunView from "./SingleRunView";
 import IRuns from "../../interfaces/IRuns";
 import IRun from "../../interfaces/IRun";
-import dayjs from "dayjs";
-import MultipleRuns from "./MultipleRuns";
 
 interface IProps {
     runs: IRuns;

@@ -1,4 +1,4 @@
-.date, .count, .pace, .distance, .duration, .vdot {
+.date, .count, .pace, .distance, .duration {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
   background-image: url("../assets/icons/clipboard-list.svg");
@@ -34,10 +34,6 @@
 
 .duration {
   background-image: url("../assets/icons/stopwatch.svg");
-}
-
-.vdot {
-  background-image: url("../assets/icons/star.svg");
 }
 
 div.legend {

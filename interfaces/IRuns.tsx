@@ -7,8 +7,6 @@ export default interface IRuns {
     runs: IRun[];
     distanceSum: number;
     durationSum: Duration;
-    vdotSum: number;
-    getMostPerformant: () => IRun;
     getFurthest: () => IRun;
     getLongest: () => IRun;
     getFastest: () => IRun;
@@ -17,7 +15,6 @@ export default interface IRuns {
     getFirst: () => IRun;
     getDistanceSum: () => number;
     getDistanceAvg: () => number;
-    getVdotAvg: () => string;
     getDurationSum: () => string;
     getDurationAvg: () => string;
     getPaceAvg: () => string;

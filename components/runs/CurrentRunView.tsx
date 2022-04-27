@@ -44,9 +44,6 @@ export default class CurrentRunView extends Component<IProps, IState> {
                     <div className={style.duration}>
                         Dauer
                     </div>
-                    <div className={style.vdot}>
-                        VDOT
-                    </div>
                     <div className={style.steps}>
                         Schritte
                     </div>
@@ -72,9 +69,6 @@ export default class CurrentRunView extends Component<IProps, IState> {
                 </div>
                 <div className={style.duration} onClick={() => this.props.setStatistics(run, 'duration')}>
                     {run.getDuration()}
-                </div>
-                <div className={style.vdot} onClick={() => this.props.setStatistics(run, 'vdot')}>
-                    {run.vdot}
                 </div>
                 <div className={style.steps}>
                     {run.steps}

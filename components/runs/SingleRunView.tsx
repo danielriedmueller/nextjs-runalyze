@@ -30,9 +30,6 @@ export default class SingleRunView extends Component<IProps, IState> {
             <div className={style.duration} onClick={() => this.props.setStatistics(run, 'duration')}>
                 {run.getDuration()}
             </div>
-            <div className={style.vdot} onClick={() => this.props.setStatistics(run, 'vdot')}>
-                {run.vdot}
-            </div>
         </div>
     }
 }

@@ -22,6 +22,9 @@ export default class YearRuns extends DateRuns {
             this.props.setDateFilter(filter);
         }
 
+        console.log(firstYear)
+        console.log(latestYear)
+
         for (let i = firstYear; i > latestYear - 1; i--) {
             const currentYear = dayjs('01-01-' + i);
             years.push(<div

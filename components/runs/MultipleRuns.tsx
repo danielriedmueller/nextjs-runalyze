@@ -24,7 +24,6 @@ export default class MultipleRuns extends Component<IProps, IState> {
             <div
                 className={style.duration}>{this.props.runs.getDurationSum()}<br/><small>{this.props.runs.getDurationAvg()}</small>
             </div>
-            <div className={style.vdot}>{this.props.runs.getVdotAvg()}</div>
         </div>;
     }
 }
