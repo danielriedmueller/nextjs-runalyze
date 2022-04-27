@@ -18,8 +18,6 @@ export default async function handle(req, res) {
     const dbRun = await DbRun.fromEditRun(run);
 
     await updateRun(dbRun);
-
-    res.json({});
 }
 
 export const updateRun = async (

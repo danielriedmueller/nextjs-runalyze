@@ -12,7 +12,7 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: Request, res: Response): Promise<void> {
+export default async function handle(req: Request, res: Response): Promise<boolean> {
     await cors(req, res);
 
     const {token, user} = req.body;
