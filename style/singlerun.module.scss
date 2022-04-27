@@ -1,3 +1,17 @@
+.currentRun {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    padding: var(--spacing-s);
+    position: relative;
+    background-color: var(--blue-dark);
+    border-bottom: 1px solid var(--creme);
+
+    > div:first-child {
+      flex: 0 0 66.6%;
+    }
+  }
+
 .date, .count, .pace, .distance, .duration, .vdot, .steps, .calories, .help {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;

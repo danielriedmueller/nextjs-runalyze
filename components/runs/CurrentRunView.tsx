@@ -31,8 +31,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
         if (this.state.showHelp) {
             return <>
                 <button className={style.help} onClick={this.toggleShowHelp}></button>
-                <div
-                    className={style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
+                <div className={style.currentRun + " " + style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
                     <div className={style.date}>
                         <small>{run.getDateDay()}<br/>{run.getDate()}</small>
                     </div>
@@ -61,7 +60,7 @@ export default class CurrentRunView extends Component<IProps, IState> {
         return <>
             <button className={style.help} onClick={this.toggleShowHelp}></button>
             <div
-                className={style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
+                className={style.currentRun + " " + style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
                 <div className={style.date} onClick={() => this.props.setStatistics(run, 'date')}>
                     <small>{run.getDateDay()}<br/>{run.getDate()}</small>
                 </div>
