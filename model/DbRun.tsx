@@ -1,8 +1,5 @@
 import {fetchVdot} from "../pages/api/vdot";
-import {calcEndTime, dateToStartTime, stringToDuration} from "../helper/functions";
 import IDbRun from "../interfaces/IDbRun";
-import IEditRun from "../interfaces/IEditRun";
-import IRun from "../interfaces/IRun";
 
 interface FitnessData {
     distance: number;
@@ -41,26 +38,6 @@ export default class DbRun implements IDbRun {
         this.vdot = vdot;
     }
 
-    static async fromEditRun(run: IEditRun): Promise<IDbRun> {
-        const startTime = dateToStartTime(run.date);
-        const endTime = calcEndTime(startTime, stringToDuration(run.duration));
-
-        let newRun = new DbRun(
-            startTime,
-            endTime,
-            parseFloat(run.distance),
-            parseFloat(run.calories),
-            parseFloat(run.steps),
-            await fetchVdot(parseFloat(run.distance), startTime, endTime)
-        );
-
-        if (run.id) {
-            newRun.id = run.id
-        }
-
-        return newRun;
-    }
-
     static async fromGoogleApiData(bucket): Promise<IDbRun> {
         const {distance, calories, steps} = DbRun.getFitnessDataFromDataset(bucket.dataset);
 
@@ -72,26 +49,6 @@ export default class DbRun implements IDbRun {
             steps,
             await fetchVdot(distance, bucket.session.startTimeMillis, bucket.session.endTimeMillis)
         );
-    }
-
-    static async fromRun(run: IRun): Promise<IDbRun> {
-        const startTime = dateToStartTime(run.date);
-        const endTime = calcEndTime(startTime, run.duration);
-
-        let newRun = new DbRun(
-            startTime,
-            endTime,
-            run.distance,
-            run.calories,
-            run.steps,
-            await fetchVdot(run.distance, startTime, endTime)
-        );
-
-        if (run.id) {
-            newRun.id = run.id
-        }
-
-        return newRun;
     }
 
     static getFitnessDataFromDataset = (datasets): FitnessData => {

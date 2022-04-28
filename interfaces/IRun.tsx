@@ -7,8 +7,8 @@ export default interface IRun {
     vdot: number;
     duration: Duration;
     id: number;
-    calories?: number;
-    steps?: number;
+    calories: number;
+    steps: number;
     best: string[];
     getDate: () => string;
     getDateDay: () => string;

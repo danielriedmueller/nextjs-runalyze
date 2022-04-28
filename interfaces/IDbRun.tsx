@@ -4,6 +4,6 @@ export default interface IDbRun {
     endTime: number;
     distance: number;
     vdot?: number;
-    calories?: number;
-    steps?: number;
+    calories: number;
+    steps: number;
 }
