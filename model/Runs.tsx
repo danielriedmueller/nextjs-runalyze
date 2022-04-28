@@ -5,6 +5,7 @@ import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
+import {applyTrends} from "../helper/runs";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -46,10 +47,14 @@ export default class Runs implements IRuns {
             date = dayjs('01-01-' + filter.year);
         }
 
-        return this.getBetween(
+        const filteredRuns = this.getBetween(
             date.startOf(period),
             date.endOf(period)
         );
+
+        applyTrends(filteredRuns);
+
+        return filteredRuns;
     }
 
     getFastest(): IRun {

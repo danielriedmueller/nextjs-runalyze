@@ -1,23 +1,50 @@
 .currentRun {
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      justify-content: space-between;
-      padding: var(--spacing-s);
-      position: relative;
-      background-color: var(--blue-dark);
-      border-bottom: 1px solid var(--creme);
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    padding: var(--spacing-s) var(--spacing-s) 0 var(--spacing-s);
+    position: relative;
+    background-color: var(--blue-dark);
+    border-bottom: 1px solid var(--creme);
 
-      > div:first-child {
-        flex: 0 0 66.6%;
-      }
-    }
-
-    .date {
-      padding-top: 0;
-      margin-bottom: 0;
+    > div:first-child {
+      flex: 0 0 66.6%;
     }
   }
+
+  .date {
+    padding-top: 0;
+    margin-bottom: 0;
+  }
+
+  .singleDown:after,
+  .doubleDown:after,
+  .singleUp:after,
+  .doubleUp:after,
+  {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 34px;
+  }
+
+  .singleDown::after {
+    background-image: url("../assets/icons/chevron-down.svg");
+  }
+
+  .doubleDown::after {
+    background-image: url("../assets/icons/chevron-down-double.svg");
+  }
+
+  .singleUp::after {
+    background-image: url("../assets/icons/chevron-up.svg");
+  }
+
+  .doubleUp::after {
+    background-image: url("../assets/icons/chevron-up-double.svg");
+  }
+}
 
 .date, .count, .pace, .distance, .duration, .vdot, .steps, .calories, .help {
   font-family: 'Courier Prime', monospace;

@@ -1,7 +1,6 @@
 import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import IDateFilter from "../interfaces/IDateFilter";
-import exp from "constants";
 
 export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
 export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();

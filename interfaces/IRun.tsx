@@ -16,4 +16,10 @@ export default interface IRun {
     getDuration: () => string;
     renderDistance: () => string;
     renderCalories: () => string;
+
+    // Trends
+    paceTrend: string;
+    distanceTrend: string;
+    vdotTrend: string;
+    durationTrend: string;
 }

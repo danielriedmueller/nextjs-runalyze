@@ -14,6 +14,10 @@ export default class Run implements IRun {
     steps: number;
     vdot: number;
     best: string[];
+    paceTrend: string;
+    distanceTrend: string;
+    vdotTrend: string;
+    durationTrend: string;
 
     constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
         this.calories = calories;
