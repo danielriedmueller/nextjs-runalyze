@@ -15,8 +15,8 @@ export default interface IRuns {
     getCount: () => number;
     getLatest: () => IRun;
     getFirst: () => IRun;
-    getDistanceSum: () => number;
-    getDistanceAvg: () => number;
+    renderDistanceSum: () => string;
+    renderDistanceAvg: () => string;
     getVdotAvg: () => string;
     getDurationSum: () => string;
     getDurationAvg: () => string;

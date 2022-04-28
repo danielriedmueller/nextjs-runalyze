@@ -38,6 +38,8 @@ export default class Run implements IRun {
         );
     }
 
+    renderDistance = (): string => (this.distance / 1000).toFixed(2);
+
     getDate = ():string => this.date.format(process.env.NEXT_PUBLIC_DATE_FORMAT);
 
     getDateDay = (): string => this.date.format('dddd');
@@ -53,4 +55,6 @@ export default class Run implements IRun {
     }
 
     getDuration = (): string => durationToString(this.duration);
+
+    renderCalories = (): string => this.calories.toFixed(0);
 }

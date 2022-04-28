@@ -26,15 +26,15 @@ export default class WeekRuns extends DateRuns {
 
         for (let i = lastWeek; i > firstWeek - 1; i--) {
             const currentWeek = date.week(i);
-            const weekRuns = runs.getBetween(
-                currentWeek.startOf('week'),
-                currentWeek.endOf('week')
-            );
+            const startOfWeek = currentWeek.startOf('week');
+            const endOfWeek = currentWeek.endOf('week');
+            const weekRuns = runs.getBetween(startOfWeek, endOfWeek);
+            const label = startOfWeek.format('DD.MM.') + ' - ' + endOfWeek.format('DD.MM.');
             if (weekRuns.getCount() > 0) {
                 weeks.push(<div
                     key={'monthRun-' + i}
                 ><MultipleRuns
-                    label={i.toString()}
+                    label={label}
                     runs={weekRuns}
                     active={i === filter.week}
                     onClick={() => onClick(i)}

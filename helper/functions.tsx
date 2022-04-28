@@ -47,7 +47,6 @@ export const applyPeriodOnFilter = (orgFilter: IDateFilter, period: OpUnitType):
     return filter;
 }
 
-
 export const isValidRun = (newRun) => {
     let code, i, len;
 

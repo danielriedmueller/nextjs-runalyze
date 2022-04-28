@@ -97,12 +97,12 @@ export default class Runs implements IRuns {
         );
     }
 
-    getDistanceAvg(): number {
-        return (Math.round((this.distanceSum / this.getCount()) * 100) / 100);
+    renderDistanceAvg(): string {
+        return ((Math.round((this.distanceSum / this.getCount()) * 100) / 100) / 1000).toFixed(2);
     }
 
-    getDistanceSum(): number {
-        return this.distanceSum;
+    renderDistanceSum(): string {
+        return (this.distanceSum / 1000).toFixed(2);
     }
 
     getDurationAvg(): string {

@@ -14,4 +14,6 @@ export default interface IRun {
     getDateDay: () => string;
     getPace: () => string;
     getDuration: () => string;
+    renderDistance: () => string;
+    renderCalories: () => string;
 }

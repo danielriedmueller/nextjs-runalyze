@@ -25,7 +25,7 @@ export default class SingleRunView extends Component<IProps, IState> {
                 {run.getPace()}
             </div>
             <div className={style.distance} onClick={() => this.props.setStatistics(run, 'distance')}>
-                {run.distance}
+                {run.renderDistance()}
             </div>
             <div className={style.duration} onClick={() => this.props.setStatistics(run, 'duration')}>
                 {run.getDuration()}

@@ -1,14 +1,21 @@
 .currentRun {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: space-between;
-    padding: var(--spacing-s);
-    position: relative;
-    background-color: var(--blue-dark);
-    border-bottom: 1px solid var(--creme);
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: space-between;
+      padding: var(--spacing-s);
+      position: relative;
+      background-color: var(--blue-dark);
+      border-bottom: 1px solid var(--creme);
 
-    > div:first-child {
-      flex: 0 0 66.6%;
+      > div:first-child {
+        flex: 0 0 66.6%;
+      }
+    }
+
+    .date {
+      padding-top: 0;
+      margin-bottom: 0;
     }
   }
 
@@ -48,15 +55,12 @@
 }
 
 .date {
-  background: #fff none;
-  color: black;
+  background-image: url("../assets/icons/calendar3.svg");
   border-bottom: 1px solid var(--creme);
-  padding: 0 0 var(--spacing-s) 0;
-}
-
-.date input {
-  font-size: smaller;
-  color: black;
+  padding-bottom: var(--spacing-s);
+  padding-top: var(--spacing-s);
+  background-color: var(--red);
+  background-position: var(--spacing-s) var(--spacing-s);
 }
 
 .pace {
