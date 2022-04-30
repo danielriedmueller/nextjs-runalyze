@@ -1,4 +1,4 @@
-import React, {Component, ReactNode} from "react";
+import React, {Component, FC, ReactElement, ReactNode} from "react";
 import style from '../../style/runs.module.scss';
 import SingleRunView from "./SingleRunView";
 import IRuns from "../../interfaces/IRuns";
@@ -7,14 +7,11 @@ interface IProps {
     runs: IRuns;
 }
 
-interface IState {
-}
+const SingleRuns: FC<IProps> = ({runs}): ReactElement => {
+    const getRunViews = (): ReactNode[] => {
+        if (runs.getCount() === 0) return [];
 
-export default class SingleRuns extends Component<IProps, IState> {
-    getRunViews(): ReactNode[] {
-        if (this.props.runs.getCount() === 0) return [];
-
-        return this.props.runs.toArray().map((run, index) => {
+        return runs.toArray().map((run, index) => {
             return <div
                 key={'singleRun-' + index}
             ><SingleRunView
@@ -23,7 +20,7 @@ export default class SingleRuns extends Component<IProps, IState> {
         })
     }
 
-    render() {
-        return <div className={style.table}>{this.getRunViews()}</div>;
-    }
+    return <div className={style.table}>{getRunViews()}</div>;
 }
+
+export default SingleRuns;

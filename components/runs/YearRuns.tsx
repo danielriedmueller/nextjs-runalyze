@@ -1,25 +1,31 @@
-import React, {ReactNode} from "react";
-import DateRuns from "./DateRuns";
+import React, {FC, ReactElement, ReactNode} from "react";
 import dayjs from "dayjs";
 import MultipleRuns from "./MultipleRuns";
+import style from "../../style/runs.module.scss";
+import IRuns from "../../interfaces/IRuns";
+import IDateFilter from "../../interfaces/IDateFilter";
 
-export default class YearRuns extends DateRuns {
-    getRunViews(): ReactNode[] {
-        const filter = this.props.filter;
+interface IProps {
+    runs: IRuns;
+    filter: IDateFilter;
+    setDateFilter: (filter: IDateFilter) => void;
+}
 
-        if (this.props.runs.getCount() === 0) return [];
+const YearRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+    const getRunViews = (): ReactNode[] => {
+        if (runs.getCount() === 0) return [];
 
         let years = [];
 
-        const newestYear = this.props.runs.getNewest().date.year();
-        const oldestYear = this.props.runs.getFirst().date.year();
+        const newestYear = runs.getNewest().date.year();
+        const oldestYear = runs.getFirst().date.year();
 
         const onClick = (year: number) => {
             if (year === filter.year) {
                 year = null;
             }
             filter.year = year;
-            this.props.setDateFilter(filter);
+            setDateFilter(filter);
         }
 
         for (let i = newestYear; i > oldestYear - 1; i--) {
@@ -28,7 +34,7 @@ export default class YearRuns extends DateRuns {
                 key={'yearRun-' + i}
             ><MultipleRuns
                 label={i.toString()}
-                runs={this.props.runs.getBetween(
+                runs={runs.getBetween(
                     currentYear.startOf('year'),
                     currentYear.endOf('year')
                 )}
@@ -39,4 +45,8 @@ export default class YearRuns extends DateRuns {
 
         return years;
     }
+
+    return <div className={style.table}>{getRunViews()}</div>;
 }
+
+export default YearRuns;

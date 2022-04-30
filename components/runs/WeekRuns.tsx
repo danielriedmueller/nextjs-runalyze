@@ -1,13 +1,18 @@
-import React from "react";
-import DateRuns from "./DateRuns";
+import React, {FC, ReactElement, ReactNode} from "react";
 import dayjs from "dayjs";
 import MultipleRuns from "./MultipleRuns";
+import IRuns from "../../interfaces/IRuns";
+import IDateFilter from "../../interfaces/IDateFilter";
+import style from "../../style/runs.module.scss";
 
-export default class WeekRuns extends DateRuns {
-    getRunViews() {
-        const runs = this.props.runs;
-        const filter = this.props.filter;
+interface IProps {
+    runs: IRuns;
+    filter: IDateFilter;
+    setDateFilter: (filter: IDateFilter) => void;
+}
 
+const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+    const getRunViews = (): ReactNode[] => {
         if (runs.getCount() < 2 || !filter.year || !filter.month) return [];
 
         let weeks = [];
@@ -21,7 +26,7 @@ export default class WeekRuns extends DateRuns {
                 week = null;
             }
             filter.week = week;
-            this.props.setDateFilter(filter);
+            setDateFilter(filter);
         }
 
         for (let i = lastWeek; i > firstWeek - 1; i--) {
@@ -44,4 +49,8 @@ export default class WeekRuns extends DateRuns {
 
         return weeks;
     }
+
+    return <div className={style.table}>{getRunViews()}</div>;
 }
+
+export default WeekRuns;

@@ -1,13 +1,19 @@
-import React from "react";
+import React, {FC, ReactElement, ReactNode} from "react";
 import dayjs from "dayjs";
-import DateRuns from "./DateRuns";
 import MultipleRuns from "./MultipleRuns";
+import style from "../../style/runs.module.scss";
+import IRuns from "../../interfaces/IRuns";
+import IDateFilter from "../../interfaces/IDateFilter";
+import exp from "constants";
 
-export default class MonthRuns extends DateRuns {
-    getRunViews() {
-        const runs = this.props.runs;
-        const filter = this.props.filter;
+interface IProps {
+    runs: IRuns;
+    filter: IDateFilter;
+    setDateFilter: (filter: IDateFilter) => void;
+}
 
+const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+    const getRunViews = (): ReactNode[] => {
         if (runs.getCount() < 2 || !filter.year) return [];
 
         let months = [];
@@ -20,7 +26,7 @@ export default class MonthRuns extends DateRuns {
                 month = null;
             }
             filter.month = month;
-            this.props.setDateFilter(filter);
+            setDateFilter(filter);
         }
 
         for (let i = lastMonth; i > firstMonth - 1; i--) {
@@ -43,4 +49,8 @@ export default class MonthRuns extends DateRuns {
 
         return months;
     }
+
+    return <div className={style.table}>{getRunViews()}</div>;
 }
+
+export default MonthRuns;

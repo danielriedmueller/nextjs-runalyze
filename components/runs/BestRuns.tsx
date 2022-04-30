@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {FC, ReactElement} from "react";
 import style from '../../style/runs.module.scss';
 import SingleRunView from "./SingleRunView";
 import IRuns from "../../interfaces/IRuns";
@@ -7,24 +7,21 @@ interface IProps {
     runs: IRuns;
 }
 
-interface IState {
+const BestRuns: FC<IProps> = ({runs}): ReactElement => {
+    return <div className={style.table}>
+        <SingleRunView
+            run={runs.getMostPerformant()}
+        />
+        <SingleRunView
+            run={runs.getFurthest()}
+        />
+        <SingleRunView
+            run={runs.getLongest()}
+        />
+        <SingleRunView
+            run={runs.getFastest()}
+        />
+    </div>;
 }
 
-export default class BestRuns extends Component<IProps, IState> {
-    render() {
-        return <div className={style.table}>
-            <SingleRunView
-                run={this.props.runs.getMostPerformant()}
-            />
-            <SingleRunView
-                run={this.props.runs.getFurthest()}
-            />
-            <SingleRunView
-                run={this.props.runs.getLongest()}
-            />
-            <SingleRunView
-                run={this.props.runs.getFastest()}
-            />
-        </div>;
-    }
-}
+export default BestRuns;
