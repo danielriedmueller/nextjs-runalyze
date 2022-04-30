@@ -4,8 +4,6 @@ import IRun from "../../interfaces/IRun";
 
 interface IProps {
     run: IRun;
-    statistics: string;
-    setStatistics: (currentRun: IRun, statistics: string) => void;
 }
 
 interface IState {
@@ -24,28 +22,27 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 
     render() {
-        const activeClass = this.props.statistics + 'Active';
         const run = this.props.run;
 
         return <>
             <button className={style.help} onClick={this.toggleShowHelp}></button>
-            {!run ? renderNoRunContent() : this.state.showHelp ? renderHelpContent(run, activeClass) :
+            {!run ? renderNoRunContent() : this.state.showHelp ? renderHelpContent(run) :
                 <div
-                    className={style.currentRun + " " + style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
-                    <div className={style.date} onClick={() => this.props.setStatistics(run, 'date')}>
+                    className={style.currentRun + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
+                    <div className={style.date}>
                         <small>{run.getDateDay()}<br/>{run.getDate()}</small>
                     </div>
                     <div className={style.stats}>
-                        <div className={style.pace} onClick={() => this.props.setStatistics(run, 'pace')}>
+                        <div className={style.pace}>
                             <span className={style[run.paceTrend]}>{run.getPace()}</span>
                         </div>
-                        <div className={style.distance} onClick={() => this.props.setStatistics(run, 'distance')}>
+                        <div className={style.distance}>
                             <span className={style[run.distanceTrend]}>{run.renderDistance()}</span>
                         </div>
-                        <div className={style.duration} onClick={() => this.props.setStatistics(run, 'duration')}>
+                        <div className={style.duration}>
                             <span className={style[run.durationTrend]}>{run.getDuration()}</span>
                         </div>
-                        <div className={style.vdot} onClick={() => this.props.setStatistics(run, 'vdot')}>
+                        <div className={style.vdot}>
                             <span className={style[run.vdotTrend]}>{run.vdot}</span>
                         </div>
                         <div className={style.steps}>
@@ -61,8 +58,8 @@ export default class CurrentRunView extends Component<IProps, IState> {
     }
 }
 
-const renderHelpContent = (run: IRun, activeClass: string): ReactNode => <div
-    className={style.currentRun + " " + style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
+const renderHelpContent = (run: IRun): ReactNode => <div
+    className={style.currentRun + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
     <div className={style.date}>
         <small>{run.getDateDay()}<br/>{run.getDate()}</small>
     </div>

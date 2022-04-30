@@ -21,7 +21,6 @@ interface IProps {
 
 interface IState {
     currentRun: IRun;
-    statistics: string;
 }
 
 export default class RunArea extends Component<IProps, IState> {
@@ -29,8 +28,7 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: props.runs.getFiltered(props.filter).getNewest(),
-            statistics: 'vdot'
+            currentRun: props.runs.getFiltered(props.filter).getNewest()
         };
     }
 
@@ -42,29 +40,19 @@ export default class RunArea extends Component<IProps, IState> {
         return null;
     }
 
-    setStatistics = (currentRun: IRun, statistics: string) => {
-        this.setState({currentRun, statistics});
-    }
-
     render() {
         return <>
             <div className={style.currentRun}>
                 <CurrentRunView
                     run={this.state.currentRun}
-                    statistics={this.state.statistics}
-                    setStatistics={this.setStatistics}
                 />
             </div>
             <div className={style.runarea}>
                 <BestRuns
                     runs={this.props.runs.getFiltered(this.props.filter)}
-                    statistics={this.state.statistics}
-                    setStatistics={this.setStatistics}
                 />
                 <SingleRuns
                     runs={this.props.runs.getFiltered(this.props.filter)}
-                    statistics={this.state.statistics}
-                    setStatistics={this.setStatistics}
                 />
                 <WeekRuns
                     runs={this.props.runs.getFiltered(this.props.filter, 'month')}
