@@ -7,21 +7,19 @@ interface IProps {
     runs: IRuns;
 }
 
-const BestRuns: FC<IProps> = ({runs}): ReactElement => {
-    return <div className={style.table}>
-        <SingleRunView
-            run={runs.getMostPerformant()}
-        />
-        <SingleRunView
-            run={runs.getFurthest()}
-        />
-        <SingleRunView
-            run={runs.getLongest()}
-        />
-        <SingleRunView
-            run={runs.getFastest()}
-        />
-    </div>;
-}
+const BestRuns: FC<IProps> = ({runs}): ReactElement => <div className={style.table}>
+    <SingleRunView
+        run={runs.getMostPerformant()}
+    />
+    <SingleRunView
+        run={runs.getFurthest()}
+    />
+    <SingleRunView
+        run={runs.getLongest()}
+    />
+    <SingleRunView
+        run={runs.getFastest()}
+    />
+</div>;
 
 export default BestRuns;
