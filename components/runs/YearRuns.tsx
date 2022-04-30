@@ -11,8 +11,8 @@ export default class YearRuns extends DateRuns {
 
         let years = [];
 
-        const firstYear = this.props.runs.getFirst().date.year();
-        const latestYear = this.props.runs.getLatest().date.year();
+        const newestYear = this.props.runs.getNewest().date.year();
+        const oldestYear = this.props.runs.getFirst().date.year();
 
         const onClick = (year: number) => {
             if (year === filter.year) {
@@ -22,7 +22,7 @@ export default class YearRuns extends DateRuns {
             this.props.setDateFilter(filter);
         }
 
-        for (let i = firstYear; i > latestYear - 1; i--) {
+        for (let i = newestYear; i > oldestYear - 1; i--) {
             const currentYear = dayjs('01-01-' + i);
             years.push(<div
                 key={'yearRun-' + i}

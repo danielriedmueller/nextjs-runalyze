@@ -29,6 +29,7 @@ interface IState {
     currentRun: IRun;
     editRun: IEditRun;
     statistics: string;
+    filter: IDateFilter
     mode: number;
 }
 
@@ -37,19 +38,12 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: null,
+            currentRun: props.runs.getFiltered(props.filter).getNewest(),
             editRun: null,
+            filter: null,
             statistics: 'vdot',
             mode: Mode.None
         };
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        if (!state.currentRun) {
-            return {currentRun: props.runs.getFiltered(props.filter).getLatest()};
-        }
-
-        return null;
     }
 
     upsert = async (run: IEditRun) => {

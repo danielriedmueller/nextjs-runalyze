@@ -125,11 +125,11 @@ export default class Runs implements IRuns {
     }
 
     getFirst(): IRun {
-        return this.runs[0];
+        return this.runs[this.getCount() - 1];
     }
 
-    getLatest(): IRun {
-        return this.runs[this.getCount() - 1];
+    getNewest(): IRun {
+        return this.runs[0];
     }
 
     getPaceAvg(): string {

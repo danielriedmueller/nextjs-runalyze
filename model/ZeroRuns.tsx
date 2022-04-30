@@ -50,7 +50,7 @@ export default class ZeroRuns implements IRuns {
         return undefined;
     }
 
-    getLatest(): IRun {
+    getNewest(): IRun {
         return undefined;
     }
 
