@@ -33,7 +33,7 @@ export default class MonthRuns extends DateRuns {
                 months.push(<div
                     key={'monthRun-' + i}
                 ><MultipleRuns
-                    label={i.toString()}
+                    label={currentMonth.format('MMMM')}
                     runs={monthRuns}
                     active={i === filter.month}
                     onClick={() => onClick(i)}

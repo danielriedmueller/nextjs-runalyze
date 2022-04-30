@@ -19,6 +19,7 @@ import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUs
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import UserArea from "../components/UserArea";
+import ZeroRuns from "../model/ZeroRuns";
 
 require('dayjs/locale/de')
 
@@ -46,7 +47,7 @@ class Home extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            runs: new Runs(props.runs.map((run) => Run.fromDbRun(run))),
+            runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
             user: null
         };
@@ -74,8 +75,8 @@ class Home extends Component<IProps, IState> {
     }
 
     refreshRuns = async (): Promise<void> => {
-        const runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: new Runs(runs.map((run) => Run.fromDbRun(run)))});
+        let runs = await fetchRuns(this.state.user.id);
+        this.setState({runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run))),});
     }
 
     setDateFilter = (filter: IDateFilter): void => {

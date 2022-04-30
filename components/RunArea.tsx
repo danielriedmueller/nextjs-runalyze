@@ -29,7 +29,7 @@ export default class RunArea extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentRun: null,
+            currentRun: props.runs.getFiltered(props.filter).getNewest(),
             statistics: 'vdot'
         };
     }

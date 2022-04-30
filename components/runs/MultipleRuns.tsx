@@ -19,7 +19,7 @@ export default class MultipleRuns extends Component<IProps, IState> {
             <div className={style.count}>{this.props.runs.getCount()}</div>
             <div className={style.pace}>{this.props.runs.getPaceAvg()}</div>
             <div
-                className={style.distance}>{this.props.runs.getDistanceSum()}<br/><small>{this.props.runs.getDistanceAvg()}</small>
+                className={style.distance}>{this.props.runs.renderDistanceSum()}<br/><small>{this.props.runs.renderDistanceAvg()}</small>
             </div>
             <div
                 className={style.duration}>{this.props.runs.getDurationSum()}<br/><small>{this.props.runs.getDurationAvg()}</small>

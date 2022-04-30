@@ -1,10 +1,13 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {applyPeriodOnFilter, durationToString, stringToDuration} from "../helper/functions";
+import {applyPeriodOnFilter, createDuration, durationToString, stringToDuration} from "../helper/functions";
 import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
+import {applyTrends} from "../helper/runs";
+import ZeroRuns from "./ZeroRuns";
+import IDbRun from "../interfaces/IDbRun";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -12,7 +15,7 @@ export default class Runs implements IRuns {
     durationSum: Duration;
     vdotSum: number;
 
-    constructor(runs: IRun[]) {
+    private constructor(runs: IRun[]) {
         this.distanceSum = 0;
         this.durationSum = dayjs.duration(0);
         this.vdotSum = 0;
@@ -24,6 +27,10 @@ export default class Runs implements IRuns {
         })
 
         this.runs = runs;
+    }
+
+    public static fromRuns(runs: IRun[]): IRuns {
+        return runs.length > 0 ? new Runs(runs) : new ZeroRuns();
     }
 
     getFiltered(filter: IDateFilter, period?: OpUnitType): IRuns {
@@ -46,10 +53,14 @@ export default class Runs implements IRuns {
             date = dayjs('01-01-' + filter.year);
         }
 
-        return this.getBetween(
+        const filteredRuns = this.getBetween(
             date.startOf(period),
             date.endOf(period)
         );
+
+        applyTrends(filteredRuns);
+
+        return filteredRuns;
     }
 
     getFastest(): IRun {
@@ -92,17 +103,17 @@ export default class Runs implements IRuns {
     }
 
     getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
-        return new Runs(
+        return Runs.fromRuns(
             this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]'))
         );
     }
 
-    getDistanceAvg(): number {
-        return (Math.round((this.distanceSum / this.getCount()) * 100) / 100);
+    renderDistanceAvg(): string {
+        return ((Math.round((this.distanceSum / this.getCount()) * 100) / 100) / 1000).toFixed(2);
     }
 
-    getDistanceSum(): number {
-        return this.distanceSum;
+    renderDistanceSum(): string {
+        return (this.distanceSum / 1000).toFixed(2);
     }
 
     getDurationAvg(): string {
@@ -114,11 +125,11 @@ export default class Runs implements IRuns {
     }
 
     getFirst(): IRun {
-        return this.runs[0];
+        return this.runs[this.getCount() - 1];
     }
 
-    getLatest(): IRun {
-        return this.runs[this.getCount() - 1];
+    getNewest(): IRun {
+        return this.runs[0];
     }
 
     getPaceAvg(): string {

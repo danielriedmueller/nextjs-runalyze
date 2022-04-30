@@ -13,10 +13,10 @@ export default interface IRuns {
     getLongest: () => IRun;
     getFastest: () => IRun;
     getCount: () => number;
-    getLatest: () => IRun;
+    getNewest: () => IRun;
     getFirst: () => IRun;
-    getDistanceSum: () => number;
-    getDistanceAvg: () => number;
+    renderDistanceSum: () => string;
+    renderDistanceAvg: () => string;
     getVdotAvg: () => string;
     getDurationSum: () => string;
     getDurationAvg: () => string;
