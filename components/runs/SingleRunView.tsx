@@ -17,6 +17,10 @@ export default class SingleRunView extends Component<IProps, IState> {
         const activeClass = this.props.statistics + 'Active';
         const run = this.props.run;
 
+        if (!run) {
+            return null;
+        }
+
         return <div className={style[activeClass] + ' ' + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
             <div className={style.date} onClick={() => this.props.setStatistics(run, 'date')}>
                 <small>{run.getDateDay()}<br/>{run.getDate()}</small>

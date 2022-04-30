@@ -19,7 +19,7 @@ export default class Run implements IRun {
     vdotTrend: string;
     durationTrend: string;
 
-    constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
+    private constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
         this.calories = calories;
         this.date = dayjs(date);
         this.distance = distance;

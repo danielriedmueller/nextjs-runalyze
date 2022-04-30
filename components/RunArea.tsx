@@ -46,7 +46,7 @@ export default class RunArea extends Component<IProps, IState> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.currentRun) {
-            return {currentRun: props.runs.getLatest()};
+            return {currentRun: props.runs.getFiltered(props.filter).getLatest()};
         }
 
         return null;

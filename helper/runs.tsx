@@ -23,34 +23,13 @@ export const applyTrends = (runs: IRuns): IRuns => {
     return runs;
 }
 
-const calcPaceTrend = (run: IRun, avg: number): string => {
+const calcPaceTrend = (run: IRun, avg: number): string => getTrendByDeviation((avg - run.distance / run.duration.asMilliseconds()) * 10000);
+const calcDurationTrend = (run: IRun, avg: number): string => getTrendByDeviation(avg - run.duration.asMilliseconds());
+const calcDistanceTrend = (run: IRun, avg: number): string => getTrendByDeviation(avg - run.distance);
+const calcVdotTrend = (run: IRun, avg: number): string => getTrendByDeviation(avg - run.vdot);
+
+const getTrendByDeviation = (deviation: number): string => {
     let trend = '';
-    const pace = run.distance / run.duration.asMilliseconds();
-    const deviation = (avg - pace) * 10000;
-
-    if (deviation > 5) {
-        if (deviation > 10) {
-            trend = DOUBLE_UP_CLS;
-        } else {
-            trend = SINGLE_UP_CLS;
-        }
-    }
-
-    if (deviation < 5) {
-        if (deviation < 10) {
-            trend = DOUBLE_DOWN_CLS;
-        } else {
-            trend = SINGLE_DOWN_CLS;
-        }
-    }
-
-    return trend;
-}
-
-const calcDurationTrend = (run: IRun, avg: number): string => {
-    let trend = '';
-    const duration = run.duration.asMilliseconds();
-    const deviation = (avg - duration);
 
     if (deviation > 5) {
         if (deviation > 10) {
