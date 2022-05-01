@@ -4,11 +4,14 @@ import IRun from "../../interfaces/IRun";
 
 interface IProps {
     run: IRun;
-    best?: string;
+    onClick?: () => void;
 }
 
-const SingleRunView: FC<IProps> = ({run}): ReactElement => !run ? null : (
-    <div className={(run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
+const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => !run ? null : (
+    <div
+        className={style[run.isCurrent ? 'isCurrent' : ''] + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}
+        onClick={onClick}
+    >
         <div className={style.date}>
             <small>{run.getDateDay()}<br/>{run.getDate()}</small>
         </div>

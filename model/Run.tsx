@@ -18,6 +18,7 @@ export default class Run implements IRun {
     distanceTrend: string;
     vdotTrend: string;
     durationTrend: string;
+    isCurrent: boolean;
 
     private constructor(calories: number, date: string, distance: number, duration: Duration, steps: number, vdot: number, id: number) {
         this.calories = calories;
@@ -28,6 +29,7 @@ export default class Run implements IRun {
         this.vdot = vdot;
         this.id = id;
         this.best = [];
+        this.isCurrent = false;
     }
 
     public static fromDbRun(dbRun: IDbRun): IRun {

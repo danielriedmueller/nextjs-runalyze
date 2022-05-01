@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
-    const [showHelp, setShowHelp] = useState(false);
+    const [showHelp, setShowHelp] = useState<boolean>(false);
 
     const renderHelpContent = (run: IRun): ReactNode => <div
         className={style.currentRun + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>

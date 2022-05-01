@@ -16,6 +16,9 @@
   .date {
     padding-top: 0;
     margin-bottom: 0;
+    color: var(--creme);
+    background-color: var(--red);
+    background-image: url("../assets/icons/calendar3.svg");
   }
 
   .singleDown:after,
@@ -83,12 +86,19 @@
 }
 
 .date {
-  background-image: url("../assets/icons/calendar3.svg");
+  background-image: url("../assets/icons/calendar3-dark.svg");
   border-bottom: 1px solid var(--creme);
   padding-bottom: var(--spacing-s);
   padding-top: var(--spacing-s);
-  background-color: var(--red);
+  background-color: var(--blue-light);
+  color: #000;
   background-position: var(--spacing-s) var(--spacing-s);
+}
+
+.isCurrent .date {
+  color: var(--creme);
+  background-color: var(--red);
+  background-image: url("../assets/icons/calendar3.svg");
 }
 
 .pace {

@@ -10,6 +10,7 @@ export default interface IRun {
     calories: number;
     steps: number;
     best: string[];
+    isCurrent: boolean;
     getDate: () => string;
     getDateDay: () => string;
     getPace: () => string;
