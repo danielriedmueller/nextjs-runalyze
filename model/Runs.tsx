@@ -1,13 +1,12 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {applyPeriodOnFilter, createDuration, durationToString, stringToDuration} from "../helper/functions";
+import {applyPeriodOnFilter, durationToString, stringToDuration} from "../helper/functions";
 import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
-import {applyTrends} from "../helper/runs";
 import ZeroRuns from "./ZeroRuns";
-import IDbRun from "../interfaces/IDbRun";
+import {applyTrends} from "../helper/trends";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -59,6 +58,8 @@ export default class Runs implements IRuns {
         );
 
         applyTrends(filteredRuns);
+
+        console.log(filteredRuns.getCount())
 
         return filteredRuns;
     }
