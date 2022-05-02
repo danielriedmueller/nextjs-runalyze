@@ -7,6 +7,7 @@ import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
 import ZeroRuns from "./ZeroRuns";
 import {applyTrends} from "../helper/trends";
+import {getMonthRuns, getWeekRuns, getYearRuns} from "../helper/filteredRuns";
 
 export default class Runs implements IRuns {
     runs: IRun[];
@@ -37,31 +38,17 @@ export default class Runs implements IRuns {
             return this;
         }
 
-        if (period) {
-            filter = applyPeriodOnFilter(filter, period);
-        } else {
-            period = filter.week ? 'week' : filter.month ? 'month' : 'year';
+        filter = applyPeriodOnFilter(filter, period);
+
+        if (filter.week && filter.month) {
+            return getWeekRuns(this, filter.week, filter.month, filter.year);
         }
 
-        let date;
-        if (filter.week) {
-            date = dayjs(filter.month + '-01-' + filter.year).week(filter.week);
-        } else if (filter.month) {
-            date = dayjs(filter.month + '-01-' + filter.year);
-        } else {
-            date = dayjs('01-01-' + filter.year);
+        if (filter.month) {
+            return getMonthRuns(this, filter.month, filter.year);
         }
 
-        const filteredRuns = this.getBetween(
-            date.startOf(period),
-            date.endOf(period)
-        );
-
-        applyTrends(filteredRuns);
-
-        console.log(filteredRuns.getCount())
-
-        return filteredRuns;
+        return getYearRuns(this, filter.year);
     }
 
     getFastest(): IRun {

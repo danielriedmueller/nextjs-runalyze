@@ -32,8 +32,9 @@ export const emendDateFilter = (filter: IDateFilter): IDateFilter => {
     return filter;
 }
 
-export const applyPeriodOnFilter = (orgFilter: IDateFilter, period: OpUnitType): IDateFilter => {
+export const applyPeriodOnFilter = (orgFilter: IDateFilter, period?: OpUnitType): IDateFilter => {
     let filter = {...orgFilter};
+
     if (period === 'year') {
         filter.month = null;
         filter.week = null;

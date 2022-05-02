@@ -4,6 +4,7 @@ import MultipleRuns from "./MultipleRuns";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
 import style from "../../style/runs.module.scss";
+import {getWeekRuns} from "../../helper/filteredRuns";
 
 interface IProps {
     runs: IRuns;
@@ -30,12 +31,9 @@ const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
         }
 
         for (let i = lastWeek; i > firstWeek - 1; i--) {
-            const currentWeek = date.week(i);
-            const startOfWeek = currentWeek.startOf('week');
-            const endOfWeek = currentWeek.endOf('week');
-            const weekRuns = runs.getBetween(startOfWeek, endOfWeek);
-            const label = startOfWeek.format('DD.MM.') + ' - ' + endOfWeek.format('DD.MM.');
+            const weekRuns = getWeekRuns(runs, i, filter.month, filter.year);
             if (weekRuns.getCount() > 0) {
+                const label = weekRuns.getFirst().date.format('DD.MM.') + ' - ' + weekRuns.getNewest().date.format('DD.MM.');
                 weeks.push(<div
                     key={'monthRun-' + i}
                 ><MultipleRuns
