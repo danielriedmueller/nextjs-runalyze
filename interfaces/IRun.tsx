@@ -17,6 +17,7 @@ export default interface IRun {
     getDuration: () => string;
     renderDistance: () => string;
     renderCalories: () => string;
+    isBestInSomething: () => boolean;
 
     // Trends
     paceTrend: string;

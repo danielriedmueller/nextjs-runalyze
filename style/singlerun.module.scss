@@ -79,6 +79,13 @@
   color: var(--yellow) !important;
 }
 
+.fastest .date,
+.mostPerformant .date,
+.longest .date,
+.furthest .date {
+  background-color: var(--yellow);
+}
+
 .count {
   background-image: url("../assets/icons/clipboard-list.svg");
   border-bottom: 1px solid var(--creme);

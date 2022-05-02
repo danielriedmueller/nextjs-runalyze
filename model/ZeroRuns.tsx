@@ -1,11 +1,7 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {applyPeriodOnFilter, durationToString, stringToDuration} from "../helper/functions";
-import dayjs, {OpUnitType} from "dayjs";
-import {Duration} from "dayjs/plugin/duration";
-import {Length, Pacer, Timespan} from "fitness-js";
+import dayjs from "dayjs";
 import IDateFilter from "../interfaces/IDateFilter";
-import {applyTrends} from "../helper/runs";
 
 export default class ZeroRuns implements IRuns {
     distanceSum: number;
@@ -34,10 +30,6 @@ export default class ZeroRuns implements IRuns {
         return "-";
     }
 
-    getFastest(): IRun {
-        return undefined;
-    }
-
     getFiltered(filter: IDateFilter, period: dayjs.OpUnitType | undefined): IRuns {
         return new ZeroRuns();
     }
@@ -46,19 +38,7 @@ export default class ZeroRuns implements IRuns {
         return undefined;
     }
 
-    getFurthest(): IRun {
-        return undefined;
-    }
-
     getNewest(): IRun {
-        return undefined;
-    }
-
-    getLongest(): IRun {
-        return undefined;
-    }
-
-    getMostPerformant(): IRun {
         return undefined;
     }
 

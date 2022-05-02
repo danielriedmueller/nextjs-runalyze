@@ -1,10 +1,30 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
+import {stringToDuration} from "./functions";
 
 const SINGLE_DOWN_CLS = 'singleDown';
 const DOUBLE_DOWN_CLS = 'doubleDown';
 const SINGLE_UP_CLS = 'singleUp';
 const DOUBLE_UP_CLS = 'doubleUp';
+
+export const chooseBest = (runs: IRun[]) => {
+    runs.forEach(run => run.best = []);
+    findFastest(runs).best.push('fastest');
+    findFurthest(runs).best.push('furthest');
+    findLongest(runs).best.push('longest');
+    findMostPerformant(runs).best.push('mostPerformant');
+}
+
+const findFastest = (runs: IRun[]) => runs.reduce((prev, current) => {
+    const durationA = stringToDuration(prev.getPace());
+    const durationB = stringToDuration(current.getPace());
+
+    return (durationA.asMilliseconds() < durationB.asMilliseconds()) ? prev : current
+});
+
+const findFurthest = (runs: IRun[]) => runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
+const findLongest = (runs: IRun[]) => runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
+const findMostPerformant = (runs: IRun[]) => runs.reduce((prev, current) => prev.vdot > current.vdot ? prev : current);
 
 export const applyTrends = (runs: IRuns): IRuns => {
     const runsCount = runs.getCount();

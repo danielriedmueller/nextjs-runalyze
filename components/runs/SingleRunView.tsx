@@ -7,9 +7,9 @@ interface IProps {
     onClick?: () => void;
 }
 
-const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => !run ? null : (
+const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => run && (
     <div
-        className={style[run.isCurrent ? 'isCurrent' : ''] + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}
+        className={style[run.isCurrent ? 'isCurrent' : ''] + " " + (run.isBestInSomething() ? run.best.map((type) => style[type]).join(" ") : "")}
         onClick={onClick}
     >
         <div className={style.date}>

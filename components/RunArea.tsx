@@ -1,6 +1,5 @@
 import React, {FC, ReactElement, useEffect, useState} from "react";
 import IUser from "../interfaces/IUser";
-import BestRuns from "./runs/BestRuns";
 import style from '../style/runarea.module.scss';
 import IRuns from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
@@ -40,10 +39,6 @@ const RunArea: FC<IProps> = ({runs, user, refresh, filter, setDateFilter}): Reac
             />
         </div>
         <div className={style.runarea}>
-            <BestRuns
-                runs={runs.getFiltered(filter)}
-                setCurrentRun={_setCurrentRun}
-            />
             <SingleRuns
                 runs={runs.getFiltered(filter)}
                 setCurrentRun={_setCurrentRun}

@@ -8,10 +8,6 @@ export default interface IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
-    getMostPerformant: () => IRun;
-    getFurthest: () => IRun;
-    getLongest: () => IRun;
-    getFastest: () => IRun;
     getCount: () => number;
     getNewest: () => IRun;
     getFirst: () => IRun;

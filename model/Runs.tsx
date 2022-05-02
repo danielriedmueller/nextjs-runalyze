@@ -1,12 +1,12 @@
 import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
-import {applyPeriodOnFilter, durationToString, stringToDuration} from "../helper/functions";
+import {applyPeriodOnFilter, durationToString} from "../helper/functions";
 import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
 import ZeroRuns from "./ZeroRuns";
-import {applyTrends} from "../helper/trends";
+import {chooseBest} from "../helper/trends";
 import {getMonthRuns, getWeekRuns, getYearRuns} from "../helper/filteredRuns";
 
 export default class Runs implements IRuns {
@@ -49,41 +49,6 @@ export default class Runs implements IRuns {
         }
 
         return getYearRuns(this, filter.year);
-    }
-
-    getFastest(): IRun {
-        let run = this.runs.reduce((prev, current) => {
-            const durationA = stringToDuration(prev.getPace());
-            const durationB = stringToDuration(current.getPace());
-
-            return (durationA.asMilliseconds() < durationB.asMilliseconds()) ? prev : current
-        });
-        run.best.push('fastest');
-
-        return run;
-    }
-
-    getFurthest(): IRun {
-        let run = this.runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
-        run.best.push('furthest');
-
-        return run;
-    }
-
-    getLongest(): IRun {
-        let run = this.runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
-        run.best.push('longest');
-
-        return run;
-    }
-
-    getMostPerformant(): IRun {
-        let run = this.runs.reduce((prev, current) => {
-            return prev.vdot > current.vdot ? prev : current;
-        });
-        run.best.push('mostPerformant');
-
-        return run;
     }
 
     getCount(): number {
