@@ -84,6 +84,8 @@
 .longest .date,
 .furthest .date {
   background-color: var(--yellow);
+  color: #000;
+  background-image: url("../assets/icons/calendar3-dark.svg");
 }
 
 .count {
