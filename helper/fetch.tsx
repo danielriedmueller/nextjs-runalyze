@@ -17,9 +17,9 @@ export const fetchRuns = async (userId: string): Promise<IDbRun[]> => {
     }
 }
 
-export const fetchFitData = async (user: IUser): Promise<void> => {
+export const fetchFitData = async (user: IUser): Promise<boolean> => {
     try {
-        await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -27,6 +27,8 @@ export const fetchFitData = async (user: IUser): Promise<void> => {
                 user: user.id
             }),
         });
+
+        return await response.json();
     } catch (error) {
         console.error(error)
     }

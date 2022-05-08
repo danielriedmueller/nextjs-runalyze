@@ -10,8 +10,7 @@ interface IProps {
     responseGoogleFailed: () => void;
 }
 
-const UserArea: FC<IProps> = ({guser, fetchFitData, init, responseGoogleFailed}): ReactElement => <div
-    className={style.userarea + " " + style[guser ? 'loggedIn' : 'loggedOut']}>
+const UserArea: FC<IProps> = ({guser, fetchFitData, init, responseGoogleFailed}): ReactElement => <div className={style.userarea + " " + style[guser ? 'loggedIn' : 'loggedOut']}>
     {guser ?
         <>
             {guser.unfetchedRuns > 0 ? <div>

@@ -40,6 +40,7 @@ interface IState {
     runs: IRuns;
     filter: IDateFilter;
     guser: IUser;
+    isLoading: boolean;
 }
 
 class Home extends Component<IProps, IState> {
@@ -49,7 +50,8 @@ class Home extends Component<IProps, IState> {
         this.state = {
             runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
-            guser: null
+            guser: null,
+            isLoading: false
         };
     }
 
@@ -67,7 +69,15 @@ class Home extends Component<IProps, IState> {
         this.setState({guser});
     }
 
-    fetchFitData = async (): Promise<void> => fetchFitData(this.state.guser);
+    fetchFitData = async (): Promise<void> => {
+        this.setState({isLoading: true});
+        await fetchFitData(this.state.guser);
+        let runs = await fetchRuns(this.state.guser.id);
+        this.setState({
+            runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run))),
+            isLoading: false
+        });
+    };
 
     responseGoogleFailed = (): void => {
         console.log('google login failed');
@@ -81,23 +91,26 @@ class Home extends Component<IProps, IState> {
     }
 
     refresh = () => {
-        this.setState({runs : new ZeroRuns()})
+        this.setState({runs: new ZeroRuns()})
     }
 
     render() {
         return <div id="app">
-            <Header />
-            {this.state.runs.getCount() > 0 ? <RunArea
-                runs={this.state.runs}
-                filter={this.state.filter}
-                setDateFilter={this.setDateFilter}
-                refresh={this.refresh}
-            /> : <UserArea
-                guser={this.state.guser}
-                fetchFitData={this.fetchFitData}
-                init={this.init}
-                responseGoogleFailed={this.responseGoogleFailed}
-            />}
+            <Header/>
+            {!this.state.isLoading ?
+                this.state.runs.getCount() > 0 ? <RunArea
+                    runs={this.state.runs}
+                    filter={this.state.filter}
+                    setDateFilter={this.setDateFilter}
+                    refresh={this.refresh}
+                /> : <UserArea
+                    guser={this.state.guser}
+                    fetchFitData={this.fetchFitData}
+                    init={this.init}
+                    responseGoogleFailed={this.responseGoogleFailed}
+                />
+                : <div>loading</div>
+            }
         </div>
     }
 }

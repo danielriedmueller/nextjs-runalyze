@@ -17,7 +17,7 @@ export default async function handle(req: Request, res: Response): Promise<numbe
 
     //const gApiData = await fetchSessions(user, token);
     const gApiData = exampleDataSessions;
-    return res.json(gApiData.length);
+    return res.json(gApiData.session.length);
 
     // TODO Remove if unbecessary
     /*
