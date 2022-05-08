@@ -1,5 +1,6 @@
 import React, {FC, ReactElement, ReactNode, useState} from "react";
-import style from '../../style/singlerun.module.scss';
+import style from '../../style/currentrun.module.scss';
+import runStyle from '../../style/run.module.scss';
 import IRun from "../../interfaces/IRun";
 
 interface IProps {
@@ -10,54 +11,55 @@ const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
     const [showHelp, setShowHelp] = useState<boolean>(false);
 
     const renderHelpContent = (run: IRun): ReactNode => <div
-        className={style.currentRun + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
-        <div className={style.date}>
-            <small>{run.getDateDay()}<br/>{run.getDate()}</small>
+        className={run.best.length > 0 ? run.best.map((type) => runStyle[type]).join(" ") : ""}>
+        <div className={style.head}>
+            <div className={style.date}>
+                <small>{run.getDateDay()}<br/>{run.getDate()}</small>
+            </div>
         </div>
         <div className={style.stats}>
-            <div className={style.pace}>
+            <div className={runStyle.pace}>
                 Pace in M/km
             </div>
-            <div className={style.distance}>
+            <div className={runStyle.distance}>
                 Distanz in km
             </div>
-            <div className={style.duration}>
+            <div className={runStyle.duration}>
                 Dauer
             </div>
-            <div className={style.vdot}>
+            <div className={runStyle.vdot}>
                 VDOT
             </div>
-            <div className={style.steps}>
+            <div className={runStyle.steps}>
                 Schritte
             </div>
-            <div className={style.calories}>
+            <div className={runStyle.calories}>
                 Kalorien
             </div>
         </div>
     </div>;
 
-    const renderNoRunContent = (): ReactNode => <div
-        className={style.currentRun}>
-        <div className={style.date}>
+    const renderNoRunContent = (): ReactNode => <div>
+        <div className={runStyle.date}>
             <small>-</small>
         </div>
         <div className={style.stats}>
-            <div className={style.pace}>
+            <div className={runStyle.pace}>
                 -
             </div>
-            <div className={style.distance}>
+            <div className={runStyle.distance}>
                 -
             </div>
-            <div className={style.duration}>
+            <div className={runStyle.duration}>
                 -
             </div>
-            <div className={style.vdot}>
+            <div className={runStyle.vdot}>
                 -
             </div>
-            <div className={style.steps}>
+            <div className={runStyle.steps}>
                 -
             </div>
-            <div className={style.calories}>
+            <div className={runStyle.calories}>
                 -
             </div>
         </div>
@@ -66,28 +68,27 @@ const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
     return (<>
         <button className={style.help} onClick={() => setShowHelp(!showHelp)}></button>
         {!run ? renderNoRunContent() : showHelp ? renderHelpContent(run) :
-            <div
-                className={style.currentRun + " " + (run.best.length > 0 ? run.best.map((type) => style[type]).join(" ") : "")}>
-                <div className={style.date}>
+            <div className={run.best.length > 0 ? run.best.map((type) => runStyle[type]).join(" ") : ""}>
+                <div className={runStyle.date}>
                     <small>{run.getDateDay()}<br/>{run.getDate()}</small>
                 </div>
                 <div className={style.stats}>
-                    <div className={style.pace}>
+                    <div className={runStyle.pace}>
                         <span className={style[run.paceTrend]}>{run.getPace()}</span>
                     </div>
-                    <div className={style.distance}>
+                    <div className={runStyle.distance}>
                         <span className={style[run.distanceTrend]}>{run.renderDistance()}</span>
                     </div>
-                    <div className={style.duration}>
+                    <div className={runStyle.duration}>
                         <span className={style[run.durationTrend]}>{run.getDuration()}</span>
                     </div>
-                    <div className={style.vdot}>
+                    <div className={runStyle.vdot}>
                         <span className={style[run.vdotTrend]}>{run.vdot}</span>
                     </div>
-                    <div className={style.steps}>
+                    <div className={runStyle.steps}>
                         {run.steps}
                     </div>
-                    <div className={style.calories}>
+                    <div className={runStyle.calories}>
                         {run.renderCalories()}
                     </div>
                 </div>

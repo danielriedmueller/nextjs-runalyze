@@ -1,0 +1,103 @@
+.head {
+  height: var(--run-head-height);
+  border-bottom: 1px solid var(--creme);
+  margin-bottom: var(--spacing-s);
+}
+
+.scrollable {
+  max-height: var(--run-body-height);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.date, .count, .pace, .distance, .duration, .vdot, .steps, .calories {
+  font-family: 'Courier Prime', monospace;
+  background: transparent none no-repeat var(--spacing-s) top;
+  background-image: url("../assets/icons/clipboard-list.svg");
+  background-size: var(--icon-size);
+  min-height: var(--icon-size);
+  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
+  padding-top: 3px;
+  text-align: left;
+  color: var(--creme);
+}
+
+.date {
+  background-image: url("../assets/icons/calendar3-dark.svg");
+  background-position: var(--spacing-s) var(--spacing-s);
+  background-color: var(--blue-light);
+  color: #000;
+  height: 100%;
+  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
+}
+
+.isCurrent .date {
+  color: var(--creme) !important;
+  background-color: var(--red) !important;
+  background-image: url("../assets/icons/calendar3.svg") !important;
+}
+
+.count, .pace, .distance, .duration, .vdot, .steps, .calories {
+  margin-bottom: var(--spacing-s);
+
+}
+
+.count {
+  background-image: url("../assets/icons/clipboard-list.svg");
+}
+
+.pace {
+  background-image: url("../assets/icons/stopwatch-running.svg");
+}
+
+.distance {
+  background-image: url("../assets/icons/polygon3.svg");
+}
+
+.duration {
+  background-image: url("../assets/icons/stopwatch.svg");
+}
+
+.vdot {
+  background-image: url("../assets/icons/star.svg");
+}
+
+.steps {
+  background-image: url("../assets/icons/footprint.svg");
+}
+
+.calories {
+  background-image: url("../assets/icons/fire.svg");
+}
+
+.fastest .date,
+.mostPerformant .date,
+.longest .date,
+.furthest .date {
+  background-color: var(--yellow);
+  color: #000;
+  background-image: url("../assets/icons/calendar3-dark.svg");
+}
+
+.fastest .pace,
+.mostPerformant .vdot,
+.longest .duration,
+.furthest .distance {
+  color: var(--yellow) !important;
+}
+
+.fastest .pace {
+  background-image: url("../assets/icons/stopwatch-running-most.svg");
+}
+
+.mostPerformant .vdot {
+  background-image: url("../assets/icons/star-most.svg");
+}
+
+.longest .duration {
+  background-image: url("../assets/icons/stopwatch-most.svg");
+}
+
+.furthest .distance {
+  background-image: url("../assets/icons/polygon3-most.svg");
+}

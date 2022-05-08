@@ -1,5 +1,5 @@
 import React, {FC, ReactElement} from "react";
-import style from '../../style/singlerun.module.scss';
+import style from '../../style/run.module.scss';
 import IRun from "../../interfaces/IRun";
 
 interface IProps {
