@@ -4,19 +4,18 @@ import IUser from "../interfaces/IUser";
 import style from '../style/userarea.module.scss';
 
 interface IProps {
-    user: IUser;
+    guser: IUser;
     fetchFitData: () => Promise<void>;
     init: (response: GoogleLoginResponse) => Promise<void>;
     responseGoogleFailed: () => void;
 }
 
-const UserArea: FC<IProps> = ({user, fetchFitData, init, responseGoogleFailed}): ReactElement => <div
-    className={style.userarea + " " + style[user ? 'loggedIn' : 'loggedOut']}>
-    {user ?
+const UserArea: FC<IProps> = ({guser, fetchFitData, init, responseGoogleFailed}): ReactElement => <div
+    className={style.userarea + " " + style[guser ? 'loggedIn' : 'loggedOut']}>
+    {guser ?
         <>
-            <div>Hallo {user.name}!</div>
-            {user.unfetchedRuns > 0 ? <div>
-                Du kannst {user.unfetchedRuns} Aktivitäten
+            {guser.unfetchedRuns > 0 ? <div>
+                Du kannst {guser.unfetchedRuns} Aktivitäten
                 <button onClick={fetchFitData}>Importieren</button>
             </div> : null}
         </> :

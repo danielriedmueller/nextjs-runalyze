@@ -19,6 +19,7 @@ import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUs
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import UserArea from "../components/UserArea";
+import ZeroRuns from "../model/ZeroRuns";
 
 require('dayjs/locale/de')
 
@@ -38,7 +39,7 @@ interface IProps {
 interface IState {
     runs: IRuns;
     filter: IDateFilter;
-    user: IUser;
+    guser: IUser;
 }
 
 class Home extends Component<IProps, IState> {
@@ -48,29 +49,29 @@ class Home extends Component<IProps, IState> {
         this.state = {
             runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
-            user: null
+            guser: null
         };
     }
 
     init = async (response: GoogleLoginResponse): Promise<void> => {
-        const user = {
+        const guser = {
             token: response.accessToken,
             id: response.googleId,
             name: response.profileObj.givenName,
         } as IUser;
 
-        setUserIdCookie(user);
+        setUserIdCookie(guser);
 
-        user.unfetchedRuns = await checkFitData(user);
+        guser.unfetchedRuns = await checkFitData(guser);
 
-        this.setState({user});
+        this.setState({guser});
     }
 
-    fetchFitData = async (): Promise<void> => fetchFitData(this.state.user);
+    fetchFitData = async (): Promise<void> => fetchFitData(this.state.guser);
 
     responseGoogleFailed = (): void => {
         console.log('google login failed');
-        this.setState({user: null})
+        this.setState({guser: null})
     }
 
     setDateFilter = (filter: IDateFilter): void => {
@@ -79,15 +80,20 @@ class Home extends Component<IProps, IState> {
         this.setState({filter});
     }
 
+    refresh = () => {
+        this.setState({runs : new ZeroRuns()})
+    }
+
     render() {
         return <div id="app">
-            <Header/>
-            {this.state.user ? <RunArea
+            <Header />
+            {this.state.runs.getCount() > 0 ? <RunArea
                 runs={this.state.runs}
                 filter={this.state.filter}
                 setDateFilter={this.setDateFilter}
+                refresh={this.refresh}
             /> : <UserArea
-                user={this.state.user}
+                guser={this.state.guser}
                 fetchFitData={this.fetchFitData}
                 init={this.init}
                 responseGoogleFailed={this.responseGoogleFailed}

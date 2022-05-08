@@ -3,6 +3,7 @@ import Cors from "cors";
 import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
 import {insertRun} from "../insert";
 import dayjs from "dayjs";
+import {exampleDataSessions} from "./check";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
@@ -17,7 +18,8 @@ export default async function handle(req: Request, res: Response): Promise<void>
 
     const {token, user} = req.body;
 
-    const gApiData = await fetchSessions(user, token);
+    //const gApiData = await fetchSessions(user, token);
+    const gApiData = exampleDataSessions;
 
     await Promise.all(
         gApiData.session.map(async (session) => {
@@ -38,7 +40,7 @@ export default async function handle(req: Request, res: Response): Promise<void>
             });
             const gApiBucketData = await gApiBucketResponse.json();
             const dbRun = await DbRun.fromGoogleApiData(gApiBucketData.bucket[0]);
-            await insertRun(user, dbRun);
+            //await insertRun(user, dbRun);
         })
     );
 }

@@ -17,3 +17,15 @@
   background-size: 20px 20px;
   background-color: var(--blue-dark);
 }
+
+.refreshButton {
+  background: var(--red) url("../assets/icons/cloud-sync.svg") no-repeat center center;
+  width: var(--icon-size-big);
+  height: var(--icon-size-big);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: var(--spacing-s);
+  top: var(--spacing-s);
+}
