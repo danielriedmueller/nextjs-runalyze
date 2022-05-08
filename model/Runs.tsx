@@ -6,7 +6,6 @@ import {Duration} from "dayjs/plugin/duration";
 import {Length, Pacer, Timespan} from "fitness-js";
 import IDateFilter from "../interfaces/IDateFilter";
 import ZeroRuns from "./ZeroRuns";
-import {chooseBest} from "../helper/trends";
 import {getMonthRuns, getWeekRuns, getYearRuns} from "../helper/filteredRuns";
 
 export default class Runs implements IRuns {
@@ -14,16 +13,22 @@ export default class Runs implements IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
+    caloriesSum: number;
+    stepsSum: number;
 
     private constructor(runs: IRun[]) {
         this.distanceSum = 0;
         this.durationSum = dayjs.duration(0);
         this.vdotSum = 0;
+        this.caloriesSum = 0;
+        this.stepsSum = 0;
 
         runs.forEach((run) => {
             this.distanceSum += run.distance;
             this.durationSum = this.durationSum.add(run.duration);
             this.vdotSum += run.vdot;
+            this.stepsSum += run.steps;
+            this.caloriesSum += run.calories;
         })
 
         this.runs = runs;
@@ -33,7 +38,7 @@ export default class Runs implements IRuns {
         return runs.length > 0 ? new Runs(runs) : new ZeroRuns();
     }
 
-    getFiltered(filter: IDateFilter, period?: OpUnitType): IRuns {
+    getFiltered = (filter: IDateFilter, period?: OpUnitType) => {
         if (!filter.year) {
             return this;
         }
@@ -50,42 +55,20 @@ export default class Runs implements IRuns {
 
         return getYearRuns(this, filter.year);
     }
-
-    getCount(): number {
-        return this.runs.length;
-    }
-
-    getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
-        return Runs.fromRuns(
-            this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]'))
-        );
-    }
-
-    renderDistanceAvg(): string {
-        return ((Math.round((this.distanceSum / this.getCount()) * 100) / 100) / 1000).toFixed(2);
-    }
-
-    renderDistanceSum(): string {
-        return (this.distanceSum / 1000).toFixed(2);
-    }
-
-    getDurationAvg(): string {
-        return durationToString(dayjs.duration(this.durationSum.asMilliseconds() / this.getCount()));
-    }
-
-    getDurationSum(): string {
-        return durationToString(this.durationSum);
-    }
-
-    getFirst(): IRun {
-        return this.runs[this.getCount() - 1];
-    }
-
-    getNewest(): IRun {
-        return this.runs[0];
-    }
-
-    getPaceAvg(): string {
+    getCount = () => this.runs.length;
+    getBetween = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => Runs.fromRuns(
+        this.runs.filter((run) => run.date.isBetween(startDate, endDate, null, '[]'))
+    );
+    getFirst = () => this.runs[this.getCount() - 1];
+    getNewest = () => this.runs[0];
+    toArray = () => this.runs;
+    getDurationAvg = () => durationToString(dayjs.duration(this.durationSum.asMilliseconds() / this.getCount()));
+    getDurationSum = () => durationToString(this.durationSum);
+    getStepsSum = () => this.stepsSum.toFixed(0);
+    getStepsAvg = () => (this.stepsSum / this.getCount()).toFixed(0);
+    getCaloriesSum = () => this.caloriesSum.toFixed(0);
+    getCaloriesAvg = () => (this.caloriesSum / this.getCount()).toFixed(0);
+    getPaceAvg = () => {
         if (this.distanceSum === 0 || this.durationSum.asMilliseconds() === 0) {
             return "0:0";
         }
@@ -95,12 +78,7 @@ export default class Runs implements IRuns {
             .withTime(new Timespan().addMilliseconds(this.durationSum.asMilliseconds()))
             .toPaceUnit('min/km').toString();
     }
-
-    getVdotAvg(): string {
-        return (this.vdotSum / this.getCount()).toFixed(2);
-    }
-
-    toArray(): IRun[] {
-        return this.runs;
-    }
+    getVdotAvg = () => ((this.vdotSum / this.getCount()).toFixed(2));
+    renderDistanceAvg = () => (((Math.round((this.distanceSum / this.getCount()) * 100) / 100) / 1000).toFixed(2));
+    renderDistanceSum = () => (this.distanceSum / 1000).toFixed(2);
 }

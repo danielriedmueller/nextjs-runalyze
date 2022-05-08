@@ -8,6 +8,8 @@ export default interface IRuns {
     distanceSum: number;
     durationSum: Duration;
     vdotSum: number;
+    stepsSum: number;
+    caloriesSum: number;
     getCount: () => number;
     getNewest: () => IRun;
     getFirst: () => IRun;
@@ -17,6 +19,10 @@ export default interface IRuns {
     getDurationSum: () => string;
     getDurationAvg: () => string;
     getPaceAvg: () => string;
+    getStepsSum: () => string;
+    getStepsAvg: () => string;
+    getCaloriesSum: () => string;
+    getCaloriesAvg: () => string;
     getBetween: (startDate: Dayjs, endDate: Dayjs) => IRuns;
     getFiltered: (filter: IDateFilter, period?: OpUnitType) => IRuns;
     toArray: () => IRun[];

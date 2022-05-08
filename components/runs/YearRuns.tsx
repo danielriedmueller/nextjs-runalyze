@@ -1,6 +1,5 @@
 import React, {FC, ReactElement, ReactNode} from "react";
-import dayjs from "dayjs";
-import MultipleRuns from "./MultipleRuns";
+import MultipleRunsView from "./MultipleRunsView";
 import style from "../../style/runs.module.scss";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
@@ -27,14 +26,13 @@ const YearRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
         let years = [];
 
         for (let i = runs.getNewest().date.year(); i > runs.getFirst().date.year() - 1; i--) {
-            years.push(<div
+            years.push(<MultipleRunsView
                 key={'yearRun-' + i}
-            ><MultipleRuns
                 label={i.toString()}
                 runs={getYearRuns(runs, i)}
                 active={i === filter.year}
                 onClick={() => onClick(i)}
-            /></div>)
+            />)
         }
 
         return years;

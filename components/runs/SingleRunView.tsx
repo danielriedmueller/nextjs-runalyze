@@ -27,6 +27,12 @@ const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => run && (
         <div className={style.vdot}>
             {run.vdot}
         </div>
+        <div className={style.steps}>
+            {run.steps}
+        </div>
+        <div className={style.calories}>
+            {run.renderCalories()}
+        </div>
     </div>
 );
 

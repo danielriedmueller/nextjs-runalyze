@@ -6,11 +6,12 @@ import IDateFilter from "../interfaces/IDateFilter";
 export default class ZeroRuns implements IRuns {
     distanceSum: number;
     durationSum: plugin.Duration;
+    vdotSum: number;
+    stepsSum: number;
+    caloriesSum: number;
+    runs: IRun[];
 
     constructor() {
-        this.distanceSum = 0;
-        this.durationSum = dayjs.duration(0);
-        this.vdotSum = 0;
         this.runs = [];
     }
 
@@ -18,20 +19,12 @@ export default class ZeroRuns implements IRuns {
         return undefined;
     }
 
-    getCount(): number {
-        return 0;
-    }
-
-    getDurationAvg(): string {
-        return "-";
-    }
-
-    getDurationSum(): string {
-        return "-";
-    }
-
     getFiltered(filter: IDateFilter, period: dayjs.OpUnitType | undefined): IRuns {
         return new ZeroRuns();
+    }
+
+    getCount(): number {
+        return 0;
     }
 
     getFirst(): IRun {
@@ -41,28 +34,19 @@ export default class ZeroRuns implements IRuns {
     getNewest(): IRun {
         return undefined;
     }
-
-    getPaceAvg(): string {
-        return "-";
-    }
-
-    getVdotAvg(): string {
-        return "-";
-    }
-
-    renderDistanceAvg(): string {
-        return "-";
-    }
-
-    renderDistanceSum(): string {
-        return "-";
-    }
-
-    runs: IRun[];
+    
+    getDurationAvg = () => "-";
+    getDurationSum = () => "-";
+    getStepsSum = () => "-";
+    getStepsAvg = () => "-";
+    getCaloriesSum = () => "-";
+    getCaloriesAvg = () => "-";
+    getPaceAvg = () => "-";
+    getVdotAvg = () => "-";
+    renderDistanceAvg = () => "-";
+    renderDistanceSum = () => "-";
 
     toArray(): IRun[] {
         return [];
     }
-
-    vdotSum: number;
 }

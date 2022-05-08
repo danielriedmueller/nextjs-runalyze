@@ -1,6 +1,6 @@
 import React, {FC, ReactElement, ReactNode} from "react";
 import dayjs from "dayjs";
-import MultipleRuns from "./MultipleRuns";
+import MultipleRunsView from "./MultipleRunsView";
 import style from "../../style/runs.module.scss";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
@@ -36,14 +36,13 @@ const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
                 currentMonth.endOf('month')
             );
             if (monthRuns.getCount() > 0) {
-                months.push(<div
+                months.push(<MultipleRunsView
                     key={'monthRun-' + i}
-                ><MultipleRuns
                     label={currentMonth.format('MMMM')}
                     runs={monthRuns}
                     active={i === filter.month}
                     onClick={() => onClick(i)}
-                /></div>)
+                />)
             }
         }
 
