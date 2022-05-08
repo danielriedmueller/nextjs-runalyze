@@ -6,11 +6,11 @@ const DATE_FILTER_COOKIE = 'date_filter';
 const DATE_FILTER_COOKIE_SEPERATOR = '+';
 
 export const setDateFilterCookie = (filter: IDateFilter): void => {
-    document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter);
+    document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter) + ";SameSite=Strict";
 }
 
 export const setUserIdCookie = (user: IUser): void => {
-    document.cookie = USER_ID_COOKIE + "=" + user.id;
+    document.cookie = USER_ID_COOKIE + "=" + user.id + ";SameSite=Strict";
 }
 
 export const getDateFilterFromCookie = (cookies: string[]): IDateFilter => cookieStringToDateFilter(cookies[DATE_FILTER_COOKIE]);

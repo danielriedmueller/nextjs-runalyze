@@ -19,7 +19,6 @@ import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUs
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import UserArea from "../components/UserArea";
-import ZeroRuns from "../model/ZeroRuns";
 
 require('dayjs/locale/de')
 
@@ -74,11 +73,6 @@ class Home extends Component<IProps, IState> {
         this.setState({user: null})
     }
 
-    refreshRuns = async (): Promise<void> => {
-        let runs = await fetchRuns(this.state.user.id);
-        this.setState({runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run))),});
-    }
-
     setDateFilter = (filter: IDateFilter): void => {
         filter = emendDateFilter(filter);
         setDateFilterCookie(filter);
@@ -88,19 +82,16 @@ class Home extends Component<IProps, IState> {
     render() {
         return <div id="app">
             <Header/>
-            <UserArea
+            {this.state.user ? <RunArea
+                runs={this.state.runs}
+                filter={this.state.filter}
+                setDateFilter={this.setDateFilter}
+            /> : <UserArea
                 user={this.state.user}
                 fetchFitData={this.fetchFitData}
                 init={this.init}
                 responseGoogleFailed={this.responseGoogleFailed}
-            />
-            {this.state.runs && this.state.user ? <RunArea
-                runs={this.state.runs}
-                user={this.state.user}
-                filter={this.state.filter}
-                refresh={this.refreshRuns}
-                setDateFilter={this.setDateFilter}
-            /> : null}
+            />}
         </div>
     }
 }

@@ -1,5 +1,4 @@
 import React, {FC, ReactElement, useEffect, useState} from "react";
-import IUser from "../interfaces/IUser";
 import style from '../style/runarea.module.scss';
 import IRuns from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
@@ -12,13 +11,11 @@ import IRun from "../interfaces/IRun";
 
 interface IProps {
     runs: IRuns;
-    user: IUser;
-    refresh: () => void;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
 }
 
-const RunArea: FC<IProps> = ({runs, user, refresh, filter, setDateFilter}): ReactElement => {
+const RunArea: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
     const [currentRun, setCurrentRun] = useState<IRun>();
 
     useEffect(() => {
