@@ -11,8 +11,10 @@ interface IProps {
 
 const MultipleRunsView: FC<IProps> = ({runs, label, active, onClick}): ReactElement => {
     return <div onClick={() => onClick()}>
-        <div className={active ? style.activeLegend : style.legend}>{label}</div>
-        <div className={style.count}>{runs.getCount()}</div>
+        <div className={style.head}>
+            <div className={active ? style.activeLegend : style.legend}>{label}</div>
+            <div className={style.count}>{runs.getCount()}</div>
+        </div>
         <div className={style.scrollable}>
             <div className={style.pace}>{runs.getPaceAvg()}</div>
             <div

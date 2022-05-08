@@ -11,23 +11,20 @@
   color: var(--creme);
 }
 
+.head {
+  max-height: var(--run-head-height);
+  border-bottom: 1px solid var(--creme);
+  margin-bottom: var(--spacing-s);
+}
+
 .scrollable {
-  max-height: 100px;
+  max-height: var(--run-body-height);
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 .count {
   background-image: url("../assets/icons/clipboard-list.svg");
-  border-bottom: 1px solid var(--creme);
-  padding-bottom: var(--spacing-s);
-}
-
-.date {
-  background-image: url("../assets/icons/calendar3.svg");
-  border-bottom: 1px solid var(--creme);
-  padding-bottom: var(--spacing-s);
-  padding-top: 0;
 }
 
 .pace {
