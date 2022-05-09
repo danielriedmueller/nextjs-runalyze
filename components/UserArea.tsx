@@ -14,8 +14,7 @@ const UserArea: FC<IProps> = ({guser, fetchFitData, init, responseGoogleFailed})
     {guser ?
         <>
             {guser.unfetchedRuns > 0 ? <div>
-                Du kannst {guser.unfetchedRuns} Aktivitäten
-                <button onClick={fetchFitData}>Importieren</button>
+                Es werden {guser.unfetchedRuns} Aktivitäten importiert
             </div> : null}
         </> :
         <GoogleLogin

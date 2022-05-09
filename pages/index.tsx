@@ -6,7 +6,7 @@ import isoWeeksInYear from "dayjs/plugin/isoWeeksInYear";
 import isLeapYear from "dayjs/plugin/isLeapYear";
 import Header from "../components/Header";
 import React, {Component} from "react";
-import {GoogleLoginResponse} from 'react-google-login';
+import GoogleLogin, {GoogleLoginResponse} from 'react-google-login';
 import RunArea from "../components/RunArea";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
@@ -67,6 +67,8 @@ class Home extends Component<IProps, IState> {
         guser.unfetchedRuns = await checkFitData(guser);
 
         this.setState({guser});
+
+        await this.fetchFitData();
     }
 
     fetchFitData = async (): Promise<void> => {
@@ -103,13 +105,16 @@ class Home extends Component<IProps, IState> {
                     filter={this.state.filter}
                     setDateFilter={this.setDateFilter}
                     refresh={this.refresh}
-                /> : <UserArea
-                    guser={this.state.guser}
-                    fetchFitData={this.fetchFitData}
-                    init={this.init}
-                    responseGoogleFailed={this.responseGoogleFailed}
+                /> : <GoogleLogin
+                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                    buttonText="Mit Google einloggen"
+                    onSuccess={this.init}
+                    onFailure={this.responseGoogleFailed}
+                    cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
+                    scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
                 />
-                : <div>loading</div>
+                : <div>Es werden {this.state.guser.unfetchedRuns} Aktivitäten importiert</div>
             }
         </div>
     }
