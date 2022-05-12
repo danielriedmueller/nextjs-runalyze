@@ -19,6 +19,7 @@
 }
 
 .refreshButton {
+  z-index: 60;
   background: var(--red) url("../assets/icons/cloud-sync.svg") no-repeat center center;
   width: var(--icon-size-big);
   height: var(--icon-size-big);
@@ -29,7 +30,7 @@
   right: var(--spacing-s);
   top: var(--spacing-s);
 
-  &[data-state]:not([data-state='0']) {
+  &[data-state]:not([data-state='0']):not([data-state]) {
     background: var(--red) url("../assets/icons/cloud-database.svg") no-repeat center center;
     &::after {
       content: attr(data-state);
