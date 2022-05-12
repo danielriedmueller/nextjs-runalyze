@@ -1,6 +1,6 @@
 {
   "name": "runalyze",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,25 +8,26 @@
     "start": "next start"
   },
   "dependencies": {
-    "better-sqlite3": "^7.1.2",
-    "cors": "2.8.5",
-    "dateformat": "^3.0.3",
-    "dayjs": "^1.9.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "better-sqlite3": "*",
+    "bootstrap": "^5.1.3",
+    "cors": "*",
+    "dateformat": "*",
+    "dayjs": "*",
+    "dotenv": "*",
+    "express": "*",
     "fitness-js": "file:lib/fitness-js",
-    "form-data": "^4.0.0",
-    "google-auth-library": "^8.0.2",
-    "next": "^10.0.0",
-    "next-pwa": "^5.0.1",
-    "react": "16.13.1",
-    "react-datetime-picker": "^3.0.4",
-    "react-dom": "16.13.1",
-    "react-google-login": "^5.2.2",
-    "sass": "^1.30.0"
+    "form-data": "*",
+    "next": "*",
+    "next-pwa": "*",
+    "react": "*",
+    "react-bootstrap": "^2.3.1",
+    "react-datetime-picker": "*",
+    "react-dom": "*",
+    "react-google-login": "*",
+    "sass": "*"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^6.2.1",
-    "typescript": "^4.6.3"
+    "copy-webpack-plugin": "*",
+    "typescript": "*"
   }
 }

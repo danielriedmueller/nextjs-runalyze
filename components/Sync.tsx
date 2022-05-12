@@ -2,7 +2,7 @@ import React, {FC, ReactElement} from "react";
 import GoogleLogin, {GoogleLoginResponse} from "react-google-login";
 import IUser from "../interfaces/IUser";
 import style from '../style/sync.module.scss';
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 interface IProps {
     user: IUser;
