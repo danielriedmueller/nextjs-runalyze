@@ -18,22 +18,8 @@ export default async function handle(req: Request, res: Response): Promise<boole
 
     const {token, user, session} = req.body;
 
-    //const gApiData = await fetchSessions(user, token);
+    const gApiData = await fetchSessions(user, token);
 
-    const run = exampleRunData.find(run => {
-        return parseInt(run.startTime) === session.startTimeMillis && parseInt(run.endTime) === session.endTimeMillis;
-    })
-
-    await task();
-    async function task() {
-        return new Promise(res => {
-            setTimeout(res, Math.random() * 3000);
-        })
-    }
-
-    console.log(run);
-    return res.json(true);
-    /*
     await Promise.all(
         gApiData.session.map(async (session) => {
             const gApiBucketResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
@@ -57,8 +43,6 @@ export default async function handle(req: Request, res: Response): Promise<boole
             //await insertRun(user, dbRun);
         })
     );
-
-     */
 }
 
 export const fetchSessions = async (user: string, token: string): Promise<Response> => {

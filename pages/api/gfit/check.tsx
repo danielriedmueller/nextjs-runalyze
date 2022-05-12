@@ -16,16 +16,10 @@ export default async function handle(req: Request, res: Response): Promise<IGoog
 
     const sessions = [];
 
-    //const gApiData = await fetchSessions(user, token);
-    const gApiData = exampleDataSessions;
-    const newSessions = gApiData.session.map(session => ({
-        startTimeMillis: parseInt(session.startTimeMillis),
-        endTimeMillis: parseInt(session.endTimeMillis)
-    }));
-    return res.json(newSessions);
+    const gApiData = await fetchSessions(user, token);
 
     // TODO Remove if unbecessary
-    /*
+
     sessions.push(...gApiData.session);
     let nextPageToken = gApiData.nextPageToken;
 
@@ -47,9 +41,9 @@ export default async function handle(req: Request, res: Response): Promise<IGoog
         }
     }
 
-    return res.json(sessions.length);
+    console.log(sessions)
 
-     */
+    return res.json(sessions);
 }
 
 export const exampleDataSessions = {

@@ -75,19 +75,19 @@ class Home extends Component<IProps, IState> {
         this.setState({loadingCount: this.state.user.unfetchedRuns.length});
         Promise.all(
             user.unfetchedRuns.map(async (session, index) => {
-                return await fetchFitData(user, session).then(() => {
+                return await fetchFitData(user, session).then(async () => {
                     user.unfetchedRuns = user.unfetchedRuns.filter((el) => el.startTimeMillis !== session.startTimeMillis);
-                    this.setState({user})
+                    let runs = await fetchRuns(this.state.user.id);
+                    this.setState({
+                        user,
+                        runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run)))
+                    });
                 });
             })
         ).then(async () => {
             this.setState({
                 loadingCount: 0,
                 showSync: false,
-            });
-            let runs = await fetchRuns(this.state.user.id);
-            this.setState({
-                runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run)))
             });
         });
     };
@@ -109,9 +109,9 @@ class Home extends Component<IProps, IState> {
 
     render() {
         return <div id="app">
-                <button className={style.refreshButton}
-                        data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
-                        onClick={this.refresh}></button>
+            <button className={style.refreshButton}
+                    data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
+                    onClick={this.refresh}></button>
             <Header/>
             <Sync
                 user={this.state.user}
@@ -121,11 +121,11 @@ class Home extends Component<IProps, IState> {
                 isVisible={this.state.showSync}
                 loadingCount={this.state.loadingCount}
             />
-            {this.state.runs.getCount() > 0 && <RunArea
+            <RunArea
                 runs={this.state.runs}
                 filter={this.state.filter}
                 setDateFilter={this.setDateFilter}
-            />}
+            />
         </div>
     }
 }
