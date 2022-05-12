@@ -26,7 +26,7 @@
   background-image: url("../assets/icons/calendar3-dark.svg");
   background-position: var(--spacing-s) var(--spacing-s);
   background-color: var(--blue-light);
-  color: #000;
+  color: var(--anthrazit);
   height: 100%;
   padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
 }
@@ -75,7 +75,7 @@
 .longest .date,
 .furthest .date {
   background-color: var(--yellow);
-  color: #000;
+  color: var(--anthrazit);
   background-image: url("../assets/icons/calendar3-dark.svg");
 }
 
