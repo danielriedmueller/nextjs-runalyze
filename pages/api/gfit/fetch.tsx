@@ -27,7 +27,7 @@ export default async function handle(req: Request, res: Response): Promise<boole
     await task();
     async function task() {
         return new Promise(res => {
-            setTimeout(res, Math.random() * 1000);
+            setTimeout(res, Math.random() * 3000);
         })
     }
 

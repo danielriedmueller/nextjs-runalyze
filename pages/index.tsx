@@ -41,6 +41,7 @@ interface IState {
     filter: IDateFilter;
     user: IUser;
     showSync: boolean;
+    loadingCount: number;
 }
 
 class Home extends Component<IProps, IState> {
@@ -51,7 +52,8 @@ class Home extends Component<IProps, IState> {
             runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
             user: null,
-            showSync: false
+            showSync: false,
+            loadingCount: 0
         };
     }
 
@@ -64,16 +66,25 @@ class Home extends Component<IProps, IState> {
 
         setUserIdCookie(user);
         user.unfetchedRuns = await checkFitData(user);
+        console.log('init')
         this.setState({user});
     }
 
     fetchFitData = async (): Promise<void> => {
-        const user = this.state.user;
+        let user = this.state.user;
+        this.setState({loadingCount: this.state.user.unfetchedRuns.length});
         Promise.all(
-            user.unfetchedRuns.map(async (session) => {
-                return await fetchFitData(user, session);
+            user.unfetchedRuns.map(async (session, index) => {
+                return await fetchFitData(user, session).then(() => {
+                    user.unfetchedRuns = user.unfetchedRuns.filter((el) => el.startTimeMillis !== session.startTimeMillis);
+                    this.setState({user})
+                });
             })
         ).then(async () => {
+            this.setState({
+                loadingCount: 0,
+                showSync: false,
+            });
             let runs = await fetchRuns(this.state.user.id);
             this.setState({
                 runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run)))
@@ -97,11 +108,12 @@ class Home extends Component<IProps, IState> {
     }
 
     render() {
-        console.log(this.state.user)
         return <div id="app">
-            <button className={style.refreshButton}
-                    data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
-                    onClick={this.refresh}></button>
+            {this.state.user && this.state.user.unfetchedRuns.length > 0 &&
+                <button className={style.refreshButton}
+                        data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
+                        onClick={this.refresh}></button>
+            }
             <Header/>
             <Sync
                 user={this.state.user}
@@ -109,8 +121,8 @@ class Home extends Component<IProps, IState> {
                 startImport={this.fetchFitData}
                 responseGoogleFailed={this.responseGoogleFailed}
                 isVisible={this.state.showSync}
+                loadingCount={this.state.loadingCount}
             />
-
             {this.state.runs.getCount() > 0 && <RunArea
                 runs={this.state.runs}
                 filter={this.state.filter}
