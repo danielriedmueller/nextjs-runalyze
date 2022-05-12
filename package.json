@@ -14,7 +14,7 @@
     "dayjs": "^1.9.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "fitness-js": "^0.2.2",
+    "fitness-js": "file:lib/fitness-js",
     "form-data": "^4.0.0",
     "google-auth-library": "^8.0.2",
     "next": "^10.0.0",

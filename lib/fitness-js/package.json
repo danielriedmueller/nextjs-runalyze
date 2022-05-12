@@ -1,0 +1,67 @@
+{
+  "_args": [
+    [
+      "fitness-js@0.2.2",
+      "/home/dan/Projects/nextjs-runalyze"
+    ]
+  ],
+  "_from": "fitness-js@0.2.2",
+  "_id": "fitness-js@0.2.2",
+  "_inBundle": false,
+  "_integrity": "sha512-h1A+zUcW9TbC2R8cdqKNJcqcpIiR4Wgw0E6NUkGKYAFuDVPfp/QlQ2NVFqW3j3h4R6fNTrVmSVPs2BQ0UysQlg==",
+  "_location": "/fitness-js",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "fitness-js@0.2.2",
+    "name": "fitness-js",
+    "escapedName": "fitness-js",
+    "rawSpec": "0.2.2",
+    "saveSpec": null,
+    "fetchSpec": "0.2.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/fitness-js/-/fitness-js-0.2.2.tgz",
+  "_spec": "0.2.2",
+  "_where": "/home/dan/Projects/nextjs-runalyze",
+  "author": {
+    "name": "Alexander Yefanov",
+    "email": "alexander@efanov.net"
+  },
+  "bugs": {
+    "url": "https://github.com/alx17/fitness-js/issues"
+  },
+  "dependencies": {},
+  "description": "A collection of utilities for calculation of various fitness metrics.",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=4.0.0"
+  },
+  "homepage": "https://github.com/alx17/fitness-js",
+  "keywords": [
+    "fitness",
+    "calculator"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "fitness-js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alx17/fitness-js.git"
+  },
+  "scripts": {
+    "lint": "eslint src/**.js",
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "version": "0.2.2"
+}
