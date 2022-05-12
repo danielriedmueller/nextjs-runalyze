@@ -9,30 +9,29 @@ const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
 const cors = initMiddleware(
     Cors({
-        methods: ['GET'],
+        methods: ['POST'],
     })
 )
 
 export default async function handle(req: Request, res: Response): Promise<boolean> {
     await cors(req, res);
 
-    const {token, user} = req.body;
+    const {token, user, session} = req.body;
 
     //const gApiData = await fetchSessions(user, token);
-    const gApiData = exampleDataSessions;
 
-    await Promise.all(
-        gApiData.session.map(async (session) => task().then(() => {
-            console.log('progress')
-        }))
-    );
+    const run = exampleRunData.find(run => {
+        return parseInt(run.startTime) === session.startTimeMillis && parseInt(run.endTime) === session.endTimeMillis;
+    })
 
+    await task();
     async function task() {
         return new Promise(res => {
             setTimeout(res, Math.random() * 1000);
         })
     }
 
+    console.log(run);
     return res.json(true);
     /*
     await Promise.all(

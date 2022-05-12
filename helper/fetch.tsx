@@ -1,5 +1,6 @@
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
+import IGoogleSession from "../interfaces/IGoogleSession";
 
 export const fetchRuns = async (userId: string): Promise<IDbRun[]> => {
     try {
@@ -17,14 +18,15 @@ export const fetchRuns = async (userId: string): Promise<IDbRun[]> => {
     }
 }
 
-export const fetchFitData = async (user: IUser): Promise<boolean> => {
+export const fetchFitData = async (user: IUser, session: IGoogleSession): Promise<boolean> => {
     try {
         const response = await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 token: user.token,
-                user: user.id
+                user: user.id,
+                session
             }),
         });
 
@@ -34,7 +36,7 @@ export const fetchFitData = async (user: IUser): Promise<boolean> => {
     }
 }
 
-export const checkFitData = async (user: IUser): Promise<number> => {
+export const checkFitData = async (user: IUser): Promise<IGoogleSession[]> => {
     try {
         const response = await fetch(process.env.NEXT_PUBLIC_API_CHECK_GOOGLE_FIT_DATA, {
             method: 'POST',
@@ -45,7 +47,7 @@ export const checkFitData = async (user: IUser): Promise<number> => {
             }),
         });
 
-        return await response.json() as number;
+        return await response.json() as IGoogleSession[];
     } catch (error) {
         console.error(error)
     }

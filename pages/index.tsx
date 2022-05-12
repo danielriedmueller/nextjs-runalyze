@@ -11,15 +11,16 @@ import RunArea from "../components/RunArea";
 import IUser from "../interfaces/IUser";
 import IDbRun from "../interfaces/IDbRun";
 import Run from "../model/Run";
-import {checkFitData, fetchFitData, fetchRuns} from "../helper/fetch";
+import {checkFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
-import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 import {emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
-import UserArea from "../components/UserArea";
 import ZeroRuns from "../model/ZeroRuns";
+import style from "../style/runarea.module.scss";
+import IGoogleSession from "../interfaces/IGoogleSession";
+import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
 
 require('dayjs/locale/de')
 
@@ -39,8 +40,9 @@ interface IProps {
 interface IState {
     runs: IRuns;
     filter: IDateFilter;
-    guser: IUser;
-    isLoading: boolean;
+    user: IUser;
+    unfetchedRuns: IGoogleSession[];
+    isLoadingCount: number;
 }
 
 class Home extends Component<IProps, IState> {
@@ -50,40 +52,44 @@ class Home extends Component<IProps, IState> {
         this.state = {
             runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
-            guser: null,
-            isLoading: false
+            user: null,
+            unfetchedRuns: null,
+            isLoadingCount: 0,
         };
     }
 
     init = async (response: GoogleLoginResponse): Promise<void> => {
-        const guser = {
+        const user = {
             token: response.accessToken,
             id: response.googleId,
             name: response.profileObj.givenName,
         } as IUser;
 
-        setUserIdCookie(guser);
+        setUserIdCookie(user);
 
-        guser.unfetchedRuns = await checkFitData(guser);
+        const unfetchedRuns = await checkFitData(user);
 
-        this.setState({guser});
-
+        this.setState({
+            user,
+            unfetchedRuns
+        });
         await this.fetchFitData();
+
+        console.log('init')
     }
 
     fetchFitData = async (): Promise<void> => {
-        this.setState({isLoading: true});
-        await fetchFitData(this.state.guser);
-        let runs = await fetchRuns(this.state.guser.id);
+        this.setState({isLoadingCount: this.state.unfetchedRuns.length});
+        let runs = await fetchRuns(this.state.user.id);
         this.setState({
             runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run))),
-            isLoading: false
+            isLoadingCount: 0
         });
     };
 
     responseGoogleFailed = (): void => {
         console.log('google login failed');
-        this.setState({guser: null})
+        this.setState({user: null, unfetchedRuns: null})
     }
 
     setDateFilter = (filter: IDateFilter): void => {
@@ -92,30 +98,57 @@ class Home extends Component<IProps, IState> {
         this.setState({filter});
     }
 
-    refresh = () => {
-        this.setState({runs: new ZeroRuns()})
+    refresh = async () => {
+
+        /*
+                const user = this.state.user;
+        if (!user || !user.token) {
+            this.setState({showGoogleLogin: true})
+
+            return;
+        }
+        const unfetchedRuns = await checkFitData(user);
+        this.setState({unfetchedRuns});
+        Promise.all(
+            user.unfetchedRuns.map(async (session) => {
+
+                this.setState({
+                    isLoadingCount: this.state.isLoadingCount - 1
+                });
+
+                return await fetchFitData(user, session);
+            })
+        ).then(async () => {
+            let runs = await fetchRuns(this.state.user.id);
+            this.setState({
+                runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run))),
+                isLoadingCount: 0
+            });
+        });
+
+         */
     }
 
     render() {
         return <div id="app">
             <Header/>
-            {!this.state.isLoading ?
-                this.state.runs.getCount() > 0 ? <RunArea
-                    runs={this.state.runs}
-                    filter={this.state.filter}
-                    setDateFilter={this.setDateFilter}
-                    refresh={this.refresh}
-                /> : <GoogleLogin
-                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                    buttonText="Mit Google einloggen"
-                    onSuccess={this.init}
-                    onFailure={this.responseGoogleFailed}
-                    cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
-                    scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
-                />
-                : <div>Es werden {this.state.guser.unfetchedRuns} Aktivitäten importiert</div>
-            }
+            <button className={style.refreshButton} data-state={this.state.unfetchedRuns ? this.state.unfetchedRuns.length : ""}
+                    onClick={this.refresh}></button>
+            <div>Zu importieren {this.state.unfetchedRuns ? this.state.unfetchedRuns.length : ""}</div>
+            {!this.state.user && <GoogleLogin
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                buttonText="Mit Google einloggen"
+                onSuccess={this.init}
+                onFailure={this.responseGoogleFailed}
+                cookiePolicy={'single_host_origin'}
+                isSignedIn={true}
+                scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
+            />}
+            {this.state.runs.getCount() > 0 && <RunArea
+                runs={this.state.runs}
+                filter={this.state.filter}
+                setDateFilter={this.setDateFilter}
+            />}
         </div>
     }
 }

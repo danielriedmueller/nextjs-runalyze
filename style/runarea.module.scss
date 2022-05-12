@@ -28,4 +28,15 @@
   position: absolute;
   right: var(--spacing-s);
   top: var(--spacing-s);
+
+  &[data-state]:not([data-state='0']) {
+    background: var(--red) url("../assets/icons/cloud-database.svg") no-repeat center center;
+    &::after {
+      content: attr(data-state);
+      width: 20px;
+      height: 20px;
+      display: block;
+
+    }
+  }
 }

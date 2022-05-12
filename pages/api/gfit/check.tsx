@@ -1,14 +1,15 @@
 import initMiddleware from "../../../lib/init-middleware";
 import Cors from "cors";
 import {fetchSessions} from "./fetch";
+import IGoogleSession from "../../../interfaces/IGoogleSession";
 
 const cors = initMiddleware(
     Cors({
-        methods: ['GET'],
+        methods: ['POST'],
     })
 )
 
-export default async function handle(req: Request, res: Response): Promise<number> {
+export default async function handle(req: Request, res: Response): Promise<IGoogleSession[]> {
     await cors(req, res);
 
     const {token, user} = req.body;
@@ -17,7 +18,11 @@ export default async function handle(req: Request, res: Response): Promise<numbe
 
     //const gApiData = await fetchSessions(user, token);
     const gApiData = exampleDataSessions;
-    return res.json(gApiData.session.length);
+    const newSessions = gApiData.session.map(session => ({
+        startTimeMillis: parseInt(session.startTimeMillis),
+        endTimeMillis: parseInt(session.endTimeMillis)
+    }));
+    return res.json(newSessions);
 
     // TODO Remove if unbecessary
     /*

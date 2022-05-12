@@ -13,10 +13,9 @@ interface IProps {
     runs: IRuns;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
-    refresh: () => void;
 }
 
-const RunArea: FC<IProps> = ({runs, filter, setDateFilter, refresh}): ReactElement => {
+const RunArea: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
     const [currentRun, setCurrentRun] = useState<IRun>();
 
     useEffect(() => {
@@ -31,7 +30,6 @@ const RunArea: FC<IProps> = ({runs, filter, setDateFilter, refresh}): ReactEleme
     }
 
     return <>
-        <button className={style.refreshButton} onClick={() => refresh()}></button>
         <div className={style.currentRun}>
             <CurrentRunView
                 run={currentRun}
