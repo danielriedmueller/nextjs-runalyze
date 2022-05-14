@@ -10,6 +10,10 @@
   overflow-x: hidden;
 }
 
+.noruns {
+  opacity: 0.3;
+}
+
 .date, .count, .pace, .distance, .duration, .vdot, .steps, .calories {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
@@ -28,6 +32,7 @@
   background-color: var(--blue-light);
   color: var(--anthrazit);
   height: 100%;
+  min-height: 50px;
   padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
 }
 

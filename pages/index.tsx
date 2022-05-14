@@ -52,7 +52,7 @@ class Home extends Component<IProps, IState> {
             runs: Runs.fromRuns(props.runs.map((run) => Run.fromDbRun(run))),
             filter: props.filter,
             user: null,
-            showSync: false,
+            showSync: props.runs.length <= 0,
             loadingCount: 0
         };
     }
@@ -133,7 +133,6 @@ class Home extends Component<IProps, IState> {
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = getUserIdFromCookie(ctx.req.cookies);
     const filter = getDateFilterFromCookie(ctx.req.cookies);
-    console.log(userId)
     const runs = userId ? await fetchRuns(userId) : [];
 
     return {props: {runs, filter}}

@@ -39,7 +39,7 @@ const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
         </div>
     </div>;
 
-    const renderNoRunContent = (): ReactNode => <div>
+    const renderNoRunContent = (): ReactNode => <div className={runStyle.noruns}>
         <div className={runStyle.date}>
             <small>-</small>
         </div>
