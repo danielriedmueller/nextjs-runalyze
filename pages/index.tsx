@@ -77,6 +77,7 @@ class Home extends Component<IProps, IState> {
             user.unfetchedRuns.map(async (session, index) => {
                 return await fetchFitData(user, session).then(async () => {
                     user.unfetchedRuns = user.unfetchedRuns.filter((el) => el.startTimeMillis !== session.startTimeMillis);
+                    console.log(user.unfetchedRuns)
                     let runs = await fetchRuns(this.state.user.id);
                     this.setState({
                         user,
