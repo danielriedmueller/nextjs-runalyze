@@ -111,7 +111,7 @@ class Home extends Component<IProps, IState> {
     render() {
         return <div id="app">
             <button className={style.refreshButton}
-                    data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
+                    data-state={this.state.user ? this.state.user.unfetchedRuns ? this.state.user.unfetchedRuns.length : "" : ""}
                     onClick={this.refresh}></button>
             <Header/>
             <Sync
