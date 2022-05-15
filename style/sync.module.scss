@@ -1,6 +1,6 @@
 .userarea {
   position: relative;
-  $height: 60px;
+  $height: 80px;
   padding: var(--spacing-s);
   background-color: #2f353b;
   color: var(--creme);
@@ -24,6 +24,45 @@
     position: absolute;
     right: var(--spacing-s);
     top: var(--spacing-s);
+  }
+
+  .loginButton {
+    background: transparent url("../assets/icons/google_fit_icon.svg") no-repeat left center;
+    height: 100%;
+    margin: auto;
+    width: 65px;
+    animation: heartbeat 2s infinite;
+    display: block;
+    border: none;
+    color: var(--creme);
+  }
+}
+
+@keyframes heartbeat
+{
+  0%
+  {
+    transform: scale( .75 );
+  }
+  20%
+  {
+    transform: scale( 1 );
+  }
+  40%
+  {
+    transform: scale( .75 );
+  }
+  60%
+  {
+    transform: scale( 1 );
+  }
+  80%
+  {
+    transform: scale( .75 );
+  }
+  100%
+  {
+    transform: scale( .75 );
   }
 }
 

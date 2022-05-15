@@ -7,13 +7,15 @@
   --creme: #f1faee;
   --yellow: #F6CF63;
   --anthrazit: #2f353b;
-  --spacing-s: 10px;
+  --spacing-s: 13px;
+  --spacing: 21px;
   --icon-size: 20px;
   --icon-size-big: 40px;
   --font-size-body: 16px;
   --font-size-header: 24px;
   --run-head-height: 80px;
   --run-body-height: 107px;
+  --max-width: 600px;
 }
 
 html, body {
@@ -29,15 +31,24 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body > div {
+  height: 100%;
+  width: 100%;
+}
+
 * {
   box-sizing: border-box;
 }
 
 #app {
   height: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  position: relative;
+  background-color: var(--red);
 }
 
 #app > * {
   max-width: 100%;
-  overflow: scroll;
+  overflow: auto;
 }

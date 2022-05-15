@@ -1,6 +1,15 @@
 import dayjs, {OpUnitType} from "dayjs";
 import {Duration} from "dayjs/plugin/duration";
 import IDateFilter from "../interfaces/IDateFilter";
+import IRuns from "../interfaces/IRuns";
+import Runs from "../model/Runs";
+import Run from "../model/Run";
+import {fetchRuns} from "./fetch";
+
+export const createRuns = async (userId: string): Promise<IRuns> => {
+    let runs = await fetchRuns(userId);
+    return Runs.fromRuns(runs.map((run) => Run.fromDbRun(run)))
+}
 
 export const createDuration = (startTime: number, endTime: number): Duration => dayjs.duration(endTime - startTime);
 export const durationToString = (duration: Duration): string => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();

@@ -15,7 +15,7 @@ import {checkFitData, fetchFitData, fetchRuns} from "../helper/fetch";
 import Runs from "../model/Runs";
 import IRuns from "../interfaces/IRuns";
 import isBetween from "dayjs/plugin/isBetween";
-import {emendDateFilter} from "../helper/functions";
+import {createRuns, emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import style from "../style/runarea.module.scss";
 import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
@@ -66,7 +66,9 @@ class Home extends Component<IProps, IState> {
 
         setUserIdCookie(user);
         user.unfetchedRuns = await checkFitData(user);
-        this.setState({user});
+        const runs = await createRuns(user.id);
+
+        this.setState({user, runs});
     }
 
     fetchFitData = async (): Promise<void> => {
@@ -76,10 +78,10 @@ class Home extends Component<IProps, IState> {
             user.unfetchedRuns.map(async (session, index) => {
                 return await fetchFitData(user, session).then(async () => {
                     user.unfetchedRuns = user.unfetchedRuns.filter((el) => el.startTimeMillis !== session.startTimeMillis);
-                    let runs = await fetchRuns(this.state.user.id);
+                    const runs = await createRuns(this.state.user.id);
                     this.setState({
                         user,
-                        runs: Runs.fromRuns(runs.map((run) => Run.fromDbRun(run)))
+                        runs
                     });
                 });
             })
@@ -108,7 +110,7 @@ class Home extends Component<IProps, IState> {
 
     render() {
         return <div id="app">
-            <button className={style.refreshButton}
+            <button className={style.refreshButton + " " + (this.state.showSync ? style.active : "")}
                     data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
                     onClick={this.refresh}></button>
             <Header/>

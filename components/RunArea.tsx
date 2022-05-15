@@ -31,9 +31,7 @@ const RunArea: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
 
     return <>
         <div className={style.currentRun}>
-            <CurrentRunView
-                run={currentRun}
-            />
+            <CurrentRunView run={currentRun}/>
         </div>
         <div className={style.runarea}>
             <SingleRuns

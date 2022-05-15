@@ -1,26 +1,15 @@
 .runarea {
   background-color: var(--blue-dark);
   overflow: hidden;
-}
 
-.edit-mode {
-  background: linear-gradient(to right, var(--green) 2px, transparent 2px) 0 0,
-  linear-gradient(to right, var(--green) 2px, transparent 2px) 0 100%,
-  linear-gradient(to left, var(--green) 2px, transparent 2px) 100% 0,
-  linear-gradient(to left, var(--green) 2px, transparent 2px) 100% 100%,
-  linear-gradient(to bottom, var(--green) 2px, transparent 2px) 0 0,
-  linear-gradient(to bottom, var(--green) 2px, transparent 2px) 100% 0,
-  linear-gradient(to top, var(--green) 2px, transparent 2px) 0 100%,
-  linear-gradient(to top, var(--green) 2px, transparent 2px) 100% 100%;
-
-  background-repeat: no-repeat;
-  background-size: 20px 20px;
-  background-color: var(--blue-dark);
+  > div:empty {
+    display: none;
+  }
 }
 
 .refreshButton {
   z-index: 60;
-  background: var(--red) url("../assets/icons/cloud-sync.svg") no-repeat center center;
+  background: var(--red) url("../assets/icons/cloud-sync-white.svg") no-repeat center center;
   width: var(--icon-size-big);
   height: var(--icon-size-big);
   border: 0;
@@ -29,6 +18,10 @@
   position: absolute;
   right: var(--spacing-s);
   top: var(--spacing-s);
+
+  &.active {
+    background-image: url("../assets/icons/cloud-sync.svg");
+  }
 
   &[data-state]:not([data-state='0']):not([data-state]) {
     background: var(--red) url("../assets/icons/cloud-database.svg") no-repeat center center;

@@ -39,35 +39,9 @@ const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
         </div>
     </div>;
 
-    const renderNoRunContent = (): ReactNode => <div className={runStyle.noruns}>
-        <div className={runStyle.date}>
-            <small>-</small>
-        </div>
-        <div className={style.stats}>
-            <div className={runStyle.pace}>
-                -
-            </div>
-            <div className={runStyle.distance}>
-                -
-            </div>
-            <div className={runStyle.duration}>
-                -
-            </div>
-            <div className={runStyle.vdot}>
-                -
-            </div>
-            <div className={runStyle.steps}>
-                -
-            </div>
-            <div className={runStyle.calories}>
-                -
-            </div>
-        </div>
-    </div>;
-
     return (<>
         <button className={style.help} onClick={() => setShowHelp(!showHelp)}></button>
-        {!run ? renderNoRunContent() : showHelp ? renderHelpContent(run) :
+        {!run ? <></> : showHelp ? renderHelpContent(run) :
             <div className={run.best.length > 0 ? run.best.map((type) => runStyle[type]).join(" ") : ""}>
                 <div className={runStyle.date}>
                     <small>{run.getDateDay()}<br/>{run.getDate()}</small>

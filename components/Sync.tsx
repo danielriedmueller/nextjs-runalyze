@@ -28,12 +28,14 @@ const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisi
             </> :
             <GoogleLogin
                 clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                buttonText="Mit Google einloggen"
                 onSuccess={init}
                 onFailure={responseGoogleFailed}
                 cookiePolicy={'single_host_origin'}
                 isSignedIn={true}
                 scope={process.env.NEXT_PUBLIC_GOOGLE_SCOPE}
+                render={renderProps => (
+                    <button className={style.loginButton} onClick={renderProps.onClick} disabled={renderProps.disabled}></button>
+                )}
             />
         }
     </div>;
