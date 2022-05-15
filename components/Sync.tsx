@@ -20,8 +20,8 @@ const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisi
         className={style[isVisible ? "" : "hidden"] + " " + style.userarea + " " + style[user ? 'loggedIn' : 'loggedOut']}>
         {user ?
             <>
+                Es können {user.unfetchedRuns.length} Aktivitäten importiert werden.
                 {user.unfetchedRuns.length > 0 && <div>
-                    Es können {user.unfetchedRuns.length} Aktivitäten importiert werden.
                     {loadingCount > 0 && <ProgressBar animated now={calcProgress()}/>}
                     <button className={style.importButton} onClick={startImport}></button>
                 </div>}

@@ -10,7 +10,7 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function handle(req: NextApiRequest, res: NextApiResponse<boolean>): Promise<void> {
     await cors(req, res);
 
     const {token, user, session} = req.body;
@@ -35,7 +35,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse):
 
     await insertRun(user, dbRun);
 
-    res.status(200);
+    res.send(true);
 }
 
 export interface IGoogleDatasetResource {

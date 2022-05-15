@@ -15,8 +15,6 @@ const cors = initMiddleware(
 export default async function handle(req: NextApiRequest, res: NextApiResponse<IGoogleSession[]>): Promise<void> {
     await cors(req, res);
 
-    console.log(req)
-
     const {token, user} = req.body;
 
     const sessions = [];

@@ -65,9 +65,7 @@ class Home extends Component<IProps, IState> {
         } as IUser;
 
         setUserIdCookie(user);
-        const unfetchedRuns = await checkFitData(user);
-        user.unfetchedRuns = unfetchedRuns ? unfetchedRuns : [];
-        console.log('init')
+        user.unfetchedRuns = await checkFitData(user);
         this.setState({user});
     }
 
