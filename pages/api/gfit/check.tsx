@@ -23,6 +23,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<I
 
     sessions.push(...gApiData.session);
 
+    /*
     // TODO Remove if unnecessary
     let nextPageToken = gApiData.nextPageToken;
 
@@ -43,6 +44,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<I
             nextPageToken = gApiData.nextPageToken;
         }
     }
+
+     */
+
+    console.log(sessions);
 
     res.json(sessions);
 }
