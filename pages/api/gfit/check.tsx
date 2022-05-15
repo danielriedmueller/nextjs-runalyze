@@ -47,8 +47,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<I
 
      */
 
-    console.log(sessions);
-
     res.json(sessions);
 }
 
@@ -60,8 +58,6 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
         // Add 1,5 hours to prevent insert last run
         ? dayjs(latestRunDate + 10000000).toISOString()
         : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
-
-    console.log(startTime)
 
     const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
     const params = new URLSearchParams({activityType, startTime});
