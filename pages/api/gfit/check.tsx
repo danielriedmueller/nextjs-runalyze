@@ -61,6 +61,8 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
         ? dayjs(latestRunDate + 10000000).toISOString()
         : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
 
+    console.log(startTime)
+
     const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
     const params = new URLSearchParams({activityType, startTime});
     const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
