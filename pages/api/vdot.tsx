@@ -1,4 +1,3 @@
-// Initialize the cors middleware
 import * as dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import {durationToString} from "../../helper/functions";

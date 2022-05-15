@@ -2,6 +2,7 @@ import initMiddleware from "../../../lib/init-middleware";
 import Cors from "cors";
 import IGoogleSession from "../../../interfaces/IGoogleSession";
 import dayjs from "dayjs";
+import {NextApiRequest, NextApiResponse} from "next";
 
 const db = require('better-sqlite3')(process.env.DATABASE_URL);
 
@@ -11,8 +12,10 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: Request, res: Response): Promise<IGoogleSession[]> {
+export default async function handle(req: NextApiRequest, res: NextApiResponse<IGoogleSession[]>): Promise<void> {
     await cors(req, res);
+
+    console.log(req)
 
     const {token, user} = req.body;
 
@@ -20,9 +23,9 @@ export default async function handle(req: Request, res: Response): Promise<IGoog
 
     const gApiData = await fetchSessions(user, token);
 
-    // TODO Remove if unbecessary
-
     sessions.push(...gApiData.session);
+
+    // TODO Remove if unnecessary
     let nextPageToken = gApiData.nextPageToken;
 
     while (nextPageToken) {
@@ -43,10 +46,10 @@ export default async function handle(req: Request, res: Response): Promise<IGoog
         }
     }
 
-    return res.json(sessions);
+    res.json(sessions);
 }
 
-const fetchSessions = async (user: string, token: string): Promise<Response> => {
+const fetchSessions = async (user: string, token: string): Promise<IGoogleSessionResponse> => {
     let latestRunDate = db.prepare('SELECT startTime FROM runs WHERE user = ? ORDER BY startTime desc').pluck().get(user);
 
     // Initially get runs from current year
@@ -65,4 +68,45 @@ const fetchSessions = async (user: string, token: string): Promise<Response> => 
     });
 
     return await gApiResponse.json();
+}
+
+interface IGoogleSessionResponse {
+    "session": [
+        {
+            "id": string,
+            "name": string,
+            "description": string,
+            "startTimeMillis": number,
+            "endTimeMillis": number,
+            "modifiedTimeMillis": number,
+            "application": {
+                "packageName": string,
+                "version": string,
+                "detailsUrl": string,
+                "name": string
+            },
+            "activityType": number,
+            "activeTimeMillis": number
+        }
+    ],
+    "deletedSession": [
+        {
+            "id": string,
+            "name": string,
+            "description": string,
+            "startTimeMillis": number,
+            "endTimeMillis": number,
+            "modifiedTimeMillis": number,
+            "application": {
+                "packageName": string,
+                "version": string,
+                "detailsUrl": string,
+                "name": string
+            },
+            "activityType": number,
+            "activeTimeMillis": number
+        }
+    ],
+    "nextPageToken": string,
+    "hasMoreData": boolean
 }

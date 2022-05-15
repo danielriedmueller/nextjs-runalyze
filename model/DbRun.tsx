@@ -1,5 +1,6 @@
 import {fetchVdot} from "../pages/api/vdot";
 import IDbRun from "../interfaces/IDbRun";
+import {IGoogleDatasetResource, IGoogleDatasetResponse} from "../pages/api/gfit/fetch";
 
 interface FitnessData {
     distance: number;
@@ -38,7 +39,8 @@ export default class DbRun implements IDbRun {
         this.vdot = vdot;
     }
 
-    static async fromGoogleApiData(bucket): Promise<IDbRun> {
+    static async fromGoogleApiData(datasetResponse: IGoogleDatasetResponse): Promise<IDbRun> {
+        const bucket = datasetResponse.bucket[0];
         const {distance, calories, steps} = DbRun.getFitnessDataFromDataset(bucket.dataset);
 
         return new DbRun(
@@ -51,10 +53,10 @@ export default class DbRun implements IDbRun {
         );
     }
 
-    static getFitnessDataFromDataset = (datasets): FitnessData => {
+    static getFitnessDataFromDataset = (datasetResources: IGoogleDatasetResource[]): FitnessData => {
         let fitnessData = [];
 
-        datasets.forEach((dataset) => {
+        datasetResources.forEach((dataset) => {
             dataset.point.forEach((point) => {
                 Object.entries(FITNESS_DATA_TYPES).forEach(([type, apiName]) => {
                     if (point.dataTypeName === apiName) {

@@ -2,6 +2,7 @@ import initMiddleware from "../../../lib/init-middleware";
 import Cors from "cors";
 import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
 import {insertRun} from "../insert";
+import {NextApiRequest, NextApiResponse} from "next";
 
 const cors = initMiddleware(
     Cors({
@@ -9,12 +10,12 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: Request, res: Response): Promise<boolean> {
+export default async function handle(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     await cors(req, res);
 
     const {token, user, session} = req.body;
 
-    const gApiBucketResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
+    const datasetResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
@@ -29,10 +30,71 @@ export default async function handle(req: Request, res: Response): Promise<boole
             "bucketBySession": {}
         })
     });
-    const gApiBucketData = await gApiBucketResponse.json();
-    const dbRun = await DbRun.fromGoogleApiData(gApiBucketData.bucket[0]);
+    const dataset = await datasetResponse.json() as IGoogleDatasetResponse;
+    const dbRun = await DbRun.fromGoogleApiData(dataset);
 
     await insertRun(user, dbRun);
 
-    res.json(true)
+    res.status(200);
+}
+
+export interface IGoogleDatasetResource {
+    "minStartTimeNs": number,
+    "maxEndTimeNs": number,
+    "dataSourceId": string,
+    "point": [
+        {
+            "startTimeNanos": number,
+            "endTimeNanos": number,
+            "dataTypeName": string,
+            "originDataSourceId": string,
+            "value": [
+                {
+                    "intVal": number,
+                    "fpVal": number,
+                    "stringVal": string,
+                    "mapVal": [
+                        {
+                            "key": string,
+                            "value": {
+                                "fpVal": number
+                            }
+                        }
+                    ]
+                }
+            ],
+            "modifiedTimeMillis": number,
+            "rawTimestampNanos": number,
+            "computationTimeMillis": number
+        }
+    ],
+    "nextPageToken": string
+}
+
+export interface IGoogleDatasetResponse {
+    "bucket": [
+        {
+            "type": string,
+            "startTimeMillis": number,
+            "endTimeMillis": number,
+            "dataset": IGoogleDatasetResource[],
+            "session": {
+                "id": string,
+                "name": string,
+                "description": string,
+                "startTimeMillis": number,
+                "endTimeMillis": number,
+                "modifiedTimeMillis": number,
+                "application": {
+                    "packageName": string,
+                    "version": string,
+                    "detailsUrl": string,
+                    "name": string
+                },
+                "activityType": number,
+                "activeTimeMillis": number
+            },
+            "activity": number
+        }
+    ]
 }

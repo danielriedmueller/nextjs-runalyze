@@ -18,7 +18,7 @@ export const fetchRuns = async (userId: string): Promise<IDbRun[]> => {
     }
 }
 
-export const fetchFitData = async (user: IUser, session: IGoogleSession): Promise<boolean> => {
+export const fetchFitData = async (user: IUser, session: IGoogleSession): Promise<number> => {
     try {
         const response = await fetch(process.env.NEXT_PUBLIC_API_FETCH_GOOGLE_FIT_DATA, {
             method: 'POST',
