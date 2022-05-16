@@ -14,7 +14,7 @@ const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => run && (
     >
         <div className={style.head}>
             <div className={style.date}>
-                <small>{run.getDateDay()}<br/>{run.getDate()}</small>
+                <small>{run.getDate()}</small>
             </div>
         </div>
         <div className={style.scrollable}>

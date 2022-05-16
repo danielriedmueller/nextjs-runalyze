@@ -46,7 +46,9 @@ export default class Run implements IRun {
 
     isBestInSomething = (): boolean => this.best.length > 0;
 
-    getDate = (): string => this.date.format(process.env.NEXT_PUBLIC_DATE_FORMAT);
+    getDatetime = (): string => this.date.format('DD.MM.YYYY HH:mm:ss');
+
+    getDate = (): string => this.date.format('DD.MM.YYYY');
 
     getDateDay = (): string => this.date.format('dddd');
 

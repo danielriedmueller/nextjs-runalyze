@@ -1,13 +1,9 @@
 .head {
-  height: var(--run-head-height);
   border-bottom: 1px solid var(--creme);
   margin-bottom: var(--spacing-s);
 }
 
 .scrollable {
-  max-height: var(--run-body-height);
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 .noruns {
@@ -16,29 +12,22 @@
 .date, .count, .pace, .distance, .duration, .vdot, .steps, .calories {
   font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
-  background-image: url("../assets/icons/clipboard-list.svg");
   background-size: var(--icon-size);
   min-height: var(--icon-size);
   padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
-  padding-top: 3px;
   text-align: left;
   color: var(--creme);
 }
 
 .date {
-  background-image: url("../assets/icons/calendar3-dark.svg");
-  background-position: var(--spacing-s) var(--spacing-s);
   background-color: var(--blue-light);
   color: var(--anthrazit);
-  height: 100%;
-  min-height: 50px;
-  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
+  padding: var(--spacing-s);
 }
 
 .isCurrent .date {
   color: var(--creme) !important;
   background-color: var(--red) !important;
-  background-image: url("../assets/icons/calendar3.svg") !important;
 }
 
 .count, .pace, .distance, .duration, .vdot, .steps, .calories {
@@ -78,9 +67,9 @@
 .mostPerformant .date,
 .longest .date,
 .furthest .date {
-  background-color: var(--yellow);
-  color: var(--anthrazit);
-  background-image: url("../assets/icons/calendar3-dark.svg");
+  //background-color: var(--yellow);
+  //color: var(--anthrazit);
+  //background-image: url("../assets/icons/calendar3-dark.svg");
 }
 
 .fastest .pace,

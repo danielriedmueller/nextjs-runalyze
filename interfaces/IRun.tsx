@@ -12,6 +12,7 @@ export default interface IRun {
     best: string[];
     isCurrent: boolean;
     getDate: () => string;
+    getDatetime: () => string;
     getDateDay: () => string;
     getPace: () => string;
     getDuration: () => string;

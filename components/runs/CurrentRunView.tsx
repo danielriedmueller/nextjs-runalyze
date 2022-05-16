@@ -43,8 +43,8 @@ const CurrentRunView: FC<IProps> = ({run}): ReactElement => {
         <button className={style.help} onClick={() => setShowHelp(!showHelp)}></button>
         {!run ? <></> : showHelp ? renderHelpContent(run) :
             <div className={run.best.length > 0 ? run.best.map((type) => runStyle[type]).join(" ") : ""}>
-                <div className={runStyle.date}>
-                    <small>{run.getDateDay()}<br/>{run.getDate()}</small>
+                <div className={style.currentRunDate}>
+                    <small>{run.getDateDay()}<br/>{run.getDatetime()}</small>
                 </div>
                 <div className={style.stats}>
                     <div className={runStyle.pace}>
