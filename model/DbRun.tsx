@@ -44,12 +44,12 @@ export default class DbRun implements IDbRun {
         const {distance, calories, steps} = DbRun.getFitnessDataFromDataset(bucket.dataset);
 
         return new DbRun(
-            bucket.session.startTimeMillis,
-            bucket.session.endTimeMillis,
+            bucket.startTimeMillis,
+            bucket.endTimeMillis,
             distance,
             calories,
             steps,
-            await fetchVdot(distance, bucket.session.startTimeMillis, bucket.session.endTimeMillis)
+            await fetchVdot(distance, bucket.startTimeMillis, bucket.endTimeMillis)
         );
     }
 

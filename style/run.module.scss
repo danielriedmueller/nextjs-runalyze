@@ -32,7 +32,6 @@
 
 .count, .pace, .distance, .duration, .vdot, .steps, .calories {
   margin-bottom: var(--spacing-s);
-
 }
 
 .count {
@@ -67,8 +66,8 @@
 .mostPerformant .date,
 .longest .date,
 .furthest .date {
-  //background-color: var(--yellow);
-  //color: var(--anthrazit);
+  background-color: var(--yellow);
+  color: var(--anthrazit);
   //background-image: url("../assets/icons/calendar3-dark.svg");
 }
 

@@ -14,13 +14,9 @@ const cors = initMiddleware(
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse<IGoogleSession[]>): Promise<void> {
     await cors(req, res);
-
     const {token, user} = req.body;
-
     const sessions = [];
-
     const gApiData = await fetchSessions(user, token);
-
     sessions.push(...gApiData.session);
 
     /*
@@ -55,12 +51,17 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
 
     // Initially get runs from current year
     let startTime = latestRunDate
-        // Add 1,5 hours to prevent insert last run
-        ? dayjs(latestRunDate + 10000000).toISOString()
+        ? dayjs(latestRunDate).toISOString()
         : dayjs(dayjs().year() + '-01-01', 'YYYY-MM-DD').toISOString()
 
     const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
-    const params = new URLSearchParams({activityType, startTime});
+    const fields = 'session(startTimeMillis,endTimeMillis)';
+
+    const params = new URLSearchParams({
+        activityType,
+        startTime,
+        fields
+    });
     const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
             'Content-type': 'application/json',

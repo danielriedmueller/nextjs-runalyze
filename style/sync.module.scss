@@ -25,17 +25,6 @@
     right: var(--spacing-s);
     top: var(--spacing-s);
   }
-
-  .loginButton {
-    background: transparent url("../assets/icons/google_fit_icon.svg") no-repeat left center;
-    height: 100%;
-    margin: auto;
-    width: 65px;
-    animation: heartbeat 2s infinite;
-    display: block;
-    border: none;
-    color: var(--creme);
-  }
 }
 
 @keyframes heartbeat

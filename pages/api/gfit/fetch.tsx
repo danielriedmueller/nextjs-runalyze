@@ -3,6 +3,7 @@ import Cors from "cors";
 import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
 import {insertRun} from "../insert";
 import {NextApiRequest, NextApiResponse} from "next";
+import {data} from "browserslist";
 
 const cors = initMiddleware(
     Cors({
@@ -15,7 +16,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
 
     const {token, user, session} = req.body;
 
-    const datasetResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate', {
+    const fields = '?fields=bucket(startTimeMillis,endTimeMillis,dataset(point(dataTypeName,value(intVal,fpVal))))';
+
+    const datasetResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate' + fields, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
@@ -37,6 +40,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
 
     res.send(true);
 }
+
 
 export interface IGoogleDatasetResource {
     "minStartTimeNs": number,
@@ -70,6 +74,7 @@ export interface IGoogleDatasetResource {
     ],
     "nextPageToken": string
 }
+
 
 export interface IGoogleDatasetResponse {
     "bucket": [
