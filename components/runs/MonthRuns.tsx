@@ -4,15 +4,16 @@ import MultipleRunsView from "./MultipleRunsView";
 import style from "../../style/runs.module.scss";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
-import exp from "constants";
+import {ArithmeticModes} from "../../pages";
 
 interface IProps {
     runs: IRuns;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
+    mode: ArithmeticModes;
 }
 
-const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement => {
     const getRunViews = (): ReactNode[] => {
         if (runs.getCount() < 2 || !filter.year) return [];
 
@@ -42,6 +43,7 @@ const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
                     runs={monthRuns}
                     active={i === filter.month}
                     onClick={() => onClick(i)}
+                    mode={mode}
                 />)
             }
         }

@@ -5,14 +5,16 @@ import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
 import style from "../../style/runs.module.scss";
 import {getWeekRuns} from "../../helper/filteredRuns";
+import {ArithmeticModes} from "../../pages";
 
 interface IProps {
     runs: IRuns;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
+    mode: ArithmeticModes;
 }
 
-const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement => {
     const getRunViews = (): ReactNode[] => {
         if (runs.getCount() < 2 || !filter.year || !filter.month) return [];
 
@@ -40,6 +42,7 @@ const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
                     runs={weekRuns}
                     active={i === filter.week}
                     onClick={() => onClick(i)}
+                    mode={mode}
                 />)
             }
         }

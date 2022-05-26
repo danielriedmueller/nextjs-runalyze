@@ -18,7 +18,13 @@ import isBetween from "dayjs/plugin/isBetween";
 import {createRuns, emendDateFilter} from "../helper/functions";
 import IDateFilter from "../interfaces/IDateFilter";
 import style from "../style/runarea.module.scss";
-import {getDateFilterFromCookie, getUserIdFromCookie, setDateFilterCookie, setUserIdCookie} from "../helper/cookie";
+import {
+    getArithmeticModeFromCookie,
+    getDateFilterFromCookie,
+    getUserIdFromCookie,
+    setDateFilterCookie,
+    setUserIdCookie
+} from "../helper/cookie";
 import Sync from "../components/Sync";
 
 require('dayjs/locale/de')
@@ -31,9 +37,16 @@ dayjs.extend(isLeapYear);
 dayjs.extend(isBetween);
 dayjs.locale('de');
 
+export enum ArithmeticModes {
+    Sum = 1,
+    Avg = 2,
+    Med = 3,
+}
+
 interface IProps {
     runs: IDbRun[],
     filter: IDateFilter;
+    mode: ArithmeticModes;
 }
 
 interface IState {
@@ -42,6 +55,7 @@ interface IState {
     user: IUser;
     showSync: boolean;
     loadingCount: number;
+    mode: ArithmeticModes;
 }
 
 class Home extends Component<IProps, IState> {
@@ -53,7 +67,8 @@ class Home extends Component<IProps, IState> {
             filter: props.filter,
             user: null,
             showSync: props.runs.length <= 0,
-            loadingCount: 0
+            loadingCount: 0,
+            mode: props.mode ? props.mode : ArithmeticModes.Sum
         };
     }
 
@@ -108,11 +123,28 @@ class Home extends Component<IProps, IState> {
         this.setState({showSync: !this.state.showSync})
     }
 
+    toggleArithmeticMode = () => {
+        let mode = this.state.mode;
+
+        switch(mode) {
+            case ArithmeticModes.Sum:
+                mode = ArithmeticModes.Avg
+                break;
+            case ArithmeticModes.Avg:
+                mode = ArithmeticModes.Med
+                break;
+            default:
+                mode = ArithmeticModes.Sum
+        }
+
+        this.setState({mode})
+    }
+
     render() {
         return <div id="app">
             <button className={style.refreshButton + " " + (this.state.showSync ? style.active : "")}
                     data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
-                    onClick={this.refresh}></button>
+                    onClick={this.refresh} />
             <Header/>
             <Sync
                 user={this.state.user}
@@ -125,8 +157,10 @@ class Home extends Component<IProps, IState> {
             <RunArea
                 runs={this.state.runs}
                 filter={this.state.filter}
+                mode={this.state.mode}
                 setDateFilter={this.setDateFilter}
             />
+            <button onClick={this.toggleArithmeticMode}>{this.state.mode}</button>
         </div>
     }
 }
@@ -134,9 +168,10 @@ class Home extends Component<IProps, IState> {
 export async function getServerSideProps(ctx): Promise<{ props: IProps }> {
     const userId = getUserIdFromCookie(ctx.req.cookies);
     const filter = getDateFilterFromCookie(ctx.req.cookies);
+    const mode = getArithmeticModeFromCookie(ctx.req.cookies);
     const runs = userId ? await fetchRuns(userId) : [];
 
-    return {props: {runs, filter}}
+    return {props: {runs, filter, mode}}
 }
 
 export default Home;

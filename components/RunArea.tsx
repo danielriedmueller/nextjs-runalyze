@@ -8,14 +8,16 @@ import IDateFilter from "../interfaces/IDateFilter";
 import SingleRuns from "./runs/SingleRuns";
 import CurrentRunView from "./runs/CurrentRunView";
 import IRun from "../interfaces/IRun";
+import {ArithmeticModes} from "../pages";
 
 interface IProps {
     runs: IRuns;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
+    mode: ArithmeticModes;
 }
 
-const RunArea: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+const RunArea: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement => {
     const [currentRun, setCurrentRun] = useState<IRun>();
 
     useEffect(() => {
@@ -42,16 +44,19 @@ const RunArea: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
                 runs={runs.getFiltered(filter, 'month')}
                 filter={filter}
                 setDateFilter={setDateFilter}
+                mode={mode}
             />
             <MonthRuns
                 runs={runs.getFiltered(filter, 'year')}
                 filter={filter}
                 setDateFilter={setDateFilter}
+                mode={mode}
             />
             <YearRuns
                 runs={runs}
                 filter={filter}
                 setDateFilter={setDateFilter}
+                mode={mode}
             />
         </div>
     </>

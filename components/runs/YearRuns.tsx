@@ -4,14 +4,16 @@ import style from "../../style/runs.module.scss";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
 import {getYearRuns} from "../../helper/filteredRuns";
+import {ArithmeticModes} from "../../pages";
 
 interface IProps {
     runs: IRuns;
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
+    mode: ArithmeticModes;
 }
 
-const YearRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
+const YearRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement => {
     const getRunViews = (): ReactNode[] => {
         if (runs.getCount() === 0) return [];
 
@@ -32,6 +34,7 @@ const YearRuns: FC<IProps> = ({runs, filter, setDateFilter}): ReactElement => {
                 runs={getYearRuns(runs, i)}
                 active={i === filter.year}
                 onClick={() => onClick(i)}
+                mode={mode}
             />)
         }
 

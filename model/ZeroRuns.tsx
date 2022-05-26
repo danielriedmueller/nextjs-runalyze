@@ -2,6 +2,7 @@ import IRuns from "../interfaces/IRuns";
 import IRun from "../interfaces/IRun";
 import dayjs from "dayjs";
 import IDateFilter from "../interfaces/IDateFilter";
+import { Duration } from "dayjs/plugin/duration";
 
 export default class ZeroRuns implements IRuns {
     distanceSum: number;
@@ -14,6 +15,19 @@ export default class ZeroRuns implements IRuns {
     constructor() {
         this.runs = [];
     }
+
+    vdots: number[];
+    steps: number[];
+    calories: number[];
+    getVdotMed: () => string;
+    getStepsMed: () => string;
+    getCaloriesMed: () => string;
+
+    durations: Duration[];
+    getDurationMed: () => string;
+
+    distances: number[];
+    renderDistanceMed: () => string;
 
     getBetween(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): IRuns {
         return undefined;
@@ -48,5 +62,9 @@ export default class ZeroRuns implements IRuns {
 
     toArray(): IRun[] {
         return [];
+    }
+
+    getPaceMed(): string {
+        return "";
     }
 }

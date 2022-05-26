@@ -14,6 +14,10 @@
   padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
   text-align: left;
   color: var(--creme);
+
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 
 .date {
