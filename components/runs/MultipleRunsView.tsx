@@ -2,6 +2,7 @@ import React, {FC, ReactElement} from "react";
 import style from '../../style/multipleruns.module.scss';
 import runStyle from '../../style/run.module.scss';
 import IRuns from "../../interfaces/IRuns";
+import ZeroRuns from "../../model/ZeroRuns";
 
 interface IProps {
     runs: IRuns;
@@ -11,7 +12,9 @@ interface IProps {
 }
 
 const MultipleRunsView: FC<IProps> = ({runs, label, active, onClick}): ReactElement => {
-    return <div onClick={() => onClick()}>
+    const noRuns = runs instanceof ZeroRuns;
+
+    return <div className={noRuns ? style.noruns : ""} onClick={() => noRuns ? () => {} : onClick()}>
         <div className={runStyle.head}>
             <div className={active ? style.activeLegend : style.legend}>{label}</div>
             <div className={runStyle.count}>{runs.getCount()}</div>
