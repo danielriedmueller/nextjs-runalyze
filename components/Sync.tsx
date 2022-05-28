@@ -26,8 +26,8 @@ const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisi
                 {loadingCount > 0
                     ? <ProgressBar animated now={calcProgress()}/>
                     : <>
-                        <div className={style.insert}>{inserts} x</div>
-                        {deletions > 0 && <div className={style.delete}>{deletions} x</div>}
+                        <div className={style.insert}>{inserts}&nbsp;x&nbsp;</div>
+                        {deletions > 0 && <div className={style.delete}>{deletions}&nbsp;x&nbsp;</div>}
                         {user.unsynced.length > -1 && <div className={style.importButtonContainer}><button className={style.importButton} onClick={startImport} /></div>}
                     </>
                 }

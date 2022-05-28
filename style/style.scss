@@ -6,10 +6,11 @@
   --creme: #f1faee;
   --yellow: #F6CF63;
   --anthrazit: #2f353b;
-  --spacing-s: 13px;
-  --spacing: 21px;
+  --spacing-s: 16px;
+  --spacing: 24px;
   --icon-size: 24px;
   --icon-size-big: 40px;
+  --button-size: 56px;
   --font-size-body: 16px;
   --font-size-header: 24px;
   --run-head-height: 80px;
@@ -25,6 +26,7 @@ html, body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   color: var(--creme);
+  font-size: var(--font-size-body);
   background-color: var(--red);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

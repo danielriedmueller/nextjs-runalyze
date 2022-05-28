@@ -27,7 +27,7 @@
 {
   content: "";
   display: inline-block;
-  width: 24px;
+  width: var(--spacing);
   height: 34px;
   background-repeat: no-repeat;
 }

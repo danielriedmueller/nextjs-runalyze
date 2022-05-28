@@ -11,15 +11,16 @@ interface IProps {
     active: boolean;
     onClick: () => void;
     mode: ArithmeticModes;
+    data?: number;
 }
 
-const MultipleRunsView: FC<IProps> = ({runs, label, active, onClick, mode}): ReactElement => {
+const MultipleRunsView: FC<IProps> = ({runs, label, active, onClick, mode, data}): ReactElement => {
     const noRuns = runs instanceof ZeroRuns;
 
     if (noRuns) {
         return <div className={style.noruns}>
             <div className={runStyle.head}>
-                <div className={active ? style.activeLegend : style.legend}>{label}</div>
+                <div className={style.legend + " " + (active && style.active)}>{label}</div>
                 <div className={runStyle.count}>-</div>
             </div>
             <div className={runStyle.scrollable}>
@@ -35,7 +36,7 @@ const MultipleRunsView: FC<IProps> = ({runs, label, active, onClick, mode}): Rea
 
     return <div onClick={() => noRuns ? () => {} : onClick()}>
         <div className={runStyle.head}>
-            <div className={active ? style.activeLegend : style.legend}>{label}</div>
+            <div data-month={data ? data : 0} className={style.legend + " " + (active && style.active)}>{label}</div>
             <div className={runStyle.count}>{runs.getCount()}</div>
         </div>
         <div className={runStyle.scrollable}>

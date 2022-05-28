@@ -1,11 +1,11 @@
 .fabButton {
   position: fixed;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  padding: 16px;
-  right: 16px;
-  bottom: 16px;
+  width: var(--button-size);
+  height: var(--button-size);
+  border-radius: var(--spacing-s);
+  padding: 18px var(--spacing-s);
+  right: var(--spacing-s);
+  bottom: var(--spacing-s);
   z-index: 1000;
   font-size: var(--icon-size);
   line-height: var(--icon-size);

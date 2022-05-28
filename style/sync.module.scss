@@ -2,8 +2,7 @@
   position: relative;
   $height: 80px;
   padding: var(--spacing-s);
-  background-color: #2f353b;
-  color: var(--creme);
+  background-color: var(--creme);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,32 +22,29 @@
 
     .importButton {
       background: var(--red) url("../assets/icons/cloud-database.svg") no-repeat center center;
-      width: 56px;
-      height: 56px;
+      width: var(--button-size);
+      height: var(--button-size);
       border: 0;
       margin: 0;
-
       background-size: var(--icon-size);
-
-      border-radius: 16px;
-      padding: 16px;
-      right: 16px;
-      bottom: 16px;
-
-      font-size: 24px;
-      line-height: 24px;
+      border-radius: var(--spacing-s);
+      padding: var(--spacing-s);
+      right: var(--spacing-s);
+      bottom: var(--spacing-s);
+      font-size: var(--spacing);
+      line-height: var(--spacing);
       box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     }
   }
 
   .insert, .delete {
     background: transparent none no-repeat right center;
-    padding-right: calc(var(--icon-size-big) + var(--spacing-s));
-    padding-top: 2px;
-    background-size: var(--icon-size-big);
-    height: var(--icon-size-big);
+    padding-right: var(--icon-size);
+    background-size: var(--icon-size);
+    height: var(--icon-size);
     margin-right: var(--spacing-s);
-    font-size: var(--font-size-header);
+    font-size: var(--icon-size);
+    line-height: var(--icon-size);
   }
 
   .insert {
@@ -58,38 +54,4 @@
   .delete {
     background-image: url("../assets/icons/database-minus.svg");
   }
-}
-
-@keyframes heartbeat
-{
-  0%
-  {
-    transform: scale( .75 );
-  }
-  20%
-  {
-    transform: scale( 1 );
-  }
-  40%
-  {
-    transform: scale( .75 );
-  }
-  60%
-  {
-    transform: scale( 1 );
-  }
-  80%
-  {
-    transform: scale( .75 );
-  }
-  100%
-  {
-    transform: scale( .75 );
-  }
-}
-
-.userarea.loggedOut {
-}
-
-.userarea.loggedIn {
 }
