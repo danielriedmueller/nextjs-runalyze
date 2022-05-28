@@ -80,7 +80,10 @@ class Home extends Component<IProps, IState> {
         } as IUser;
 
         setUserIdCookie(user);
-        user.unfetchedRuns = await checkFitData(user);
+
+        const unfetchedSessions = await checkFitData(user);
+        user.unfetchedRuns = unfetchedSessions.sessions;
+
         const runs = await createRuns(user.id);
 
         this.setState({user, runs});

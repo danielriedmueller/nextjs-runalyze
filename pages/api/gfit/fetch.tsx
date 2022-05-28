@@ -3,7 +3,6 @@ import Cors from "cors";
 import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
 import {insertRun} from "../insert";
 import {NextApiRequest, NextApiResponse} from "next";
-import {data} from "browserslist";
 
 const cors = initMiddleware(
     Cors({
