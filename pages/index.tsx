@@ -21,7 +21,7 @@ import style from "../style/runarea.module.scss";
 import {
     getArithmeticModeFromCookie,
     getDateFilterFromCookie,
-    getUserIdFromCookie,
+    getUserIdFromCookie, setArithmeticModeCookie,
     setDateFilterCookie,
     setUserIdCookie
 } from "../helper/cookie";
@@ -139,6 +139,7 @@ class Home extends Component<IProps, IState> {
                 mode = ArithmeticModes.Sum
         }
 
+        setArithmeticModeCookie(mode);
         this.setState({mode})
     }
 
@@ -161,8 +162,8 @@ class Home extends Component<IProps, IState> {
                 filter={this.state.filter}
                 mode={this.state.mode}
                 setDateFilter={this.setDateFilter}
+                toggleMode={this.toggleArithmeticMode}
             />
-            <button onClick={this.toggleArithmeticMode}>{this.state.mode}</button>
         </div>
     }
 }

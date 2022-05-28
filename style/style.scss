@@ -1,6 +1,5 @@
 :root {
   --red: #e63946;
-  --blue: #457b9d;
   --blue-light: #a8dadc;
   --blue-dark: #1d3557;
   --green: #48B936;
@@ -9,7 +8,7 @@
   --anthrazit: #2f353b;
   --spacing-s: 13px;
   --spacing: 21px;
-  --icon-size: 20px;
+  --icon-size: 24px;
   --icon-size-big: 40px;
   --font-size-body: 16px;
   --font-size-header: 24px;
@@ -32,7 +31,6 @@ html, body {
 }
 
 body > div {
-  height: 100%;
   width: 100%;
 }
 
@@ -41,7 +39,6 @@ body > div {
 }
 
 #app {
-  height: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   position: relative;
@@ -50,5 +47,5 @@ body > div {
 
 #app > * {
   max-width: 100%;
-  overflow: auto;
+  // overflow: auto;
 }

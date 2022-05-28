@@ -17,6 +17,8 @@ interface IProps {
 
 const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisible, loadingCount}): ReactElement => {
     const calcProgress = (): number => 100 - (user.unsynced.length * 100 / loadingCount);
+    const inserts = user ? user.unsynced.filter(session => session.syncType === SyncType.Insert).length : 0;
+    const deletions = user ? user.unsynced.filter(session => session.syncType === SyncType.Delete).length : 0;
     return <div
         className={style[isVisible ? "" : "hidden"] + " " + style.userarea + " " + style[user ? 'loggedIn' : 'loggedOut']}>
         {user ?
@@ -24,9 +26,9 @@ const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisi
                 {loadingCount > 0
                     ? <ProgressBar animated now={calcProgress()}/>
                     : <>
-                        <div className={style.insert}>{user.unsynced.filter(session => session.syncType === SyncType.Insert).length} x</div>
-                        <div className={style.delete}>{user.unsynced.filter(session => session.syncType === SyncType.Delete).length} x</div>
-                        {user.unsynced.length > 0 && <button className={style.importButton} onClick={startImport} />}
+                        <div className={style.insert}>{inserts} x</div>
+                        {deletions > 0 && <div className={style.delete}>{deletions} x</div>}
+                        {user.unsynced.length > -1 && <div className={style.importButtonContainer}><button className={style.importButton} onClick={startImport} /></div>}
                     </>
                 }
             </> :

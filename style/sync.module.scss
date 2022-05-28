@@ -5,7 +5,7 @@
   background-color: #2f353b;
   color: var(--creme);
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 
   height: $height;
@@ -16,16 +16,29 @@
     margin-top: -$height;
   }
 
-  .importButton {
-    z-index: 60;
-    background: transparent url("../assets/icons/cloud-database.svg") no-repeat center center;
-    width: var(--icon-size-big);
-    height: var(--icon-size-big);
-    border: 0;
-    margin: 0;
-    padding: 0;
+  .importButtonContainer {
     flex-grow: 1;
-    background-size: var(--icon-size-big);
+    z-index: 60;
+    text-align: right;
+
+    .importButton {
+      background: var(--red) url("../assets/icons/cloud-database.svg") no-repeat center center;
+      width: 56px;
+      height: 56px;
+      border: 0;
+      margin: 0;
+
+      background-size: var(--icon-size);
+
+      border-radius: 16px;
+      padding: 16px;
+      right: 16px;
+      bottom: 16px;
+
+      font-size: 24px;
+      line-height: 24px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
   }
 
   .insert, .delete {

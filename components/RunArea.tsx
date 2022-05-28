@@ -1,5 +1,6 @@
 import React, {FC, ReactElement, useEffect, useState} from "react";
 import style from '../style/runarea.module.scss';
+import fabStyle from '../style/fab.module.scss';
 import IRuns from "../interfaces/IRuns";
 import YearRuns from "./runs/YearRuns";
 import MonthRuns from "./runs/MonthRuns";
@@ -15,9 +16,10 @@ interface IProps {
     filter: IDateFilter;
     setDateFilter: (filter: IDateFilter) => void;
     mode: ArithmeticModes;
+    toggleMode: () => void;
 }
 
-const RunArea: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement => {
+const RunArea: FC<IProps> = ({runs, filter, setDateFilter, mode, toggleMode}): ReactElement => {
     const [currentRun, setCurrentRun] = useState<IRun>();
 
     useEffect(() => {
@@ -29,6 +31,10 @@ const RunArea: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement 
         if (run) run.isCurrent = true;
 
         setCurrentRun(run);
+    }
+
+    if (runs.getCount() === 0) {
+        return <></>;
     }
 
     return <>
@@ -59,6 +65,13 @@ const RunArea: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement 
                 mode={mode}
             />
         </div>
+        <button className={fabStyle.fabButton} data-mode={mode} onClick={toggleMode}>{
+            mode === ArithmeticModes.Sum
+                ? <>&sum;</>
+                : mode === ArithmeticModes.Avg
+                ? <>&Oslash;</>
+                : <>x̃</>
+        }</button>
     </>
 }
 
