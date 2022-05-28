@@ -36,7 +36,7 @@ export const fetchFitData = async (user: IUser, session: IGoogleSession): Promis
     }
 }
 
-export const checkFitData = async (user: IUser): Promise<{sessions: IGoogleSession[], deletedSessions: IGoogleSession[]}> => {
+export const checkFitData = async (user: IUser): Promise<IGoogleSession[]> => {
     try {
         const response = await fetch(process.env.NEXT_PUBLIC_API_CHECK_GOOGLE_FIT_DATA, {
             method: 'POST',
@@ -47,7 +47,7 @@ export const checkFitData = async (user: IUser): Promise<{sessions: IGoogleSessi
             }),
         });
 
-        return await response.json() as {sessions: IGoogleSession[], deletedSessions: IGoogleSession[]};
+        return await response.json();
     } catch (error) {
         console.error(error)
     }

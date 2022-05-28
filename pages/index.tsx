@@ -81,8 +81,7 @@ class Home extends Component<IProps, IState> {
 
         setUserIdCookie(user);
 
-        const unfetchedSessions = await checkFitData(user);
-        user.unfetchedRuns = unfetchedSessions.sessions;
+        user.unsynced =  await checkFitData(user);
 
         const runs = await createRuns(user.id);
 
@@ -91,11 +90,11 @@ class Home extends Component<IProps, IState> {
 
     fetchFitData = async (): Promise<void> => {
         let user = this.state.user;
-        this.setState({loadingCount: this.state.user.unfetchedRuns.length});
+        this.setState({loadingCount: this.state.user.unsynced.length});
         Promise.all(
-            user.unfetchedRuns.map(async (session, index) => {
+            user.unsynced.map(async (session, index) => {
                 return await fetchFitData(user, session).then(async () => {
-                    user.unfetchedRuns = user.unfetchedRuns.filter((el) => el.startTimeMillis !== session.startTimeMillis);
+                    user.unsynced = user.unsynced.filter((el) => el.startTimeMillis !== session.startTimeMillis);
                     const runs = await createRuns(this.state.user.id);
                     this.setState({
                         user,
@@ -146,7 +145,7 @@ class Home extends Component<IProps, IState> {
     render() {
         return <div id="app">
             <button className={style.refreshButton + " " + (this.state.showSync ? style.active : "")}
-                    data-state={this.state.user ? this.state.user.unfetchedRuns.length : ""}
+                    data-state={this.state.user ? this.state.user.unsynced.length : ""}
                     onClick={this.refresh} />
             <Header/>
             <Sync

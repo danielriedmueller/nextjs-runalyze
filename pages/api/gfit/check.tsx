@@ -1,6 +1,6 @@
 import initMiddleware from "../../../lib/init-middleware";
 import Cors from "cors";
-import IGoogleSession from "../../../interfaces/IGoogleSession";
+import IGoogleSession, {SyncType} from "../../../interfaces/IGoogleSession";
 import dayjs from "dayjs";
 import {NextApiRequest, NextApiResponse} from "next";
 
@@ -12,13 +12,13 @@ const cors = initMiddleware(
     })
 )
 
-export default async function handle(req: NextApiRequest, res: NextApiResponse<{sessions: IGoogleSession[], deletedSessions: IGoogleSession[]}>): Promise<void> {
+export default async function handle(req: NextApiRequest, res: NextApiResponse<IGoogleSession[]>): Promise<void> {
     await cors(req, res);
     const {token, user} = req.body;
 
     let sessions = await fetchSessions(user, token);
 
-    // Check for already existing runs and filter sesssions accordingly
+    // Check for already existing runs and filter sessions accordingly
     sessions = sessions.filter((session) => {
         let existingRun = db
             .prepare('SELECT * FROM runs WHERE startTime = ? AND endTime = ? AND user = ?')
@@ -27,7 +27,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<{
         return existingRun.length === 0;
     });
 
-    const deletedSessions = await fetchDeletedSessions(user, token);
+    let deletedSessions = await fetchDeletedSessions(user, token);
+
+    // Check for not existing runs and filter deletedSessions accordingly
+    deletedSessions = deletedSessions.filter((session) => {
+        let existingRun = db
+            .prepare('SELECT * FROM runs WHERE startTime = ? AND endTime = ? AND user = ?')
+            .all(session.startTimeMillis, session.endTimeMillis, user);
+
+        return existingRun.length > 0;
+    });
+
+    res.json([...sessions, ...deletedSessions]);
 
     /*
     // TODO Remove if unnecessary
@@ -52,8 +63,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<{
     }
 
      */
-
-    res.json({sessions, deletedSessions});
 }
 
 const fetchSessions = async (user: string, token: string): Promise<IGoogleSession[]> => {
@@ -71,16 +80,24 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
         params.set('startTime', dayjs(startTime).toISOString());
     }
 
-    const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
+    return await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
             'Content-type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
+    }).then(async (response) => {
+        const gApiData = await response.json() as IGoogleSessionResponse;
+
+        if (gApiData.error) {
+            return [];
+        }
+
+        return gApiData.session.map((session): IGoogleSession => {
+            session.syncType = SyncType.Insert;
+
+            return session;
+        });
     });
-
-    const gApiData = await gApiResponse.json() as IGoogleSessionResponse;
-
-    return gApiData.session;
 }
 
 const fetchDeletedSessions = async (user: string, token: string): Promise<IGoogleSession[]> => {
@@ -94,16 +111,24 @@ const fetchDeletedSessions = async (user: string, token: string): Promise<IGoogl
         fields
     });
 
-    const gApiResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
+    return await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
             'Content-type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
+    }).then(async (response) => {
+        const gApiData = await response.json() as IGoogleSessionResponse;
+
+        if (gApiData.error) {
+            return [];
+        }
+
+        return gApiData.deletedSession.map((session): IGoogleSession => {
+            session.syncType = SyncType.Delete;
+
+            return session;
+        });
     });
-
-    const gApiData = await gApiResponse.json() as IGoogleSessionResponse;
-
-    return gApiData.deletedSession;
 }
 
 interface IGoogleSessionResponse {
@@ -144,5 +169,6 @@ interface IGoogleSessionResponse {
         }
     ],
     "nextPageToken": string,
-    "hasMoreData": boolean
+    "hasMoreData": boolean,
+    "error": any,
 }

@@ -3,6 +3,8 @@ import Cors from "cors";
 import DbRun, {FITNESS_DATA_TYPES} from "../../../model/DbRun";
 import {insertRun} from "../insert";
 import {NextApiRequest, NextApiResponse} from "next";
+import {SyncType} from "../../../interfaces/IGoogleSession";
+import {deleteRun} from "../delete";
 
 const cors = initMiddleware(
     Cors({
@@ -14,6 +16,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
     await cors(req, res);
 
     const {token, user, session} = req.body;
+
+    if (session.syncType === SyncType.Delete) {
+        await deleteRun(user, session.startTimeMillis, session.endTimeMillis);
+
+        return res.send(true);
+    }
 
     const fields = '?fields=bucket(startTimeMillis,endTimeMillis,dataset(point(dataTypeName,value(intVal,fpVal))))';
 
@@ -37,7 +45,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
 
     await insertRun(user, dbRun);
 
-    res.send(true);
+    return res.send(true);
 }
 
 

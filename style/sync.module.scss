@@ -4,6 +4,9 @@
   padding: var(--spacing-s);
   background-color: #2f353b;
   color: var(--creme);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 
   height: $height;
   z-index: 10;
@@ -21,9 +24,26 @@
     border: 0;
     margin: 0;
     padding: 0;
-    position: absolute;
-    right: var(--spacing-s);
-    top: var(--spacing-s);
+    flex-grow: 1;
+    background-size: var(--icon-size-big);
+  }
+
+  .insert, .delete {
+    background: transparent none no-repeat right center;
+    padding-right: calc(var(--icon-size-big) + var(--spacing-s));
+    padding-top: 2px;
+    background-size: var(--icon-size-big);
+    height: var(--icon-size-big);
+    margin-right: var(--spacing-s);
+    font-size: var(--font-size-header);
+  }
+
+  .insert {
+    background-image: url("../assets/icons/database-plus.svg");
+  }
+
+  .delete {
+    background-image: url("../assets/icons/database-minus.svg");
   }
 }
 
