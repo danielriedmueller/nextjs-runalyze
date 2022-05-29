@@ -1,4 +1,4 @@
-import React, {FC, ReactElement, ReactNode} from "react";
+import React, {FC, ReactElement} from "react";
 import GoogleLogin, {GoogleLoginResponse} from "react-google-login";
 import IUser from "../interfaces/IUser";
 import style from '../style/sync.module.scss';

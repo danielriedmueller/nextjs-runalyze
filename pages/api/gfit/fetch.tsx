@@ -25,6 +25,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
 
     const fields = '?fields=bucket(startTimeMillis,endTimeMillis,dataset(point(dataTypeName,value(intVal,fpVal))))';
 
+
     const datasetResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate' + fields, {
         method: 'POST',
         headers: {
@@ -44,6 +45,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
     const dbRun = await DbRun.fromGoogleApiData(dataset);
 
     await insertRun(user, dbRun);
+
 
     return res.send(true);
 }
