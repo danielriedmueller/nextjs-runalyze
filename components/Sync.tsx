@@ -2,8 +2,6 @@ import React, {FC, ReactElement} from "react";
 import GoogleLogin, {GoogleLoginResponse} from "react-google-login";
 import IUser from "../interfaces/IUser";
 import style from '../style/sync.module.scss';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import {SyncType} from "../interfaces/IGoogleSession";
 
 interface IProps {
@@ -24,7 +22,7 @@ const Sync: FC<IProps> = ({user, init, startImport, responseGoogleFailed, isVisi
         {user ?
             <>
                 {loadingCount > 0
-                    ? <ProgressBar animated now={calcProgress()}/>
+                    ? loadingCount
                     : <>
                         <div className={style.insert}>{inserts}&nbsp;x&nbsp;</div>
                         {deletions > 0 && <div className={style.delete}>{deletions}&nbsp;x&nbsp;</div>}
