@@ -48,7 +48,7 @@ export default class Run implements IRun {
 
     getDatetime = (): string => this.date.format('DD.MM.YYYY HH:mm:ss');
 
-    getDate = (): string => this.date.format('DD.MM.YYYY');
+    getDate = (): string => this.date.format('DD.MM.');
 
     getDateDay = (): string => this.date.format('dddd');
 
