@@ -18,9 +18,6 @@ const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => run && (
             </div>
         </div>
         <div className={style.scrollable}>
-            <div className={style.vdot}>
-                {run.vdot}
-            </div>
             <div className={style.pace}>
                 {run.getPace()}
             </div>
@@ -29,12 +26,6 @@ const SingleRunView: FC<IProps> = ({run, onClick}): ReactElement => run && (
             </div>
             <div className={style.duration}>
                 {run.getDuration()}
-            </div>
-            <div className={style.steps}>
-                {run.steps}
-            </div>
-            <div className={style.calories}>
-                {run.renderCalories()}
             </div>
         </div>
     </div>
