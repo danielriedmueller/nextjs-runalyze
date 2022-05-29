@@ -1,16 +1,16 @@
 :root {
   --red: #e63946;
-  --blue: #457b9d;
   --blue-light: #a8dadc;
   --blue-dark: #1d3557;
   --green: #48B936;
   --creme: #f1faee;
   --yellow: #F6CF63;
   --anthrazit: #2f353b;
-  --spacing-s: 13px;
-  --spacing: 21px;
-  --icon-size: 20px;
+  --spacing-s: 16px;
+  --spacing: 24px;
+  --icon-size: 24px;
   --icon-size-big: 40px;
+  --button-size: 56px;
   --font-size-body: 16px;
   --font-size-header: 24px;
   --run-head-height: 80px;
@@ -26,13 +26,13 @@ html, body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   color: var(--creme);
+  font-size: var(--font-size-body);
   background-color: var(--red);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body > div {
-  height: 100%;
   width: 100%;
 }
 
@@ -41,7 +41,6 @@ body > div {
 }
 
 #app {
-  height: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   position: relative;
@@ -50,7 +49,7 @@ body > div {
 
 #app > * {
   max-width: 100%;
-  overflow: auto;
+  // overflow: auto;
 }
 
 .progress {

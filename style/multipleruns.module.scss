@@ -1,17 +1,114 @@
 div.legend {
   color: var(--anthrazit);
-  background-color: var(--blue-light);
   font-family: 'Montserrat', sans-serif;
   padding: var(--spacing-s);
   margin-bottom: var(--spacing-s);
-}
+  background: var(--blue-light) url("../assets/icons/calendar3-dark.svg") no-repeat var(--spacing-s) center;
+  background-size: var(--icon-size);
+  min-height: var(--icon-size);
+  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
 
-div.activeLegend {
-  font-family: 'Montserrat', sans-serif;
-  padding: var(--spacing-s);
-  margin-bottom: var(--spacing-s);
-  background-color: var(--anthrazit);
-  color: var(--creme);
+  &.active {
+    background-color: var(--anthrazit);
+    color: var(--creme);
+    background-image: url("../assets/icons/calendar3.svg");
+  }
+
+  &[data-month="1"] {
+    background-image: url("../assets/icons/zodiac-january.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-january-white.svg");
+    }
+  }
+
+  &[data-month="2"] {
+    background-image: url("../assets/icons/zodiac-february.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-february-white.svg");
+    }
+  }
+
+  &[data-month="3"] {
+    background-image: url("../assets/icons/zodiac-march.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-march-white.svg");
+    }
+  }
+
+  &[data-month="4"] {
+    background-image: url("../assets/icons/zodiac-april.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-april-white.svg");
+    }
+  }
+
+  &[data-month="5"] {
+    background-image: url("../assets/icons/zodiac-may.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-may-white.svg");
+    }
+  }
+
+  &[data-month="6"] {
+    background-image: url("../assets/icons/zodiac-june.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-june-white.svg");
+    }
+  }
+
+  &[data-month="7"] {
+    background-image: url("../assets/icons/zodiac-july.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-july-white.svg");
+    }
+  }
+
+  &[data-month="8"] {
+    background-image: url("../assets/icons/zodiac-august.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-august-white.svg");
+    }
+  }
+
+  &[data-month="9"] {
+    background-image: url("../assets/icons/zodiac-september.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-september-white.svg");
+    }
+  }
+
+  &[data-month="10"] {
+    background-image: url("../assets/icons/zodiac-october.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-october-white.svg");
+    }
+  }
+
+  &[data-month="11"] {
+    background-image: url("../assets/icons/zodiac-november.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-november-white.svg");
+    }
+  }
+
+  &[data-month="12"] {
+    background-image: url("../assets/icons/zodiac-december.svg");
+
+    &.active {
+      background-image: url("../assets/icons/zodiac-december-white.svg");
+    }
+  }
 }
 
 .noruns {

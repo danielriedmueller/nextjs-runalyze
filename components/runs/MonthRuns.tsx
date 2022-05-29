@@ -39,6 +39,7 @@ const MonthRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElemen
             if (monthRuns.getCount() > 0) {
                 months.push(<MultipleRunsView
                     key={'monthRun-' + i}
+                    data={i}
                     label={currentMonth.format('MMMM')}
                     runs={monthRuns}
                     active={i === filter.month}
