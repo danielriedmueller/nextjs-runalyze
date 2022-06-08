@@ -4,6 +4,7 @@ import MultipleRunsView from "./MultipleRunsView";
 import IRuns from "../../interfaces/IRuns";
 import IDateFilter from "../../interfaces/IDateFilter";
 import style from "../../style/runs.module.scss";
+import runsStyle from '../../style/multipleruns.module.scss';
 import {getWeekRuns} from "../../helper/filteredRuns";
 import {ArithmeticModes} from "../../pages";
 
@@ -35,9 +36,9 @@ const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement
         for (let i = lastWeek; i > firstWeek - 1; i--) {
             const weekRuns = getWeekRuns(runs, i, filter.month, filter.year);
             if (weekRuns.getCount() > 0) {
-                const label = weekRuns.getFirst().date.format('DD.MM.') + ' - ' + weekRuns.getNewest().date.format('DD.MM.');
+                const label = weekRuns.getFirst().date.format('DD.') + " - " +  weekRuns.getNewest().date.format('DD.');
                 weeks.push(<MultipleRunsView
-                    key={'monthRun-' + i}
+                    key={'weekRun-' + i}
                     label={label}
                     runs={weekRuns}
                     active={i === filter.week}
@@ -50,7 +51,7 @@ const WeekRuns: FC<IProps> = ({runs, filter, setDateFilter, mode}): ReactElement
         return weeks;
     }
 
-    return <div className={style.table}>{getRunViews()}</div>;
+    return <div className={style.table + " " + runsStyle.weekRuns}>{getRunViews()}</div>;
 }
 
 export default WeekRuns;

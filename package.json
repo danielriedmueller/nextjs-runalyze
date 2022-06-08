@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "better-sqlite3": "*",
-    "bootstrap": "^5.1.3",
     "cors": "*",
     "dateformat": "*",
     "dayjs": "*",
@@ -20,7 +19,6 @@
     "next": "*",
     "next-pwa": "*",
     "react": "*",
-    "react-bootstrap": "^2.3.1",
     "react-datetime-picker": "*",
     "react-dom": "*",
     "react-google-login": "*",

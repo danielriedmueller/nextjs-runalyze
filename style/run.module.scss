@@ -7,7 +7,6 @@
 }
 
 .date, .count, .pace, .distance, .duration, .vdot, .steps, .calories {
-  font-family: 'Courier Prime', monospace;
   background: transparent none no-repeat var(--spacing-s) top;
   background-size: var(--icon-size);
   min-height: var(--icon-size);
@@ -21,14 +20,16 @@
 }
 
 .date {
-  background-color: var(--blue-light);
-  color: var(--anthrazit);
   padding: var(--spacing-s);
+  padding-left: calc(var(--icon-size) + var(--spacing-s) * 2);
+  color: var(--anthrazit);
+  background: var(--blue-light) url("../assets/icons/calendar3-dark.svg") no-repeat var(--spacing-s) center;
 }
 
 .isCurrent .date {
   color: var(--creme) !important;
   background-color: var(--red) !important;
+  background-image: url("../assets/icons/calendar3.svg");
 }
 
 .count, .pace, .distance, .duration, .vdot, .steps, .calories {
