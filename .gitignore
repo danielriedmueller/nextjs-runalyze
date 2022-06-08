@@ -34,5 +34,8 @@ yarn-error.log*
 *.db
 
 .idea/
-next-env.d.ts
+/.idea/
+
 public/
+/client_id.json
+/next-env.d.ts
