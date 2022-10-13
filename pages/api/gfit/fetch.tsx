@@ -17,6 +17,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
 
     const {token, user, session} = req.body;
 
+    //await new Promise(r => setTimeout(r, 500));
+
+    return res.send(true);
+
+    /*
     if (session.syncType === SyncType.Delete) {
         await deleteRun(user, session.startTimeMillis, session.endTimeMillis);
 
@@ -24,7 +29,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
     }
 
     const fields = '?fields=bucket(startTimeMillis,endTimeMillis,dataset(point(dataTypeName,value(intVal,fpVal))))';
-
 
     const datasetResponse = await fetch('https://fitness.googleapis.com/fitness/v1/users/me/dataset:aggregate' + fields, {
         method: 'POST',
@@ -42,11 +46,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<b
         })
     });
     const dataset = await datasetResponse.json() as IGoogleDatasetResponse;
+    console.log(dataset)
+    if (dataset.error) {
+        return res.send(false);
+    }
     const dbRun = await DbRun.fromGoogleApiData(dataset);
 
     await insertRun(user, dbRun);
-
-
+*/
     return res.send(true);
 }
 

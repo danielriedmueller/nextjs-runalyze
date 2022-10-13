@@ -22,7 +22,7 @@ import {
     getArithmeticModeFromCookie,
     getDateFilterFromCookie,
     getUserIdFromCookie, setArithmeticModeCookie,
-    setDateFilterCookie,
+    setDateFilterCookie, setRequestTimeoutCookie,
     setUserIdCookie
 } from "../helper/cookie";
 import Sync from "../components/Sync";
@@ -54,7 +54,6 @@ interface IState {
     filter: IDateFilter;
     user: IUser;
     showSync: boolean;
-    loadingCount: number;
     mode: ArithmeticModes;
 }
 
@@ -67,7 +66,6 @@ class Home extends Component<IProps, IState> {
             filter: props.filter,
             user: null,
             showSync: props.runs.length <= 0,
-            loadingCount: 0,
             mode: props.mode ? props.mode : ArithmeticModes.Sum
         };
     }
@@ -90,12 +88,24 @@ class Home extends Component<IProps, IState> {
 
     fetchFitData = async (): Promise<void> => {
         let user = this.state.user;
-        this.setState({loadingCount: this.state.user.unsynced.length});
+
+        const rateLimit = parseInt(process.env.NEXT_PUBLIC_GOOGLE_API_REQUEST_LIMIT);
+        const overLimitCount = user.unsynced.length - rateLimit;
+        if (overLimitCount > 0) {
+            const timeoutTill = dayjs()
+                .add(parseInt(process.env.NEXT_PUBLIC_GOOGLE_API_REQUEST_LIMIT_TIMEOUT), 'second')
+                .toISOString();
+            setRequestTimeoutCookie(timeoutTill);
+            user.unsynced = user.unsynced.slice(overLimitCount);
+        }
+
         Promise.all(
             user.unsynced.map(async (session, index) => {
                 return await fetchFitData(user, session).then(async () => {
+                    console.log(session)
                     user.unsynced = user.unsynced.filter((el) => el.startTimeMillis !== session.startTimeMillis);
                     const runs = await createRuns(this.state.user.id);
+                    console.log(user.unsynced.length)
                     this.setState({
                         user,
                         runs
@@ -103,10 +113,13 @@ class Home extends Component<IProps, IState> {
                 });
             })
         ).then(async () => {
+            /*
             this.setState({
                 loadingCount: 0,
                 showSync: false,
             });
+
+             */
         });
     };
 
@@ -155,7 +168,6 @@ class Home extends Component<IProps, IState> {
                 startImport={this.fetchFitData}
                 responseGoogleFailed={this.responseGoogleFailed}
                 isVisible={this.state.showSync}
-                loadingCount={this.state.loadingCount}
             />
             <RunArea
                 runs={this.state.runs}

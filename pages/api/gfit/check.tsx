@@ -66,19 +66,19 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse<I
 }
 
 const fetchSessions = async (user: string, token: string): Promise<IGoogleSession[]> => {
-    const activityType = process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING;
-    const fields = 'session(startTimeMillis,endTimeMillis)';
-
-    const params = new URLSearchParams({
-        activityType,
-        fields
-    });
+    const params = new URLSearchParams();
+    params.append('fields', 'session(startTimeMillis,endTimeMillis)');
+    params.append('activityType', process.env.GOOGLE_API_ACTIVITY_TYPE_RUNNING);
+    params.append('activityType', process.env.GOOGLE_API_ACTIVITY_TYPE_JOGGING);
 
     // Get newest run as startTime
     let startTime = db.prepare('SELECT startTime FROM runs WHERE user = ? ORDER BY startTime desc').pluck().get(user);
     if (startTime) {
-        params.set('startTime', dayjs(startTime).toISOString());
+        params.append('startTime', dayjs(startTime).toISOString());
+    } else {
+        params.append('startTime', "1970-01-01T00:00:00.000Z");
     }
+    params.set('startTime', "1970-01-01T00:00:00.000Z");
 
     return await fetch('https://fitness.googleapis.com/fitness/v1/users/me/sessions?' + params, {
         headers: {
@@ -87,6 +87,8 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
         },
     }).then(async (response) => {
         const gApiData = await response.json() as IGoogleSessionResponse;
+
+        console.log(gApiData)
 
         if (gApiData.error) {
             return [];
@@ -98,6 +100,7 @@ const fetchSessions = async (user: string, token: string): Promise<IGoogleSessio
             return session;
         });
     });
+
 }
 
 const fetchDeletedSessions = async (user: string, token: string): Promise<IGoogleSession[]> => {

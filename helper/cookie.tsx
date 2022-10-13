@@ -1,11 +1,11 @@
 import IUser from "../interfaces/IUser";
 import IDateFilter from "../interfaces/IDateFilter";
-import {ArithmeticModes} from "../pages";
 
 const USER_ID_COOKIE = 'user_id';
 const DATE_FILTER_COOKIE = 'date_filter';
 const DATE_FILTER_COOKIE_SEPERATOR = '+';
 const ARITHMETIC_MODE_COOKIE = 'mode';
+const REQUEST_TIMEOUT_COOKIE = 'request_timeout';
 
 export const setDateFilterCookie = (filter: IDateFilter): void => {
     document.cookie = DATE_FILTER_COOKIE + "=" + dateFilterToCookieString(filter) + ";SameSite=Strict";
@@ -19,9 +19,14 @@ export const setArithmeticModeCookie = (mode: Number): void => {
     document.cookie = ARITHMETIC_MODE_COOKIE + "=" + mode + ";SameSite=Strict";
 }
 
+export const setRequestTimeoutCookie = (date: string): void => {
+    document.cookie = REQUEST_TIMEOUT_COOKIE + "=" + date + ";SameSite=Strict";
+}
+
 export const getDateFilterFromCookie = (cookies: string[]): IDateFilter => cookieStringToDateFilter(cookies[DATE_FILTER_COOKIE]);
 export const getUserIdFromCookie = (cookies: string[]): string => cookies[USER_ID_COOKIE];
 export const getArithmeticModeFromCookie = (cookies: string[]): number => parseInt(cookies[ARITHMETIC_MODE_COOKIE]);
+export const getRequestTimeoutFromCookie = (cookies: string[]): number => cookies[REQUEST_TIMEOUT_COOKIE];
 
 /**
  * year;month;week
