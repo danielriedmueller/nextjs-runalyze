@@ -26,6 +26,7 @@
     "sass": "*"
   },
   "devDependencies": {
+    "@expo/next-adapter": "^4.0.5",
     "copy-webpack-plugin": "*",
     "typescript": "*"
   }
